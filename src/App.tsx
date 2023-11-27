@@ -21,7 +21,9 @@ function App() {
                         path={routes.admin}
                         element={
                             <DefaultLayout>
-                                <div style={{ height: '1000px', backgroundColor: 'pink' }}>Admin</div>
+                                <div style={{ height: '1000px', backgroundColor: 'pink' }}>
+                                    Admin
+                                </div>
                             </DefaultLayout>
                         }
                     />

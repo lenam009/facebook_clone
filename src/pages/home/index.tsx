@@ -1,10 +1,26 @@
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
 
-import Header from 'components/Header';
+import { Col, Row } from 'antd';
+
+import LeftBar from '@/components/layout/LeftBar';
+import Feed from '@/components/layout/Feed';
+import RightBar from '@/components/layout/RightBar';
 
 const cx = classNames.bind(styles);
 
 export default function Home() {
-    return <div className={cx('wrapper')}>This a home</div>;
+    return (
+        <Row className={cx('wrapper')}>
+            <Col span={4}>
+                <LeftBar />
+            </Col>
+            <Col span={16}>
+                <Feed />
+            </Col>
+            <Col span={4}>
+                <RightBar />
+            </Col>
+        </Row>
+    );
 }

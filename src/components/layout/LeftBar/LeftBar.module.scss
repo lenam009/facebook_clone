@@ -1,0 +1,15 @@
+.wrapper {
+    overflow-x: scroll;
+    height: 100vh;
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(22, 24, 35, 0.3);
+    }
+}
+
+.btn-show-more {
+    margin: 16px 0px 0px 16px;
+    background-color: rgba(22, 24, 35, 0.1);
+    font-weight: 600;
+}

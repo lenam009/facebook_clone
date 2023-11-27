@@ -1,6 +1,5 @@
 import classNames from 'classnames/bind';
 import styles from './HeaderTabs.module.scss';
-import { useState } from 'react';
 
 import { UserOutlined, MessageOutlined, BellOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
@@ -23,20 +22,20 @@ export default function HeaderTabs() {
         },
         {
             key: '3',
-            label: <ButtonHeaderTab to={routes.home} icon={<UserOutlined />} />,
+            label: <ButtonHeaderTab to={routes.home} icon={<UserOutlined />} badge={2} />,
         },
         {
             key: '4',
-            label: <ButtonHeaderTab to={routes.home} icon={<MessageOutlined />} />,
+            label: <ButtonHeaderTab to={routes.home} icon={<MessageOutlined />} badge={3} />,
         },
         {
             key: '5',
-            label: <ButtonHeaderTab to={routes.home} icon={<BellOutlined />} />,
+            label: <ButtonHeaderTab to={routes.home} icon={<BellOutlined />} badge={1} />,
         },
     ];
 
     return (
-        <Col span={16} className={cx('wrapper')}>
+        <>
             <ConfigProvider
                 theme={{
                     components: {
@@ -51,6 +50,6 @@ export default function HeaderTabs() {
             >
                 <Tabs centered defaultActiveKey={window.location.pathname} items={items} />
             </ConfigProvider>
-        </Col>
+        </>
     );
 }

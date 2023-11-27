@@ -1,0 +1,17 @@
+.wrapper {
+    padding: 8px 12px 8px 16px;
+    border-radius: 12px;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(22, 24, 35, 0.1);
+    }
+}
+
+.icon,
+.title {
+    font-size: 2rem;
+}
+
+.title {
+}

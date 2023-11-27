@@ -1,37 +1,45 @@
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { FacebookFilled, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { FacebookFilled, SearchOutlined } from '@ant-design/icons';
 import { Avatar, Row, Col, Flex } from 'antd';
 
 import HeaderTabs from './HeaderTabs';
 import Search from './Search';
+import routes from '@/config/routes';
 
 const cx = classNames.bind(styles);
 
 export default function Header() {
-    const [showInputSearch, setShowInputSearch] = useState(false);
+    const [showInputSearch, setShowInputSearch] = useState<boolean>(false);
 
     return (
         <header className={cx('header-container')}>
-            <Row style={{ padding: '0px 20px' }}>
+            <Row style={{ padding: '0px 20px', width: '100%' }}>
                 <Col span={4} className={cx('header-left')}>
                     <Flex gap={20} align="center" style={{ height: '100%' }}>
-                        <FacebookFilled className={cx('icon-facebook')} />
+                        <Link to={routes.home}>
+                            <Avatar style={{ backgroundColor: 'blue' }}>
+                                <FacebookFilled className={cx('icon-facebook')} />
+                            </Avatar>
+                        </Link>
                         <SearchOutlined
                             className={cx('icon-search')}
                             onClick={() => setShowInputSearch(true)}
                         />
                     </Flex>
                 </Col>
-                <HeaderTabs />
+                <Col span={16} className={cx('wrapper')}>
+                    <HeaderTabs />
+                </Col>
                 <Col span={4} className={cx('header-right')}>
                     <Flex justify="end" align="center" style={{ height: '100%' }}>
                         <Avatar
                             size="large"
                             className={cx('avatar')}
-                            icon={<UserOutlined />}
+                            src={'/assets/person/1.jpeg'}
                         />
                     </Flex>
                 </Col>

@@ -50,6 +50,7 @@ export default function Search({ showInputSearch, setShowInputSearch }: IProps) 
                                     ref={inputRef}
                                     placeholder="Tìm kiếm trên Facebook"
                                     className={cx('input')}
+                                    bordered={false}
                                 />
                             </ConfigProvider>
                         </Flex>

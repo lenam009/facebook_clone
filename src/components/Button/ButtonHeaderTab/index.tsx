@@ -4,16 +4,19 @@ import styles from './ButtonHeaderTab.module.scss';
 import { ReactNode } from 'react';
 import { useState, useEffect } from 'react';
 
+import { Badge } from 'antd';
+
 import routes from '@/config/routes';
 
 const cx = classNames.bind(styles);
 
 interface IProps {
-    children?: ReactNode;
     to: string;
+    children?: ReactNode;
     icon?: ReactNode;
+    badge?: number;
 }
-export default function ButtonHeaderTab({ children, to, icon }: IProps) {
+export default function ButtonHeaderTab({ children, to, icon, badge }: IProps) {
     const [tab, setTab] = useState(routes.home);
 
     useEffect(() => {
@@ -22,7 +25,13 @@ export default function ButtonHeaderTab({ children, to, icon }: IProps) {
     }, [window.location.pathname]);
     return (
         <Link className={cx('link', icon && 'icon', tab === to && 'active')} to={to}>
-            <span>{children ?? icon}</span>
+            <>
+                <Badge count={badge}>
+                    <span style={{ fontSize: '2rem' }} className={cx(tab === to && 'active')}>
+                        {children ?? icon}
+                    </span>
+                </Badge>
+            </>
         </Link>
     );
 }

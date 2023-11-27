@@ -1,0 +1,20 @@
+.wrapper {
+    width: var(--width-feed-content);
+    padding: 8px 12px 32px 12px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+}
+
+.wrapper-input {
+}
+
+.list-button {
+    margin-top: 20px;
+    margin-left: -12px;
+}
+
+.button {
+    font-weight: 600;
+}
