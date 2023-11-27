@@ -1,0 +1,15 @@
+.link {
+    display: block;
+    height: 100%;
+    padding: 12px 24px;
+    color: black;
+    font-size: 2rem;
+
+    &.active {
+        color: blue;
+    }
+}
+
+.icon {
+    padding-left: 36px;
+}
