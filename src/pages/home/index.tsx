@@ -15,10 +15,10 @@ export default function Home() {
             <Col span={4}>
                 <LeftBar />
             </Col>
-            <Col span={16}>
+            <Col span={14}>
                 <Feed />
             </Col>
-            <Col span={4}>
+            <Col span={6}>
                 <RightBar />
             </Col>
         </Row>

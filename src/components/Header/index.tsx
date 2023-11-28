@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { FacebookFilled, SearchOutlined } from '@ant-design/icons';
-import { Avatar, Row, Col, Flex } from 'antd';
+import { Avatar, Row, Col, Flex, Button } from 'antd';
 
 import HeaderTabs from './HeaderTabs';
 import Search from './Search';
@@ -31,11 +31,14 @@ export default function Header() {
                         />
                     </Flex>
                 </Col>
-                <Col span={16} className={cx('wrapper')}>
+                <Col span={14} className={cx('wrapper')}>
                     <HeaderTabs />
                 </Col>
-                <Col span={4} className={cx('header-right')}>
+                <Col span={6} className={cx('header-right')}>
                     <Flex justify="end" align="center" style={{ height: '100%' }}>
+                        <Button style={{ marginRight: '12px' }}>
+                            <Link to={routes.login}>Đăng nhập</Link>
+                        </Button>
                         <Avatar
                             size="large"
                             className={cx('avatar')}

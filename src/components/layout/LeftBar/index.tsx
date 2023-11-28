@@ -18,6 +18,7 @@ import ButtonItemLeftBar from '@/components/Button/ButtonItemLeftBar';
 import AccountItem from '@/components/AccountItem';
 import { IProps } from '@/components/Button/ButtonItemLeftBar';
 import { IProps as IPropAccountItem } from '@/components/AccountItem';
+import { Users } from '@/data/dataFacebook';
 
 const cx = classNames.bind(styles);
 
@@ -27,35 +28,35 @@ const items: IProps[] = [
         title: 'Feed',
     },
     {
-        icon: <WechatOutlined />,
+        icon: <WechatOutlined style={{ color: 'rgba(175,20,209,1)' }} />,
         title: 'Chats',
     },
     {
-        icon: <VideoCameraFilled />,
+        icon: <VideoCameraFilled style={{ color: 'rgb(58,214,21)' }} />,
         title: 'Videos',
     },
     {
-        icon: <UsergroupAddOutlined />,
+        icon: <UsergroupAddOutlined style={{ color: 'rgb(14,172,198)' }} />,
         title: 'Groups',
     },
     {
-        icon: <FileMarkdownFilled />,
+        icon: <FileMarkdownFilled style={{ color: 'rgb(198,14,42)' }} />,
         title: 'Bookmarks',
     },
     {
-        icon: <QuestionCircleFilled />,
+        icon: <QuestionCircleFilled style={{ color: 'rgb(26,14,198)' }} />,
         title: 'Questions',
     },
     {
-        icon: <AccountBookOutlined />,
+        icon: <AccountBookOutlined style={{ color: 'rgb(14,198,174)' }} />,
         title: 'Jobs',
     },
     {
-        icon: <CalendarOutlined />,
+        icon: <CalendarOutlined style={{ color: 'rgb(203,228,23)' }} />,
         title: 'Events',
     },
     {
-        icon: <CodepenCircleOutlined />,
+        icon: <CodepenCircleOutlined style={{ color: 'rgb(228,139,23)' }} />,
         title: 'Courses',
     },
 ];
@@ -94,7 +95,7 @@ export default function LeftBar() {
                 <ButtonItemLeftBar key={index} icon={x.icon} title={x.title} />
             ))}
             <Button size="large" type="text" className={cx('btn-show-more')}>
-                Dashed Button
+                Show More
             </Button>
             <div
                 style={{
@@ -105,12 +106,18 @@ export default function LeftBar() {
                     style={{
                         borderWidth: '3px',
                         paddingLeft: '16px',
+                        margin: '16px 0px 8px',
                     }}
                 />
             </div>
             <div>
-                {itemsAccountItem.map((x, index) => (
-                    <AccountItem key={index} avatar={x.avatar} name={x.name} />
+                {Users.map((x, index) => (
+                    <AccountItem
+                        key={index}
+                        avatar={x.profilePicture}
+                        name={x.username}
+                        shape={'square'}
+                    />
                 ))}
             </div>
         </div>

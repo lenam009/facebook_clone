@@ -17,12 +17,12 @@ export default function HeaderTabs() {
             label: <ButtonHeaderTab to={routes.home}>Homepage</ButtonHeaderTab>,
         },
         {
-            key: routes.admin,
-            label: <ButtonHeaderTab to={routes.admin}>Timeline</ButtonHeaderTab>,
+            key: 'timeline',
+            label: <ButtonHeaderTab to={routes.profile}>Timeline</ButtonHeaderTab>,
         },
         {
-            key: '3',
-            label: <ButtonHeaderTab to={routes.home} icon={<UserOutlined />} badge={2} />,
+            key: routes.profile,
+            label: <ButtonHeaderTab to={routes.profile} icon={<UserOutlined />} badge={2} />,
         },
         {
             key: '4',

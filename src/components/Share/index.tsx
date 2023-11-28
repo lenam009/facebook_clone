@@ -69,6 +69,7 @@ export default function Share() {
                             className={cx('button')}
                             type="text"
                             icon={x.icon}
+                            key={index}
                         >
                             {x.title}
                         </Button>

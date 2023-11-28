@@ -1,0 +1,30 @@
+.wrapper {
+    margin-top: 12px;
+    border-radius: 8px;
+    padding: 8px;
+    margin-left: -8px;
+    user-select: none;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(22, 24, 35, 0.1);
+    }
+}
+
+.image {
+    width: 125px;
+    height: 125px;
+    border-radius: 12px;
+}
+
+.title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.desc {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(22, 24, 35, 0.6);
+}

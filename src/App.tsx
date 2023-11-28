@@ -2,6 +2,9 @@ import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 
 import routes from './config/routes';
 import Home from './pages/home';
+import Profile from './pages/profile';
+import Login from './pages/login';
+import Register from './pages/register';
 import DefaultLayout from 'components/layout/DefaultLayout';
 
 function App() {
@@ -18,15 +21,15 @@ function App() {
                         }
                     />
                     <Route
-                        path={routes.admin}
+                        path={routes.profile}
                         element={
                             <DefaultLayout>
-                                <div style={{ height: '1000px', backgroundColor: 'pink' }}>
-                                    Admin
-                                </div>
+                                <Profile />
                             </DefaultLayout>
                         }
                     />
+                    <Route path={routes.login} element={<Login />} />
+                    <Route path={routes.register} element={<Register />} />
                 </Routes>
             </div>
         </Router>
