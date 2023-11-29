@@ -1,6 +1,8 @@
 import classNames from 'classnames/bind';
 import styles from './Share.module.scss';
 import { ReactNode } from 'react';
+import { useAppSelector } from '@/redux/hook';
+import { getUserCurrentSelector } from '@/redux/userSlice';
 
 import { Avatar, Flex, Input, Button } from 'antd';
 import {
@@ -10,6 +12,7 @@ import {
     EnvironmentOutlined,
     SmileOutlined,
 } from '@ant-design/icons';
+import { IUser } from '@/api/userApi';
 
 const cx = classNames.bind(styles);
 
@@ -31,11 +34,17 @@ const items: {
     },
     {
         title: 'Feeling',
-        icon: <SmileOutlined style={{ color: 'yellow' }} />,
+        icon: <SmileOutlined style={{ color: 'orange' }} />,
     },
 ];
 
-export default function Share() {
+interface IProp {
+    user: IUser | null;
+}
+
+export default function Share({ user }: IProp) {
+    // const user = useAppSelector(getUserCurrentSelector);
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('wrapper-input')}>
@@ -43,7 +52,9 @@ export default function Share() {
                     <Avatar
                         icon={<UserOutlined />}
                         size={'large'}
-                        src={'/assets/person/1.jpeg'}
+                        src={
+                            user?.profilePicture ? '/assets/person/' + user.profilePicture : ''
+                        }
                     />
                     <Input
                         style={{ fontSize: '1.8rem' }}

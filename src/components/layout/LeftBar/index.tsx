@@ -17,7 +17,6 @@ import {
 import ButtonItemLeftBar from '@/components/Button/ButtonItemLeftBar';
 import AccountItem from '@/components/AccountItem';
 import { IProps } from '@/components/Button/ButtonItemLeftBar';
-import { IProps as IPropAccountItem } from '@/components/AccountItem';
 import { Users } from '@/data/dataFacebook';
 
 const cx = classNames.bind(styles);
@@ -61,33 +60,6 @@ const items: IProps[] = [
     },
 ];
 
-const itemsAccountItem: IPropAccountItem[] = [
-    {
-        avatar: '/assets/person/1.jpeg',
-        name: 'Le Nam',
-    },
-    {
-        avatar: '/assets/person/1.jpeg',
-        name: 'Le Nam',
-    },
-    {
-        avatar: '/assets/person/122.jpeg',
-        name: 'Le Nam',
-    },
-    {
-        avatar: '/assets/person/1.jpeg',
-        name: 'Le Nam',
-    },
-    {
-        avatar: '/assets/person/1.jpeg',
-        name: 'Le Nam',
-    },
-    {
-        avatar: '/assets/person/122.jpeg',
-        name: 'Le Nam',
-    },
-];
-
 export default function LeftBar() {
     return (
         <div className={cx('wrapper')}>
@@ -114,7 +86,7 @@ export default function LeftBar() {
                 {Users.map((x, index) => (
                     <AccountItem
                         key={index}
-                        avatar={x.profilePicture}
+                        avatar={'../' + x.profilePicture}
                         name={x.username}
                         shape={'square'}
                     />

@@ -1,11 +1,8 @@
 import classNames from 'classnames/bind';
 import styles from './ButtonItemLeftBar.module.scss';
 import { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 
 import { Flex } from 'antd';
-
-import { FacebookFilled } from '@ant-design/icons';
 
 const cx = classNames.bind(styles);
 

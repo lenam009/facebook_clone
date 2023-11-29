@@ -5,12 +5,16 @@
     margin-top: -16px;
 }
 
+.img {
+    border-radius: 0px 0px 8px 8px;
+    // z-index: 10;
+}
+
 .wrapper-avatar {
     position: absolute;
     bottom: -100px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10;
 }
 
 .name {

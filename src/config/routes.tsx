@@ -1,6 +1,10 @@
 const routes = {
     home: '/',
-    profile: '/profile',
+    profile: {
+        prefix: '/profile',
+        params: ':/username',
+        path: '/profile/:username',
+    },
     login: '/login',
     register: '/register',
 };

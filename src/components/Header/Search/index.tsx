@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './Search.module.scss';
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 
 import { Flex, Input, InputRef, ConfigProvider } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';

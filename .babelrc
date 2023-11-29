@@ -6,6 +6,7 @@
                 "alias": {
                     "@": "./src",
                     "components": "./src/components",
+                    "assets": "./src/assets",
                     "pages": "./src/pages"
                 }
             }

@@ -5,7 +5,6 @@ import { Divider } from 'antd';
 
 import ButtonRightBarAd from '@/components/Button/ButtonRightBarAd';
 import AccountItem from '@/components/AccountItem';
-import { IProps as IPropAccountItem } from '@/components/AccountItem';
 import { Users } from '@/data/dataFacebook';
 
 const cx = classNames.bind(styles);
@@ -20,7 +19,7 @@ export default function RightBar() {
                 desc="shopcafe.qq52.info"
             />
             <ButtonRightBarAd
-                image="/assets/person/10.jpeg"
+                image="/assets/person/8.jpeg"
                 title="Mịn da trắng sáng"
                 desc="mypham.shopvg.vn"
             />
@@ -35,7 +34,7 @@ export default function RightBar() {
                 {Users.map((x, index) => (
                     <AccountItem
                         key={index}
-                        avatar={x.profilePicture}
+                        avatar={'../' + x.profilePicture}
                         name={x.username}
                         size={'large'}
                         online={true}

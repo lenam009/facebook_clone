@@ -1,15 +1,74 @@
 import classNames from 'classnames/bind';
 import styles from './Register.module.scss';
 import { Link } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
-import { Row, Col, Flex, Form, Input, Button } from 'antd';
+import { Row, Col, Flex, Form, Input, Button, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import routes from '@/config/routes';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import {
+    setUser,
+    setIsFetching,
+    getIsFetching,
+    setErrorLogin,
+    getErrorLogin,
+} from '@/redux/userSlice';
+import authApi from '@/api/authApi';
 
 const cx = classNames.bind(styles);
 
 export default function Register() {
-    const [form] = Form.useForm();
+    const dispatch = useAppDispatch();
+
+    const isFetching = useAppSelector(getIsFetching);
+    const errorLogin = useAppSelector(getErrorLogin);
+
+    const handleOnSubmit = (values: any, { resetForm }: any) => {
+        dispatch(setIsFetching(true));
+        const fetchLogin = async () => {
+            console.log(123);
+            const data = await authApi.register(
+                values.email,
+                values.password,
+                values.username,
+            );
+            dispatch(setIsFetching(false));
+            if (data && data.user) {
+                dispatch(setUser(data.user));
+                dispatch(setErrorLogin(false));
+                resetForm();
+            } else {
+                dispatch(setErrorLogin(true));
+            }
+        };
+        fetchLogin();
+    };
+
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            username: '',
+            password: '',
+            confirmPassword: '',
+        },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .required('Email không được bỏ trống *')
+                .matches(
+                    /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                    'Vui lòng nhập đúng định dạng Email',
+                ),
+            username: Yup.string().required('Tên không được bỏ trống *'),
+            password: Yup.string().required('Mật khẩu không được bỏ trống *'),
+            confirmPassword: Yup.string()
+                .required('Xác nhận mật khẩu không được bỏ trống *')
+                .oneOf([Yup.ref('password')], 'Mật khẩu không trùng khớp'),
+        }),
+        onSubmit: handleOnSubmit,
+    });
 
     return (
         <Row className={cx('wrapper')}>
@@ -26,41 +85,87 @@ export default function Register() {
             <Col className={cx('col-form')} span={6}>
                 <Flex justify="center" vertical rootClassName={cx('flex')}>
                     <div className={cx('form')}>
-                        <Form
-                            layout={'vertical'}
-                            form={form}
-                            // initialValues={{ layout: formLayout }}
-                            // onValuesChange={onFormLayoutChange}
-                        >
-                            <Form.Item>
-                                <Input className={cx('input')} placeholder="Email" />
+                        <form onSubmit={formik.handleSubmit}>
+                            <Form.Item style={{ margin: '16px 0px' }}>
+                                <Input
+                                    name="email"
+                                    className={cx('input')}
+                                    placeholder="Email"
+                                    value={formik.values.email}
+                                    onChange={formik.handleChange}
+                                />
+                                <span className={cx('errorMessage')}>
+                                    {formik.errors.email}&nbsp;
+                                </span>
                             </Form.Item>
-                            <Form.Item>
-                                <Input className={cx('input')} placeholder="Tên người dùng" />
+                            <Form.Item style={{ margin: '16px 0px' }}>
+                                <Input
+                                    name="username"
+                                    className={cx('input')}
+                                    placeholder="Tên người dùng"
+                                    value={formik.values.username}
+                                    onChange={formik.handleChange}
+                                />
+                                <span className={cx('errorMessage')}>
+                                    {formik.errors.username}&nbsp;
+                                </span>
                             </Form.Item>
-                            <Form.Item>
+                            <Form.Item style={{ margin: '16px 0px' }}>
                                 <Input.Password
+                                    name="password"
                                     className={cx('input')}
                                     placeholder="Mật khẩu"
+                                    value={formik.values.password}
+                                    onChange={formik.handleChange}
                                 />
+                                <span className={cx('errorMessage')}>
+                                    {formik.errors.password}&nbsp;
+                                </span>
                             </Form.Item>
-                            <Form.Item>
+                            <Form.Item style={{ margin: '16px 0px' }}>
                                 <Input.Password
+                                    name="confirmPassword"
                                     className={cx('input')}
                                     placeholder="Nhập lại mật khẩu"
+                                    value={formik.values.confirmPassword}
+                                    onChange={formik.handleChange}
                                 />
+                                <span className={cx('errorMessage')}>
+                                    {formik.errors.confirmPassword}&nbsp;
+                                </span>
                             </Form.Item>
-                            <Form.Item style={{ marginBottom: 0 }}>
+                            <Form.Item style={{ margin: '16px 0px' }}>
                                 <Button
                                     size="large"
                                     className={cx('btn-login')}
                                     type="primary"
                                     block
+                                    htmlType="submit"
                                 >
-                                    Tạo tài khoản
+                                    {isFetching ? (
+                                        <Spin
+                                            style={{ color: 'blue' }}
+                                            indicator={
+                                                <LoadingOutlined
+                                                    style={{ fontSize: 24 }}
+                                                    spin
+                                                />
+                                            }
+                                        />
+                                    ) : (
+                                        ' Đăng ký'
+                                    )}
                                 </Button>
+                                {errorLogin && (
+                                    <h5
+                                        style={{ marginTop: '4px', textAlign: 'right' }}
+                                        className={cx('errorMessage')}
+                                    >
+                                        Sai email hoặc mật khẩu !!!
+                                    </h5>
+                                )}
                             </Form.Item>
-                        </Form>
+                        </form>
 
                         <Flex style={{ marginTop: '16px' }} justify="center">
                             <Button type="primary" size="large" className={cx('login')}>

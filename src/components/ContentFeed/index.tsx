@@ -1,7 +1,10 @@
 import classNames from 'classnames/bind';
 import styles from './ContentFeed.module.scss';
-import { Users } from '@/data/dataFacebook';
-import { useState } from 'react';
+// import { Users } from '@/data/dataFacebook';
+import { useState, useEffect } from 'react';
+import { format } from 'timeago.js';
+import { Link } from 'react-router-dom';
+import routes from '@/config/routes';
 
 import { Avatar, Flex, Button, Image, Divider, Popover, ConfigProvider } from 'antd';
 import {
@@ -18,7 +21,12 @@ import {
     DashOutlined,
 } from '@ant-design/icons';
 
-import { IPropsContentFeed } from '@/data/dataFacebook';
+import { IPost } from '@/api/postApi';
+import { IUser } from '@/api/userApi';
+import userApi from '@/api/userApi';
+import postApi from '@/api/postApi';
+import { useAppSelector } from '@/redux/hook';
+import { getUserCurrentSelector } from '@/redux/userSlice';
 
 const cx = classNames.bind(styles);
 
@@ -30,15 +38,62 @@ const icons = [
     <FrownOutlined style={{ color: 'gray' }} className={cx('iconHover')} />,
 ];
 
-export default function ContentFeed(props: IPropsContentFeed) {
-    const [likes, setLikes] = useState<number>(props.like);
+const parseNewValueDate = (s: string): string => {
+    switch (s) {
+        case 'day':
+        case 'days':
+            return 'ngày';
+        case 'month':
+        case 'months':
+            return 'tháng';
+        case 'year':
+        case 'years':
+            return 'năm';
+        default:
+            return '';
+    }
+};
+
+const parseDate = (date: string): string => {
+    const startSpace = date.indexOf(' ');
+    const endSpace = date.lastIndexOf(' ');
+    const oldValue = date.substring(startSpace + 1, endSpace);
+    const newValue = parseNewValueDate(oldValue);
+    return date.replace(oldValue.concat(' ', 'ago'), newValue.concat(' ', 'trước'));
+};
+
+interface IProp extends IPost {
+    profileUsername?: string;
+}
+export default function ContentFeed(post: IProp) {
+    const userCurrent = useAppSelector(getUserCurrentSelector);
+
+    const [user, setUser] = useState<IUser | null>(null);
+    const [likes, setLikes] = useState<number>(post.likes.length);
     const [isLiked, setIsLiked] = useState<boolean>(false);
 
-    const user = Users.find((x) => x.id === props.userId);
+    useEffect(() => {
+        const fetchUser = async () => {
+            const user: any = await userApi.getOneUser(post.userId);
+
+            setUser(user);
+
+            if (userCurrent && userCurrent._id && post.likes.includes(userCurrent._id)) {
+                setIsLiked(true);
+            }
+        };
+        fetchUser();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleClickLike = (e: React.MouseEvent) => {
-        setLikes(isLiked ? likes - 1 : likes + 1);
-        setIsLiked(!isLiked);
+        if (post._id && userCurrent && userCurrent?._id) {
+            postApi.likeOrDislikePost(post._id, userCurrent?._id).then((res) => {
+                setLikes(isLiked ? likes - 1 : likes + 1);
+                setIsLiked(!isLiked);
+            });
+        }
     };
 
     return (
@@ -47,29 +102,44 @@ export default function ContentFeed(props: IPropsContentFeed) {
                 <DashOutlined />
             </Button>
             <Flex>
-                <Avatar
-                    icon={<UserOutlined />}
-                    className={cx('avatar')}
-                    size={'large'}
-                    src={user?.profilePicture}
-                />
+                <Link to={routes.profile.prefix + '/' + user?.username}>
+                    <Avatar
+                        icon={<UserOutlined />}
+                        className={cx('avatar')}
+                        size={'large'}
+                        src={
+                            user?.profilePicture
+                                ? '../assets/person/' + user.profilePicture
+                                : ''
+                        }
+                    />
+                </Link>
                 <div>
                     <Flex style={{ padding: '0px 12px' }} vertical>
-                        <h4 className={cx('name')}>{user?.username}</h4>
+                        <Link
+                            to={routes.profile.prefix + '/' + user?.username}
+                            style={{ color: 'black' }}
+                        >
+                            <h4 className={cx('name')}>{user?.username}</h4>
+                        </Link>
                         <div>
-                            <span className={cx('time')}>{props.date}&nbsp; </span>
+                            <span className={cx('time')}>
+                                {parseDate(format(post.createdAt))} &nbsp;
+                            </span>
                             <ClockCircleOutlined className={cx('clock')} />
                         </div>
                     </Flex>
                 </div>
             </Flex>
-            <p className={cx('desc')}>{props.desc}</p>
-            <Image
-                src={props.photo}
-                height={500}
-                width={'calc(100% + 24px)'}
-                rootClassName={cx('image')}
-            />
+            <p className={cx('desc')}>{post.desc}</p>
+            {post.img && (
+                <Image
+                    src={'../assets/post/' + post.img}
+                    height={500}
+                    width={'calc(100% + 24px)'}
+                    rootClassName={cx('image')}
+                />
+            )}
             <Flex justify="space-between" className={cx('')}>
                 <div>
                     <LikeFilled style={{ color: 'blue' }} className={cx('icon')} />
@@ -77,7 +147,7 @@ export default function ContentFeed(props: IPropsContentFeed) {
                     <span className={cx('text')}>{likes}</span>
                 </div>
                 <div>
-                    <span className={cx('text')}>{props.comment} bình luận</span>
+                    <span className={cx('text')}>{'0'} bình luận</span>
                     <span className={cx('text')}>0 lượt chia sẻ</span>
                 </div>
             </Flex>
