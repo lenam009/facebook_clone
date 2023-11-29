@@ -14,17 +14,30 @@ class PostController {
             .catch(() => next('Get one post failed'));
     }
 
-    //GET(Chỉ nhận bài post của các user mà mình đã theo dõi) /post/timeline
+    //GET(Chỉ nhận bài post của các user mà mình đã theo dõi) /post/timeline/:userId
     async getPostByFollowing(req, res, next) {
-        const user = await User.findById(req.body._id);
-        const postUser = await Post.find({ userId: user._id });
+        const user = await User.findById(req.params.userId).catch(() => null);
+        if (!user) return next('Get user failed');
+        const postUser = await Post.find({ userId: user._id }).catch(() => null);
+        if (!postUser) return next('Get postUser failed');
         let postArray = [];
-        await Promise.all(user.followings.map((x) => Post.find({ userId: x })))
+        return await Promise.all(user.followings.map((x) => Post.find({ userId: x })))
             .then((response) => {
                 postArray = postArray.concat(...response, ...postUser);
+                return res.status(200).json(postArray);
             })
             .catch(() => next('Get timeline failed'));
-        return res.status(200).json(postArray);
+    }
+
+    //GET(Chỉ nhận bài post của user có name tương ứng) /post/profile/:username
+    async getPostByUsername(req, res, next) {
+        const user = await User.findOne({ username: req.params.username })
+            .then((response) => response)
+            .catch(() => next('Get user by username failed'));
+
+        Post.find({ userId: user._id })
+            .then((response) => res.json(response))
+            .catch(() => next('Get posts by username failed'));
     }
 
     //POST /post
@@ -36,7 +49,9 @@ class PostController {
 
     //DELETE /post/:id
     async delete(req, res, next) {
-        const post = await Post.findById(req.params._id).catch(() => next('Get post by id failed'));
+        const post = await Post.findById(req.params._id).catch(() =>
+            next('Get post by id failed'),
+        );
         if (post.userId === req.body.userId) {
             post.deleteOne()
                 .then((response) => res.status(200).json('Delete post successful'))
@@ -48,7 +63,9 @@ class PostController {
 
     //PUT /post/:id
     async update(req, res, next) {
-        const post = await Post.findById(req.params._id).catch(() => next('Get post by id failed'));
+        const post = await Post.findById(req.params._id).catch(() =>
+            next('Get post by id failed'),
+        );
         if (post.userId === req.body.userId) {
             post.updateOne(req.body)
                 .then((response) => res.status(200).json('Update post successful'))
@@ -60,7 +77,9 @@ class PostController {
 
     //PUT(Like Or Dislike) /post/:id/like
     async like(req, res, next) {
-        const post = await Post.findById(req.params._id).catch(() => next('Get post by id failed'));
+        const post = await Post.findById(req.params._id).catch(() =>
+            next('Get post by id failed'),
+        );
         if (!post.likes.includes(req.body.userId)) {
             post.updateOne({ $push: { likes: req.body.userId } })
                 .then((response) => res.status(200).json('The post have been liked'))

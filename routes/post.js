@@ -5,7 +5,9 @@ const PostController = require('../app/controllers/PostController');
 
 router.get('/', PostController.index);
 
-router.get('/timeline', PostController.getPostByFollowing);
+router.get('/timeline/:userId', PostController.getPostByFollowing);
+
+router.get('/profile/:username', PostController.getPostByUsername);
 
 router.get('/:_id', PostController.getOnePost);
 

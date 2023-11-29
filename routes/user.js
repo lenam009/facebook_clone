@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const UserController = require('../app/controllers/UserController');
 
-router.get('/', UserController.index);
+router.get('/', UserController.getOneUser);
 
-router.get('/:_id', UserController.getOneUser);
+// router.get('/:_id', UserController.getOneUser);
 
 router.put('/:_id', UserController.update);
 
