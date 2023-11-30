@@ -4,7 +4,7 @@ const UserController = require('../app/controllers/UserController');
 
 router.get('/', UserController.getOneUser);
 
-// router.get('/:_id', UserController.getOneUser);
+router.get('/getall', UserController.getall);
 
 router.put('/:_id', UserController.update);
 

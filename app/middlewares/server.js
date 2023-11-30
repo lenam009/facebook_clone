@@ -3,7 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const path = require('path');
+// const path = require('path');
 
 //Cookie parser
 const cookie = (app) => {
@@ -31,7 +31,26 @@ const postHtml = (app) => {
 
 //helmet(security)
 const helmetMethod = (app) => {
-    app.use(helmet());
+    app.use(
+        helmet({
+            contentSecurityPolicy: {
+                useDefaults: true,
+                directives: {
+                    imgSrc: [
+                        "'self'",
+                        'data:',
+                        'eu.ui-avatars.com',
+                        'blob:',
+                        'api.mapbox.com',
+                        'cdnjs.cloudflare.com',
+                    ],
+                    scriptSrc: ['*'],
+                    defaultSrc: ["'self'", 'api.mapbox.com'],
+                    frameAncestors: ['*'],
+                },
+            },
+        }),
+    );
 };
 
 //morgan(file log request->server)
@@ -40,7 +59,7 @@ const morganMethod = (app) => {
 };
 
 //public/images
-const pathImages = (app) => {
+const pathImages = (app, pathDirname, path) => {
     app.use('/images', express.static(path.join(pathDirname, 'public/images')));
 };
 
@@ -51,6 +70,7 @@ const serverMiddleware = [
     postHtml,
     helmetMethod,
     morganMethod,
+    // pathImages,
 ];
 
 module.exports = serverMiddleware;

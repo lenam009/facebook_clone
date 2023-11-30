@@ -3,12 +3,12 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 
 class UserController {
-    //GET /user
-    // index(req, res, next) {
-    //     User.find()
-    //         .then((users) => res.status(200).json(users))
-    //         .catch(() => next('Get all user failed'));
-    // }
+    //GET /user/getall
+    getall(req, res, next) {
+        User.find()
+            .then((users) => res.status(200).json(users))
+            .catch(() => next('Get all user failed'));
+    }
 
     //GET /user/?_id=''&username=''
     async getOneUser(req, res, next) {

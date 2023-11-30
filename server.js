@@ -11,7 +11,7 @@ const path = require('path');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/images');
+        cb(null, 'public/images/post');
     },
     filename: (req, file, cb) => {
         cb(null, file.originalname);
@@ -28,6 +28,12 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 //Middleware server
 serverMiddleware.map((x) => x(app));
+
+// app.all('/images', function (req, res, next) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+//     next();
+// });
 
 //Config .env
 dotenv.config();
