@@ -47,6 +47,7 @@ export default function AccountItem({
                                 icon={<UserOutlined />}
                                 src={local + 'person/' + user?.profilePicture}
                                 shape={shape}
+                                // crossOrigin="anonymous"
                             />
                         </Badge>
                     </ConfigProvider>
