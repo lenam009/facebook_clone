@@ -23,21 +23,22 @@ export default function RightBarProfile({ user = null }: IProp) {
     const error = () => {
         messageApi.open({
             type: 'error',
-            content: 'Follow thất bại',
+            content: 'Thất bại',
         });
     };
 
     const success = () => {
         messageApi.open({
             type: 'success',
-            content: 'Follow thành công',
+            content: isFollow ? 'Unfollow thành công' : 'Follow thành công',
         });
     };
 
     useEffect(() => {
-        if (userCurrent && user && user._id)
+        if (userCurrent && user && user._id) {
             setIsFollow(userCurrent?.followings.includes(user?._id));
-    }, []);
+        }
+    }, [user, userCurrent]);
 
     const handleOnClickFollowOrUnfollow = () => {
         if (userCurrent && userCurrent._id && user && user._id) {

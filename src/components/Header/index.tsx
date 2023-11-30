@@ -71,6 +71,7 @@ export default function Header() {
                                 size="large"
                                 className={cx('avatar')}
                                 src={local + 'person/' + user?.profilePicture}
+                                crossOrigin="anonymous"
                             />
                         </Link>
                     </Flex>

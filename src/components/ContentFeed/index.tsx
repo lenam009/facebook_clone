@@ -39,7 +39,7 @@ const icons = [
     <FrownOutlined style={{ color: 'gray' }} className={cx('iconHover')} />,
 ];
 
-console.log(local);
+// console.log(local);
 
 const parseNewValueDate = (s: string): string => {
     switch (s) {
@@ -52,6 +52,15 @@ const parseNewValueDate = (s: string): string => {
         case 'year':
         case 'years':
             return 'năm';
+        case 'minutes':
+        case 'minute':
+            return 'phút';
+        case 'hours':
+        case 'hour':
+            return 'giờ';
+        case 'second':
+        case 'seconds':
+            return 'giây';
         default:
             return '';
     }
@@ -62,6 +71,8 @@ const parseDate = (date: string): string => {
     const endSpace = date.lastIndexOf(' ');
     const oldValue = date.substring(startSpace + 1, endSpace);
     const newValue = parseNewValueDate(oldValue);
+    console.log(oldValue);
+
     return date.replace(oldValue.concat(' ', 'ago'), newValue.concat(' ', 'trước'));
 };
 
