@@ -4,28 +4,35 @@ import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { Row, Col, Flex, Form, Input, Button, Spin } from 'antd';
+import { Row, Col, Flex, Form, Input, Button, Spin, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import routes from '@/config/routes';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import {
-    setUser,
-    setIsFetching,
-    getIsFetching,
-    setErrorLogin,
-    getErrorLogin,
-} from '@/redux/userSlice';
+import { setUser, setIsFetching, getIsFetching } from '@/redux/userSlice';
 import authApi from '@/api/authApi';
 
 const cx = classNames.bind(styles);
 
 export default function Register() {
+    const [messageApi, contextHolder] = message.useMessage();
     const dispatch = useAppDispatch();
 
     const isFetching = useAppSelector(getIsFetching);
-    const errorLogin = useAppSelector(getErrorLogin);
 
+    const error = () => {
+        messageApi.open({
+            type: 'error',
+            content: 'This is an error message',
+        });
+    };
+
+    const success = () => {
+        messageApi.open({
+            type: 'success',
+            content: 'This is a success message',
+        });
+    };
     const handleOnSubmit = (values: any, { resetForm }: any) => {
         dispatch(setIsFetching(true));
         const fetchLogin = async () => {
@@ -38,10 +45,10 @@ export default function Register() {
             dispatch(setIsFetching(false));
             if (data && data.user) {
                 dispatch(setUser(data.user));
-                dispatch(setErrorLogin(false));
                 resetForm();
+                success();
             } else {
-                dispatch(setErrorLogin(true));
+                error();
             }
         };
         fetchLogin();
@@ -72,6 +79,7 @@ export default function Register() {
 
     return (
         <Row className={cx('wrapper')}>
+            {contextHolder}
             <Col span={5}></Col>
             <Col className={cx('col-facebook')} span={6}>
                 <Flex justify="center" vertical rootClassName={cx('flex')}>
@@ -156,14 +164,6 @@ export default function Register() {
                                         ' Đăng ký'
                                     )}
                                 </Button>
-                                {errorLogin && (
-                                    <h5
-                                        style={{ marginTop: '4px', textAlign: 'right' }}
-                                        className={cx('errorMessage')}
-                                    >
-                                        Sai email hoặc mật khẩu !!!
-                                    </h5>
-                                )}
                             </Form.Item>
                         </form>
 

@@ -17,7 +17,10 @@ const postApi = {
         return axiosCreate
             .get(url)
             .then((response) => response)
-            .catch(() => console.log('Error GetPostByFollowing'));
+            .catch((error) => {
+                console.log('Error GetPostByFollowing');
+                return error;
+            });
     },
 
     getPostByUsername(username: string) {
@@ -26,7 +29,10 @@ const postApi = {
         return axiosCreate
             .get(url)
             .then((response) => response)
-            .catch(() => console.log('Error GetPostByUsername'));
+            .catch((error) => {
+                console.log('Error GetPostByUsername');
+                return error;
+            });
     },
 
     likeOrDislikePost(idPost: string, userId: string) {
@@ -37,7 +43,38 @@ const postApi = {
                 userId,
             })
             .then((response) => response)
-            .catch(() => console.log('Error LikeOrDislikePost'));
+            .catch((error) => {
+                console.log('Error LikeOrDislikePost');
+                return error;
+            });
+    },
+
+    create(userId: string, desc: string, img: string) {
+        const url = 'post';
+
+        return axiosCreate
+            .post(url, {
+                userId,
+                desc,
+                img,
+            })
+            .then((response) => response)
+            .catch((error) => {
+                console.log('Error Create');
+                return error;
+            });
+    },
+
+    uploadFile(data: FormData) {
+        const url = 'upload';
+
+        return axiosCreate
+            .post(url, data)
+            .then((response) => response)
+            .catch((error) => {
+                console.log('Error UploadFile');
+                return error;
+            });
     },
 };
 

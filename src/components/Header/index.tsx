@@ -13,6 +13,7 @@ import { useAppSelector, useAppDispatch } from '@/redux/hook';
 import { getUserCurrentSelector, setUser } from '@/redux/userSlice';
 
 const cx = classNames.bind(styles);
+const local = process.env.REACT_APP_PUBLIC_FOLDER_IMAGE;
 
 export default function Header() {
     const [showInputSearch, setShowInputSearch] = useState<boolean>(false);
@@ -64,12 +65,14 @@ export default function Header() {
                                 Đăng xuất
                             </Button>
                         )}
-                        <Avatar
-                            icon={<UserOutlined />}
-                            size="large"
-                            className={cx('avatar')}
-                            src={'../assets/person/' + user?.profilePicture}
-                        />
+                        <Link to={routes.profile.prefix + '/' + user?.username}>
+                            <Avatar
+                                icon={<UserOutlined />}
+                                size="large"
+                                className={cx('avatar')}
+                                src={local + 'person/' + user?.profilePicture}
+                            />
+                        </Link>
                     </Flex>
                 </Col>
             </Row>

@@ -29,6 +29,7 @@ import { useAppSelector } from '@/redux/hook';
 import { getUserCurrentSelector } from '@/redux/userSlice';
 
 const cx = classNames.bind(styles);
+const local = process.env.REACT_APP_PUBLIC_FOLDER_IMAGE;
 
 const icons = [
     <LikeFilled style={{ color: 'blue' }} className={cx('iconHover')} />,
@@ -37,6 +38,8 @@ const icons = [
     <MehOutlined style={{ color: 'violet' }} className={cx('iconHover')} />,
     <FrownOutlined style={{ color: 'gray' }} className={cx('iconHover')} />,
 ];
+
+console.log(local);
 
 const parseNewValueDate = (s: string): string => {
     switch (s) {
@@ -108,9 +111,7 @@ export default function ContentFeed(post: IProp) {
                         className={cx('avatar')}
                         size={'large'}
                         src={
-                            user?.profilePicture
-                                ? '../assets/person/' + user.profilePicture
-                                : ''
+                            user?.profilePicture ? local + 'person/' + user.profilePicture : ''
                         }
                     />
                 </Link>
@@ -134,7 +135,7 @@ export default function ContentFeed(post: IProp) {
             <p className={cx('desc')}>{post.desc}</p>
             {post.img && (
                 <Image
-                    src={'../assets/post/' + post.img}
+                    src={local + '/post/' + post.img}
                     height={500}
                     width={'calc(100% + 24px)'}
                     rootClassName={cx('image')}

@@ -4,30 +4,32 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { Row, Col, Flex, Form, Input, Button, Divider } from 'antd';
+import { Row, Col, Flex, Form, Input, Button, Divider, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 
 import routes from '@/config/routes';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import {
-    setUser,
-    setIsFetching,
-    getIsFetching,
-    setErrorLogin,
-    getErrorLogin,
-} from '@/redux/userSlice';
+import { setUser, setIsFetching, getIsFetching } from '@/redux/userSlice';
 import authApi from '@/api/authApi';
 
 const cx = classNames.bind(styles);
 
 export default function Login() {
+    const [messageApi, contextHolder] = message.useMessage();
+
     const dispatch = useAppDispatch();
 
     const isFetching = useAppSelector(getIsFetching);
-    const errorLogin = useAppSelector(getErrorLogin);
 
     const navigate = useNavigate();
+
+    const error = () => {
+        messageApi.open({
+            type: 'error',
+            content: ' Sai email hoặc mật khẩu !!!',
+        });
+    };
 
     const handleOnSubmit = (values: any) => {
         dispatch(setIsFetching(true));
@@ -37,10 +39,9 @@ export default function Login() {
             dispatch(setIsFetching(false));
             if (data && data.user) {
                 dispatch(setUser(data.user));
-                dispatch(setErrorLogin(false));
                 navigate(routes.home);
             } else {
-                dispatch(setErrorLogin(true));
+                error();
             }
         };
 
@@ -66,6 +67,7 @@ export default function Login() {
 
     return (
         <Row className={cx('wrapper')}>
+            {contextHolder}
             <Col span={5}></Col>
             <Col className={cx('col-facebook')} span={6}>
                 <Flex justify="center" vertical rootClassName={cx('flex')}>
@@ -128,14 +130,6 @@ export default function Login() {
                                         ' Đăng nhập'
                                     )}
                                 </Button>
-                                {errorLogin && (
-                                    <h5
-                                        style={{ marginTop: '4px', textAlign: 'right' }}
-                                        className={cx('errorMessage')}
-                                    >
-                                        Sai email hoặc mật khẩu !!!
-                                    </h5>
-                                )}
                             </Form.Item>
                         </form>
 
