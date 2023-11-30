@@ -99,6 +99,11 @@ export default function ContentFeed(post: IProp) {
         }
     };
 
+    console.log(
+        user?.profilePicture ? user.username : '',
+        user?.profilePicture ? local + 'person/' + user.profilePicture : '',
+    );
+
     return (
         <div className={cx('wrapper')}>
             <Button type="text" shape="circle" className={cx('btnMenu')}>
@@ -110,11 +115,11 @@ export default function ContentFeed(post: IProp) {
                         icon={<UserOutlined />}
                         className={cx('avatar')}
                         size={'large'}
-                        src={
-                            user?.profilePicture ? local + 'person/' + user.profilePicture : ''
-                        }
+                        crossOrigin="anonymous"
+                        src={local + 'person/' + user?.profilePicture}
                     />
                 </Link>
+
                 <div>
                     <Flex style={{ padding: '0px 12px' }} vertical>
                         <Link
@@ -135,10 +140,10 @@ export default function ContentFeed(post: IProp) {
             <p className={cx('desc')}>{post.desc}</p>
             {post.img && (
                 <Image
-                    src={local + '/post/' + post.img}
                     height={500}
                     width={'calc(100% + 24px)'}
                     rootClassName={cx('image')}
+                    src={local + 'post/' + post.img}
                 />
             )}
             <Flex justify="space-between" className={cx('')}>

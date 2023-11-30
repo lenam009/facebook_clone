@@ -16,6 +16,7 @@ import {
 import { IUser } from '@/api/userApi';
 import postApi from '@/api/postApi';
 import axios from 'axios';
+const local = process.env.REACT_APP_PUBLIC_FOLDER_IMAGE;
 
 const cx = classNames.bind(styles);
 
@@ -56,6 +57,7 @@ export default function Share({ user }: IProp) {
         messageApi.open({
             type: 'success',
             content: 'Đăng bài viết thành công',
+            duration: 1,
         });
     };
 
@@ -104,11 +106,12 @@ export default function Share({ user }: IProp) {
                 <div className={cx('wrapper-input')}>
                     <Flex>
                         <Avatar
+                            crossOrigin="anonymous"
                             icon={<UserOutlined />}
                             size={'large'}
                             src={
                                 user?.profilePicture
-                                    ? '/assets/person/' + user.profilePicture
+                                    ? local + 'person/' + user.profilePicture
                                     : ''
                             }
                         />

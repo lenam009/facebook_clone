@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './LeftBar.module.scss';
+import { useEffect, useState } from 'react';
 
 import { Button, Divider } from 'antd';
 import {
@@ -18,6 +19,8 @@ import ButtonItemLeftBar from '@/components/Button/ButtonItemLeftBar';
 import AccountItem from '@/components/AccountItem';
 import { IProps } from '@/components/Button/ButtonItemLeftBar';
 import { Users } from '@/data/dataFacebook';
+import { IUser } from '@/api/userApi';
+import userApi from '@/api/userApi';
 
 const cx = classNames.bind(styles);
 
@@ -61,6 +64,15 @@ const items: IProps[] = [
 ];
 
 export default function LeftBar() {
+    const [user, setUser] = useState<IUser[] | null>([]);
+
+    // const user = useAppSelector(getUserCurrentSelector);
+
+    useEffect(() => {
+        userApi.getAllUser().then((res: any) => setUser(res));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <div className={cx('wrapper')}>
             {items.map((x, index) => (
@@ -83,14 +95,10 @@ export default function LeftBar() {
                 />
             </div>
             <div>
-                {Users.map((x, index) => (
-                    <AccountItem
-                        key={index}
-                        avatar={'../' + x.profilePicture}
-                        name={x.username}
-                        shape={'square'}
-                    />
-                ))}
+                {user &&
+                    user.map((x, index) => (
+                        <AccountItem key={index} user={x} shape={'square'} />
+                    ))}
             </div>
         </div>
     );

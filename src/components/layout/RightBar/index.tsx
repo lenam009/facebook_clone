@@ -1,15 +1,27 @@
 import classNames from 'classnames/bind';
 import styles from './RightBar.module.scss';
+import { useEffect, useState } from 'react';
 
 import { Divider } from 'antd';
 
 import ButtonRightBarAd from '@/components/Button/ButtonRightBarAd';
 import AccountItem from '@/components/AccountItem';
 import { Users } from '@/data/dataFacebook';
+import { IUser } from '@/api/userApi';
+import userApi from '@/api/userApi';
 
 const cx = classNames.bind(styles);
 
 export default function RightBar() {
+    const [user, setUser] = useState<IUser[] | null>([]);
+
+    // const user = useAppSelector(getUserCurrentSelector);
+
+    useEffect(() => {
+        userApi.getAllUser().then((res: any) => setUser(res));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <div className={cx('wrapper')}>
             <h3 style={{ fontWeight: 650, color: 'rgba(22,24,35,0.65)' }}>Được tài trợ</h3>
@@ -31,15 +43,10 @@ export default function RightBar() {
                 Những người bạn đang online
             </h3>
             <div style={{ marginLeft: '-16px' }}>
-                {Users.map((x, index) => (
-                    <AccountItem
-                        key={index}
-                        avatar={'../' + x.profilePicture}
-                        name={x.username}
-                        size={'large'}
-                        online={true}
-                    />
-                ))}
+                {user &&
+                    user.map((x, index) => (
+                        <AccountItem user={x} size={'large'} online={true} />
+                    ))}
             </div>
         </div>
     );

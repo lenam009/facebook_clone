@@ -1,19 +1,65 @@
 import classNames from 'classnames/bind';
 import styles from './RightBarProfile.module.scss';
-import { useAppSelector } from '@/redux/hook';
-import { getUserCurrentSelector } from '@/redux/userSlice';
+import { useState, useEffect } from 'react';
 
 import ButtonUserFriend from 'components/Button/ButtonUserFriend';
-import { Flex } from 'antd';
+import { getUserCurrentSelector } from '@/redux/userSlice';
+import { useAppSelector } from '@/redux/hook';
+import { Flex, Button, message } from 'antd';
+import { IUser } from '@/api/userApi';
+import userApi from '@/api/userApi';
 
 const cx = classNames.bind(styles);
 
-export default function RightBarProfile() {
-    const user = useAppSelector(getUserCurrentSelector);
+interface IProp {
+    user: IUser | null;
+}
+export default function RightBarProfile({ user = null }: IProp) {
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const userCurrent = useAppSelector(getUserCurrentSelector);
+    const [isFollow, setIsFollow] = useState<boolean>(false);
+
+    const error = () => {
+        messageApi.open({
+            type: 'error',
+            content: 'Follow thất bại',
+        });
+    };
+
+    const success = () => {
+        messageApi.open({
+            type: 'success',
+            content: 'Follow thành công',
+        });
+    };
+
+    useEffect(() => {
+        if (userCurrent && user && user._id)
+            setIsFollow(userCurrent?.followings.includes(user?._id));
+    }, []);
+
+    const handleOnClickFollowOrUnfollow = () => {
+        if (userCurrent && userCurrent._id && user && user._id) {
+            userApi
+                .followOrUnfollow(!isFollow, userCurrent?._id, user?._id)
+                .then(() => {
+                    success();
+                    setIsFollow(!isFollow);
+                })
+                .catch(() => error());
+        }
+    };
 
     return (
         <div style={{ width: '100%' }}>
+            {contextHolder}
             <div>
+                {user?._id !== userCurrent?._id && (
+                    <Button onClick={handleOnClickFollowOrUnfollow} type="primary">
+                        {isFollow ? 'Unfollow' : 'Follow'}
+                    </Button>
+                )}
                 <h3 style={{ fontSize: '2rem' }}>Thông tin người dùng</h3>
                 <p className={cx('content-user')}>
                     <span className={cx('label')}>Thành phố:&nbsp;</span>
@@ -37,10 +83,13 @@ export default function RightBarProfile() {
             <div style={{ marginTop: '24px' }}>
                 <h3 style={{ fontSize: '2rem' }}>Bạn của người dùng</h3>
                 <Flex wrap="wrap" style={{ marginLeft: '-8px' }}>
+                    {user?.followings.map((x) => (
+                        <ButtonUserFriend idUser={x} />
+                    ))}
+                    {/* <ButtonUserFriend idUser="6562c4fb86bb7cc1bef81959" />
                     <ButtonUserFriend />
                     <ButtonUserFriend />
-                    <ButtonUserFriend />
-                    <ButtonUserFriend />
+                    <ButtonUserFriend /> */}
                 </Flex>
             </div>
         </div>

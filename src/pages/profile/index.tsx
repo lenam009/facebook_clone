@@ -38,7 +38,7 @@ export default function Profile() {
                 <Row>
                     <Col span={17}>{user?.username && <Feed user={user} home={false} />}</Col>
                     <Col span={7}>
-                        <RightBarProfile />
+                        <RightBarProfile user={user} />
                     </Col>
                 </Row>
             </Col>

@@ -7,8 +7,8 @@ interface IUser {
     email: string;
     profilePicture: string;
     coverPicture: string;
-    followers: [];
-    followings: [];
+    followers: string[];
+    followings: string[];
     isAdmin: boolean;
     desc: string;
     city: string;
@@ -31,6 +31,28 @@ const userApi = {
             })
             .then((response) => response)
             .catch(() => console.log('Error GetOneUser'));
+    },
+
+    getAllUser() {
+        const url = 'user/getall';
+
+        return axiosCreate
+            .get(url)
+            .then((response) => response)
+            .catch(() => console.log('Error GetAllUser'));
+    },
+
+    followOrUnfollow(isfollow: boolean, userid: string, userIdFollowed: string) {
+        const follow = isfollow ? 'follow' : 'unfollow';
+
+        const url = 'user/' + userIdFollowed + '/' + follow;
+
+        return axiosCreate
+            .put(url, {
+                _id: userid,
+            })
+            .then((response) => response)
+            .catch(() => console.log('Error FollowOrUnfollow'));
     },
 };
 
