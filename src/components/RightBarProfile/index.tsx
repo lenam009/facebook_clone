@@ -6,15 +6,14 @@ import ButtonUserFriend from 'components/Button/ButtonUserFriend';
 import { getUserCurrentSelector } from '@/redux/userSlice';
 import { useAppSelector } from '@/redux/hook';
 import { Flex, Button, message } from 'antd';
-import { IUser } from '@/api/userApi';
-import userApi from '@/api/userApi';
+import userApi, { IUser } from '@/api/userApi';
 
 const cx = classNames.bind(styles);
 
 interface IProp {
     user: IUser | null;
 }
-export default function RightBarProfile({ user = null }: IProp) {
+export default function RightBarProfile({ user }: IProp) {
     const [messageApi, contextHolder] = message.useMessage();
 
     const userCurrent = useAppSelector(getUserCurrentSelector);

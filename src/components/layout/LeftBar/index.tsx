@@ -18,7 +18,6 @@ import {
 import ButtonItemLeftBar from '@/components/Button/ButtonItemLeftBar';
 import AccountItem from '@/components/AccountItem';
 import { IProps } from '@/components/Button/ButtonItemLeftBar';
-import { Users } from '@/data/dataFacebook';
 import { IUser } from '@/api/userApi';
 import userApi from '@/api/userApi';
 
