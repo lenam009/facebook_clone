@@ -109,11 +109,7 @@ export default function Share({ user }: IProp) {
                             crossOrigin="anonymous"
                             icon={<UserOutlined />}
                             size={'large'}
-                            src={
-                                user?.profilePicture
-                                    ? local + 'person/' + user.profilePicture
-                                    : ''
-                            }
+                            src={local + 'person/' + user?.profilePicture}
                         />
                         <Input
                             style={{ fontSize: '1.8rem' }}

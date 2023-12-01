@@ -31,7 +31,7 @@ export default function Walkpaper({ user }: IProps) {
                     crossOrigin="anonymous"
                     size={156}
                     icon={<UserOutlined />}
-                    src={user?.profilePicture ? local + 'person/' + user.profilePicture : ''}
+                    src={local + 'person/' + user?.profilePicture}
                 />
                 <h1 className={cx('name')}>{user?.username}</h1>
                 <p className={cx('desc')}>{user?.desc}</p>

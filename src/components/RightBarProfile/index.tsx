@@ -87,10 +87,6 @@ export default function RightBarProfile({ user = null }: IProp) {
                     {user?.followings.map((x) => (
                         <ButtonUserFriend idUser={x} />
                     ))}
-                    {/* <ButtonUserFriend idUser="6562c4fb86bb7cc1bef81959" />
-                    <ButtonUserFriend />
-                    <ButtonUserFriend />
-                    <ButtonUserFriend /> */}
                 </Flex>
             </div>
         </div>
