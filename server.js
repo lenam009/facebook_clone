@@ -52,29 +52,3 @@ const port = 8088;
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
-
-//.................................................Nhớ xóa
-// //Middleware cookie parser
-// app.use(cookieParser());
-
-// //Enable CORS Policy
-// app.use(cors());
-
-// //use middleware
-// app.use(
-//     express.urlencoded({
-//         extended: true,
-//     }),
-// ); //(form html post len server )
-// app.use(express.json()); //(form javascript len server )
-
-// serverMiddleware.cookie;
-// serverMiddleware.corsPolicy;
-// serverMiddleware.postHtml;
-
-// serverMiddleware.map((x, index) => {
-//     serverMiddleware[index]();
-// });
-
-// serverMiddleware.serverMiddleware;
-////................................................................Nhớ xóa

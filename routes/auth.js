@@ -8,8 +8,12 @@ router.post('/register', AuthController.register);
 
 router.post('/login', AuthController.login);
 
+router.get('/refresh', AuthController.refreshToken);
+
+router.get('/logout', authenticationMiddleware.checkToken, AuthController.logout);
+
 router.use((err, req, res, next) => {
-    res.status(500).json('Auth_Api: ' + err);
+    res.status(500).json({ service: 'Auth_Api', ...err });
 });
 
 module.exports = router;

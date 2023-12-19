@@ -35,12 +35,17 @@ class UserController {
     //DELETE /user/:_id
     delete(req, res, next) {
         //...Check admin
-        if (req.body._id === req.params._id || req.body.isAdmin) {
-            User.findByIdAndDelete(req.body._id)
-                .then((response) => res.status(200).json('Successful delete'))
-                .catch(() => next('Delete failed'));
+        if (req.body._id === req.params._id || req.user.isAdmin) {
+            // findByIdAndDelete............................
+            User.findById(req.body._id)
+                .then((response) =>
+                    res.status(200).json({ message: 'Successful delete' }),
+                )
+                .catch(() =>
+                    next({ message: 'Not found user', error: 'delete user failed' }),
+                );
         } else {
-            return next('You can delete only your account!');
+            return next({ message: 'You can delete only your account!' });
         }
     }
 

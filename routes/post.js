@@ -20,7 +20,7 @@ router.put('/:_id', PostController.update);
 router.put('/:_id/like', PostController.like);
 
 router.use((err, req, res, next) => {
-    res.status(500).json('Post_Api: ' + err);
+    res.status(500).json({ service: 'Post_Api', ...err });
 });
 
 module.exports = router;

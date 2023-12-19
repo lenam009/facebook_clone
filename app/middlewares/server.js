@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
+
 // const path = require('path');
 
 //Cookie parser
@@ -12,7 +13,28 @@ const cookie = (app) => {
 
 //Enable CORS Policy
 const corsPolicy = (app) => {
-    app.use(cors());
+    // app.use(cors());
+    const whitelist = ['http://localhost:3000', 'http://example2.com'];
+
+    app.options('*', cors());
+
+    const corsOptions = {
+        credentials: true,
+        // http://localhost:3000
+        origin: true,
+    };
+
+    app.use(cors(corsOptions));
+
+    app.use(function (req, res, next) {
+        res.header('Content-Type', 'application/json;charset=UTF-8');
+        res.header('Access-Control-Allow-Credentials', true);
+        res.header(
+            'Access-Control-Allow-Headers',
+            'Origin, X-Requested-With, Content-Type, Accept',
+        );
+        next();
+    });
 };
 
 //Parser json
@@ -58,11 +80,6 @@ const morganMethod = (app) => {
     app.use(morgan('common'));
 };
 
-//public/images
-const pathImages = (app, pathDirname, path) => {
-    app.use('/images', express.static(path.join(pathDirname, 'public/images')));
-};
-
 const serverMiddleware = [
     cookie,
     corsPolicy,
@@ -70,7 +87,6 @@ const serverMiddleware = [
     postHtml,
     helmetMethod,
     morganMethod,
-    // pathImages,
 ];
 
 module.exports = serverMiddleware;

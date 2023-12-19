@@ -1,21 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../app/controllers/UserController');
+const authenticationMiddleware = require('../app/middlewares/authentication');
 
 router.get('/', UserController.getOneUser);
 
-router.get('/getall', UserController.getall);
+router.get('/getall', authenticationMiddleware.checkToken, UserController.getall);
 
 router.put('/:_id', UserController.update);
 
-router.delete('/:_id', UserController.delete);
+router.delete(
+    '/:_id',
+    authenticationMiddleware.checkToken,
+    authenticationMiddleware.verifyAdminAuth,
+    UserController.delete,
+);
 
 router.put('/:_id/follow', UserController.follow);
 
 router.put('/:_id/unfollow', UserController.unfollow);
 
 router.use((err, req, res, next) => {
-    res.status(500).json('User_Api: ' + err);
+    res.status(500).json({ service: 'User_Api', ...err });
 });
 
 module.exports = router;
