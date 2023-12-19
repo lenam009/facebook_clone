@@ -9,7 +9,14 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 import routes from '@/config/routes';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { setUser, setIsFetching, getIsFetching } from '@/redux/userSlice';
+import {
+    setUser,
+    setIsFetching,
+    getIsFetching,
+    registerStart,
+    registerSuccess,
+    registerFailed,
+} from '@/redux/userSlice';
 import authApi from '@/api/authApi';
 
 const cx = classNames.bind(styles);
@@ -34,20 +41,19 @@ export default function Register() {
         });
     };
     const handleOnSubmit = (values: any, { resetForm }: any) => {
-        dispatch(setIsFetching(true));
+        dispatch(registerStart());
         const fetchLogin = async () => {
-            console.log(123);
             const data = await authApi.register(
                 values.email,
                 values.password,
                 values.username,
             );
-            dispatch(setIsFetching(false));
             if (data && data.user) {
-                dispatch(setUser(data.user));
+                dispatch(registerSuccess());
                 resetForm();
                 success();
             } else {
+                dispatch(registerFailed());
                 error();
             }
         };

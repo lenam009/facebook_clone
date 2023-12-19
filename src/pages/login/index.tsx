@@ -10,7 +10,14 @@ import { Spin } from 'antd';
 
 import routes from '@/config/routes';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { setUser, setIsFetching, getIsFetching } from '@/redux/userSlice';
+import {
+    setUser,
+    setIsFetching,
+    getIsFetching,
+    loginStart,
+    loginSuccess,
+    loginFailed,
+} from '@/redux/userSlice';
 import authApi from '@/api/authApi';
 
 const cx = classNames.bind(styles);
@@ -24,24 +31,20 @@ export default function Login() {
 
     const navigate = useNavigate();
 
-    const error = () => {
-        messageApi.open({
-            type: 'error',
-            content: ' Sai email hoặc mật khẩu !!!',
-        });
-    };
-
     const handleOnSubmit = (values: any) => {
-        dispatch(setIsFetching(true));
+        dispatch(loginStart());
 
         const fetchLogin = async () => {
             const data = await authApi.login(values.email, values.password);
-            dispatch(setIsFetching(false));
+
             if (data && data.user) {
-                dispatch(setUser(data.user));
-                navigate(routes.home);
+                dispatch(loginSuccess(data.user));
+                localStorage.setItem('refresh_token', data.user.refresh_token!);
+                // Cookie.
+                navigate(routes.users);
             } else {
-                error();
+                dispatch(loginFailed());
+                message.error('Sai email hoặc mật khẩu !!!');
             }
         };
 

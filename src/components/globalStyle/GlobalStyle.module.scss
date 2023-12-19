@@ -1,3 +1,8 @@
+a[href] {
+    color: unset;
+    text-decoration: unset;
+}
+
 :root {
     --height-header: 56px;
     --width-feed-content: 625px;
@@ -18,6 +23,15 @@ body {
     line-height: 1.5;
     text-rendering: optimizeSpeed;
     overflow-y: overlay;
+}
+
+html,
+body {
+    min-height: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 //Scrollbar

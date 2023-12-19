@@ -1,6 +1,8 @@
 import axiosCreate from '.';
 
 interface IUser {
+    access_token?: string;
+    refresh_token?: string;
     _id?: string;
     username: string;
     password: string;

@@ -8,6 +8,7 @@ import Register from './pages/register';
 import DefaultLayout from 'components/layout/DefaultLayout';
 import { useAppSelector } from '@/redux/hook';
 import { getUserCurrentSelector } from '@/redux/userSlice';
+import UsersPage from './pages/users';
 
 function App() {
     let user = useAppSelector(getUserCurrentSelector);
@@ -35,6 +36,14 @@ function App() {
                         element={
                             <DefaultLayout>
                                 <Profile />
+                            </DefaultLayout>
+                        }
+                    />
+                    <Route
+                        path={routes.users}
+                        element={
+                            <DefaultLayout>
+                                <UsersPage />
                             </DefaultLayout>
                         }
                     />

@@ -77,7 +77,7 @@ export default function Share({ user }: IProp) {
                     const data = new FormData();
 
                     data.append('file', file);
-                    data.append('name', filename);
+                    // data.append('name', filename);
 
                     await axios
                         .post('http://localhost:8088/api/upload', data)
