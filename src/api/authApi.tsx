@@ -14,10 +14,16 @@ const authApi = {
         const url = 'auth/login';
 
         return axiosCreate
-            .post(url, {
-                email,
-                password,
-            })
+            .post(
+                url,
+                {
+                    email,
+                    password,
+                },
+                {
+                    withCredentials: true,
+                },
+            )
             .then((response) => response)
             .catch(() => console.log('Error login')) as Promise<IAuth>;
     },

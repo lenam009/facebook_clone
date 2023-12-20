@@ -1,25 +1,21 @@
 import axios from 'axios';
-import { AxiosInstance } from 'axios';
+import { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '@/redux/hook';
 import { getUserCurrentSelector } from '@/redux/userSlice';
 import { jwtDecode } from 'jwt-decode';
-import { useEffect, useRef } from 'react';
 
-const axiosCreate: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:8088/api/',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
+export const AxiosWrapper = () => {
+    const axiosInstance = useRef(axios.create());
 
-const AxiosRequestHandler = ({ children }: { children: any }) => {
     const currentUser = useAppSelector(getUserCurrentSelector);
 
     const currentUserRef = useRef(currentUser);
 
     useEffect(() => {
-        const responseInterceptor = axiosCreate.interceptors.request.use(
-            async function (config) {
+        const requestInterceptor = axiosInstance.current.interceptors.request.use(
+            async (config) => {
+                // Thực hiện các thao tác khác trước khi gửi request
+
                 if (currentUserRef && currentUserRef.current) {
                     const currentDate = new Date();
                     const decodeAccessToken = jwtDecode(currentUserRef.current.access_token!);
@@ -27,13 +23,13 @@ const AxiosRequestHandler = ({ children }: { children: any }) => {
                     console.log('currentUser', currentUser);
 
                     if (decodeAccessToken.exp! < currentDate.getTime() / 1000) {
-                        const data = await axiosCreate
+                        const data = await axios
                             .get('auth/refresh', {
                                 withCredentials: true,
                             })
                             .then((res) => {
                                 console.log('res', res);
-                                // config.header['token'] = 'Bearer ${res.access_token}';
+                                // config.header['token'] = 'Bearer ${}';
                                 // return res;
                             })
                             .catch((error) => {
@@ -47,31 +43,27 @@ const AxiosRequestHandler = ({ children }: { children: any }) => {
 
                 return config;
             },
-            function (error) {
+            (error) => {
                 return Promise.reject(error);
             },
         );
 
-        return () => {
-            axiosCreate.interceptors.request.eject(responseInterceptor);
-        };
-    }, [currentUserRef.current]);
+        const responseInterceptor = axiosInstance.current.interceptors.response.use(
+            (response) => {
+                // Thực hiện các thao tác khác sau khi nhận được response
+                return response;
+            },
+            (error) => {
+                return Promise.reject(error);
+            },
+        );
 
-    useEffect(() => {
-        currentUserRef.current = currentUser;
+        // Cleanup function để loại bỏ interceptor khi component unmount
+        return () => {
+            axiosInstance.current.interceptors.request.eject(requestInterceptor);
+            axiosInstance.current.interceptors.response.eject(responseInterceptor);
+        };
     }, [currentUser]);
 
-    return children;
+    return { axiosInstance: axiosInstance.current };
 };
-
-axiosCreate.interceptors.response.use(
-    function (response) {
-        return response.data;
-    },
-    function (error) {
-        return Promise.reject(error.response.data);
-    },
-);
-
-export default axiosCreate;
-export { AxiosRequestHandler };
