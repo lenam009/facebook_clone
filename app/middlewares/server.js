@@ -14,27 +14,26 @@ const cookie = (app) => {
 //Enable CORS Policy
 const corsPolicy = (app) => {
     // app.use(cors());
-    const whitelist = ['http://localhost:3000', 'http://example2.com'];
+    // const whitelist = ['http://localhost:3000', 'http://example2.com'];
 
-    app.options('*', cors());
+    // app.options('*', cors());
 
     const corsOptions = {
         credentials: true,
-        // http://localhost:3000
-        origin: true,
+        origin: 'http://localhost:3000',
     };
 
     app.use(cors(corsOptions));
 
-    app.use(function (req, res, next) {
-        res.header('Content-Type', 'application/json;charset=UTF-8');
-        res.header('Access-Control-Allow-Credentials', true);
-        res.header(
-            'Access-Control-Allow-Headers',
-            'Origin, X-Requested-With, Content-Type, Accept',
-        );
-        next();
-    });
+    // app.use(function (req, res, next) {
+    //     res.header('Content-Type', 'application/json;charset=UTF-8');
+    //     res.header('Access-Control-Allow-Credentials', true);
+    //     res.header(
+    //         'Access-Control-Allow-Headers',
+    //         'Origin, X-Requested-With, Content-Type, Accept',
+    //     );
+    //     next();
+    // });
 };
 
 //Parser json
@@ -81,8 +80,8 @@ const morganMethod = (app) => {
 };
 
 const serverMiddleware = [
-    cookie,
     corsPolicy,
+    cookie,
     jsonParser,
     postHtml,
     helmetMethod,

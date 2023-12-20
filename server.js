@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 const routes = require('./routes');
 const connect_db = require('./app/connect_db');
@@ -28,12 +29,6 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 //Middleware server
 serverMiddleware.map((x) => x(app));
-
-// app.all('/images', function (req, res, next) {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-//     next();
-// });
 
 //Config .env
 dotenv.config();

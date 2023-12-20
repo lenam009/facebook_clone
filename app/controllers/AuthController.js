@@ -9,7 +9,7 @@ const generateAccessToken = (user) => {
         { _id: user._id, isAdmin: user.isAdmin },
         process.env.ACCESS_KEY,
         {
-            expiresIn: '7d',
+            expiresIn: '3s',
         },
     );
 
@@ -96,8 +96,8 @@ class AuthController {
                 //Lưu refresh_token vào cookie...
                 res.cookie('refresh_token', refresh_token, {
                     httpOnly: true,
-                    secure: false,
-                    sameSite: 'strict',
+                    secure: true,
+                    sameSite: 'none',
                     path: '/',
                 });
 
