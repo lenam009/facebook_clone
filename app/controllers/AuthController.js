@@ -34,6 +34,7 @@ class AuthController {
         const salt = await bcrypt.genSalt(10);
         const hassPassword = await bcrypt.hash(req.body.password, salt).catch(() =>
             next({
+                statusCode: 500,
                 successful: false,
                 message: 'Create hash password failed',
             }),
@@ -45,15 +46,19 @@ class AuthController {
             .then((response) => {
                 const { password, ...payloads } = response._doc;
                 return res.status(200).json({
-                    successful: true,
-                    user: payloads,
+                    statusCode: 201,
+                    message: 'Login successfully',
+                    data: {
+                        _id: response._id,
+                        createdAt: response.createdAt,
+                    },
                 });
             })
             .catch((error) =>
                 next({
-                    successful: false,
-                    message: 'Email đã tồn tại!',
-                    error,
+                    statusCode: 400,
+                    message: `Email ${req.body.email} is exists. Please register another email.`,
+                    error: 'Bad request',
                 }),
             );
     }
@@ -65,16 +70,18 @@ class AuthController {
         const user = await User.findOne({ email: req.body.email })
             .then((response) => {
                 if (!response)
-                    return res.status(404).json({
-                        email: false,
-                        message: 'Email ko chính xác!',
+                    return res.status(401).json({
+                        statusCode: 401,
+                        message: 'Email not correct!',
+                        error: 'Unauthorized',
                     });
                 return response;
             })
             .catch((error) =>
                 next({
-                    successful: false,
-                    error,
+                    statusCode: 401,
+                    message: 'Login email failed',
+                    error: 'Unauthorized',
                 }),
             );
 
@@ -83,9 +90,10 @@ class AuthController {
             .compare(req.body.password, user.password)
             .then((result) => {
                 if (!result)
-                    return res.status(403).json({
-                        password: false,
-                        message: 'Password ko chính xác!',
+                    return res.status(401).json({
+                        statusCode: 401,
+                        message: 'Password not correct!',
+                        error: 'Unauthorized',
                     });
 
                 const access_token = generateAccessToken(user);
@@ -102,14 +110,17 @@ class AuthController {
                 });
 
                 const { password, ...payloads } = user._doc;
-                return res.status(200).json({
-                    successful: true,
-                    user: { access_token, refresh_token, ...payloads },
+                return res.status(201).json({
+                    statusCode: 201,
+                    message: 'Login successfully',
+                    data: { access_token, refresh_token, ...payloads },
                 });
             })
             .catch((error) =>
                 next({
-                    successful: false,
+                    statusCode: 401,
+                    message: 'Login password failed',
+                    error: 'Unauthorized',
                 }),
             );
     }
@@ -121,7 +132,13 @@ class AuthController {
         res.clearCookie('refresh_token');
         refreshTokenArray = refreshTokenArray.filter((x) => x !== refresh_token);
 
-        return res.status(200).json({ message: 'Logout successfully' });
+        return res.status(200).json({
+            statusCode: 200,
+            message: 'Logout successfully',
+            data: {
+                message: 'Logout successfully',
+            },
+        });
     }
 
     //GET /auth/refresh
@@ -131,10 +148,18 @@ class AuthController {
         if (refresh_token) {
             jwt.verify(refresh_token, process.env.REFRESH_KEY, (error, user) => {
                 if (error) {
-                    return res.status(401).json({ message: "You're not authenticated" });
+                    return res.status(401).json({
+                        statusCode: 401,
+                        message: "You're not authenticated",
+                        error: 'Unauthorized',
+                    });
                 }
                 if (!refreshTokenArray.includes(refresh_token)) {
-                    return res.status(403).json({ message: 'Refresh token invalid' });
+                    return res.status(403).json({
+                        statusCode: 403,
+                        message: 'Refresh token invalid',
+                        error: 'Unauthorized',
+                    });
                 }
 
                 refreshTokenArray = refreshTokenArray.filter((x) => x !== refresh_token);
@@ -150,12 +175,20 @@ class AuthController {
                 });
 
                 return res.status(201).json({
+                    statusCode: 201,
                     message: 'Refresh token successfully',
-                    access_token: new_access_token,
+                    data: {
+                        access_token: new_access_token,
+                        refresh_token: new_refresh_token,
+                    },
                 });
             });
         } else {
-            res.status(401).json({ message: "You're not authenticated" });
+            res.status(401).json({
+                statusCode: 401,
+                message: "You're not authenticated because not exists refresh_token",
+                error: 'Unauthorized',
+            });
         }
     }
 }

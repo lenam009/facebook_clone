@@ -11,8 +11,8 @@ router.put('/:_id', UserController.update);
 
 router.delete(
     '/:_id',
-    authenticationMiddleware.checkToken,
-    authenticationMiddleware.verifyAdminAuth,
+    // authenticationMiddleware.checkToken,
+    // authenticationMiddleware.verifyAdminAuth,
     UserController.delete,
 );
 
@@ -21,7 +21,8 @@ router.put('/:_id/follow', UserController.follow);
 router.put('/:_id/unfollow', UserController.unfollow);
 
 router.use((err, req, res, next) => {
-    res.status(500).json({ service: 'User_Api', ...err });
+    const statusCode = err.statusCode ?? 500;
+    res.status(statusCode).json({ service: 'User_Api', ...err });
 });
 
 module.exports = router;

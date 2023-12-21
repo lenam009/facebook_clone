@@ -13,7 +13,8 @@ router.get('/refresh', AuthController.refreshToken);
 router.get('/logout', authenticationMiddleware.checkToken, AuthController.logout);
 
 router.use((err, req, res, next) => {
-    res.status(500).json({ service: 'Auth_Api', ...err });
+    const statusCode = err.statusCode ?? 500;
+    res.status(statusCode).json({ service: 'Auth_Api', ...err });
 });
 
 module.exports = router;

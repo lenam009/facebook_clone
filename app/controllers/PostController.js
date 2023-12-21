@@ -10,91 +10,256 @@ class PostController {
     //GET /post/:_id
     getOnePost(req, res, next) {
         Post.findById(req.params._id)
-            .then((response) => res.json(response))
-            .catch(() => next('Get one post failed'));
+            .then((response) =>
+                res.status(200).json({
+                    statusCode: 200,
+                    message: 'Get post successfully',
+                    data: {
+                        ...response._doc,
+                    },
+                }),
+            )
+            .catch(() =>
+                next({
+                    statusCode: 404,
+                    message: 'Not found user',
+                    error: 'Not found user',
+                }),
+            );
     }
 
     //GET(Chỉ nhận bài post của các user mà mình đã theo dõi) /post/timeline/:userId
     async getPostByFollowing(req, res, next) {
         const user = await User.findById(req.params.userId).catch(() => null);
-        if (!user) return next('Get user failed');
+        if (!user)
+            return next({
+                statusCode: 500,
+                message: 'Get user failed',
+                error: 'Get user failed',
+            });
+
         const postUser = await Post.find({ userId: user._id }).catch(() => null);
-        if (!postUser) return next('Get postUser failed');
+        if (!postUser)
+            return next({
+                statusCode: 500,
+                message: 'Get postUser failed',
+                error: 'Get postUser failed',
+            });
+
+        console.log(user);
+
         let postArray = [];
-        return await Promise.all(user.followings.map((x) => Post.find({ userId: x })))
+        return await Promise.all(user.followings.map((x) => Post.find({ userId: x._id })))
             .then((response) => {
                 postArray = postArray.concat(...response, ...postUser);
-                return res.status(200).json(postArray);
+                return res.status(200).json({
+                    statusCode: 200,
+                    message: 'Get post by following successfully',
+                    data: {
+                        meta: {
+                            current: 0,
+                            pageSize: 0,
+                            pages: 0,
+                            total: 0,
+                        },
+                        posts: postArray,
+                    },
+                });
             })
-            .catch(() => next('Get timeline failed'));
+            .catch(() =>
+                next({
+                    statusCode: 500,
+                    message: 'Get timeline failed',
+                    error: 'Get timeline failed',
+                }),
+            );
     }
 
     //GET(Chỉ nhận bài post của user có name tương ứng) /post/profile/:username
     async getPostByUsername(req, res, next) {
         const user = await User.findOne({ username: req.params.username })
             .then((response) => response)
-            .catch(() => next('Get user by username failed'));
+            .catch(() =>
+                next({
+                    statusCode: 500,
+                    message: 'Get user by username failed',
+                    error: 'Get user by username failed',
+                }),
+            );
 
         Post.find({ userId: user._id })
-            .then((response) => res.json(response))
-            .catch(() => next('Get posts by username failed'));
+            .then((response) =>
+                res.status(200).json({
+                    statusCode: 200,
+                    message: 'Get post by username successfully',
+                    data: {
+                        meta: {
+                            current: 0,
+                            pageSize: 0,
+                            pages: 0,
+                            total: 0,
+                        },
+                        posts: response,
+                    },
+                }),
+            )
+            .catch(() =>
+                next({
+                    statusCode: 500,
+                    message: 'Get posts by username failed',
+                    error: 'Get posts by username failed',
+                }),
+            );
     }
 
     //POST /post
     create(req, res, next) {
         Post.create(req.body)
-            .then((response) => res.status(200).json(response))
-            .catch(() => next('Create post failed'));
+            .then((response) =>
+                res.status(201).json({
+                    statusCode: 201,
+                    message: 'Create a post successfully',
+                    data: {
+                        ...response._doc,
+                    },
+                }),
+            )
+            .catch(() =>
+                next({
+                    statusCode: 500,
+                    message: 'Create post failed',
+                    error: 'Create post failed',
+                }),
+            );
     }
 
     //DELETE /post/:id
     async delete(req, res, next) {
         const post = await Post.findById(req.params._id).catch(() =>
-            next('Get post by id failed'),
+            next({
+                statusCode: 404,
+                message: 'Not found user',
+                error: 'Not found user',
+            }),
         );
         if (post.userId === req.body.userId) {
             post.deleteOne()
-                .then((response) => res.status(200).json('Delete post successful'))
-                .catch(() => next('Delete post failed'));
+                .then((response) =>
+                    res.status(200).json({
+                        statusCode: 200,
+                        message: 'Delete post successful',
+                        data: {
+                            ...response,
+                        },
+                    }),
+                )
+                .catch(() =>
+                    next({
+                        statusCode: 500,
+                        message: 'Delete post failed',
+                        error: 'Delete post failed',
+                    }),
+                );
         } else {
-            return res.status(403).json('You can only delete your post');
+            return res.status(401).json({
+                statusCode: 401,
+                message: 'You can only delete your post',
+                error: 'You can only delete your post',
+            });
         }
     }
 
-    //PUT /post/:id
+    //PUT /post/:_id
     async update(req, res, next) {
         const post = await Post.findById(req.params._id).catch(() =>
-            next('Get post by id failed'),
+            next({
+                statusCode: 404,
+                message: 'Not found user',
+                error: 'Not found user',
+            }),
         );
-        if (post.userId === req.body.userId) {
+
+        console.log('post', post);
+
+        if (post?.userId === req.body.userId) {
             post.updateOne(req.body)
-                .then((response) => res.status(200).json('Update post successful'))
+                .then((response) =>
+                    res.status(200).json({
+                        statusCode: 200,
+                        message: 'Update post successful',
+                        data: {
+                            ...response,
+                        },
+                    }),
+                )
                 .catch(() => next('Update post failed'));
         } else {
-            return res.status(403).json('You can only update your post');
+            return res.status(401).json({
+                statusCode: 401,
+                message: 'You can only update your post',
+                error: 'You can only update your post',
+            });
         }
     }
 
     //PUT(Like Or Dislike) /post/:id/like
     async like(req, res, next) {
         const post = await Post.findById(req.params._id).catch(() =>
-            next('Get post by id failed'),
+            next({
+                statusCode: 404,
+                message: 'Not found user',
+                error: 'Not found user',
+            }),
         );
         if (!post.likes.includes(req.body.userId)) {
             post.updateOne({ $push: { likes: req.body.userId } })
-                .then((response) => res.status(200).json('The post have been liked'))
-                .catch(() => next('Like post failed'));
+                .then((response) =>
+                    res.status(200).json({
+                        statusCode: 200,
+                        message: 'Like post successful',
+                        data: {
+                            ...response,
+                        },
+                    }),
+                )
+                .catch(() =>
+                    next({
+                        statusCode: 500,
+                        message: 'Like post failed',
+                        error: 'Like post failed',
+                    }),
+                );
         } else {
             post.updateOne({ $pull: { likes: req.body.userId } })
-                .then((response) => res.status(200).json('The post have been disliked'))
-                .catch(() => next('Dislike post failed'));
+                .then((response) =>
+                    res.status(200).json({
+                        statusCode: 200,
+                        message: 'Disliked post successful',
+                        data: {
+                            ...response,
+                        },
+                    }),
+                )
+                .catch(() =>
+                    next({
+                        statusCode: 500,
+                        message: 'Dislike post failed',
+                        error: 'Dislike post failed',
+                    }),
+                );
         }
     }
 
-    uploadImage(req, res, next) {
+    uploadFile(req, res, next) {
         // console.log('req.file', req.file);
         // console.log('req.body', req.body);
-        return res.status(200).json({ message: 'Success', filename: req.file.filename });
+        return res.status(201).json({
+            statusCode: 201,
+            message: 'Upload file successfully',
+            data: {
+                filename: req.file.filename,
+            },
+        });
     }
 }
 
