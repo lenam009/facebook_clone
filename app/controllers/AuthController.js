@@ -9,7 +9,7 @@ const generateAccessToken = (user) => {
         { _id: user._id, isAdmin: user.isAdmin },
         process.env.ACCESS_KEY,
         {
-            expiresIn: '3s',
+            expiresIn: '7d',
         },
     );
 

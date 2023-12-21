@@ -90,6 +90,12 @@ class PostController {
                 .catch(() => next('Dislike post failed'));
         }
     }
+
+    uploadImage(req, res, next) {
+        // console.log('req.file', req.file);
+        // console.log('req.body', req.body);
+        return res.status(200).json({ message: 'Success', filename: req.file.filename });
+    }
 }
 
 module.exports = new PostController();

@@ -21,13 +21,13 @@ class UserController {
                       const { password, ...payloads } = user._doc;
                       return res.status(200).json(payloads);
                   })
-                  .catch(() => next('Get one user failed'))
+                  .catch(() => next({ message: 'Get one user failed' }))
             : await User.findOne({ username: username })
                   .then((user) => {
                       const { password, ...payloads } = user._doc;
                       return res.status(200).json(payloads);
                   })
-                  .catch(() => next('Get one user failed'));
+                  .catch(() => next({ message: 'Get one user failed' }));
         // const { password, ...payloads } = data._doc;
         // return res.status(200).json(payloads);
     }
