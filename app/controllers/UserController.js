@@ -6,6 +6,7 @@ class UserController {
     //GET /user/getall
     getall(req, res, next) {
         User.find()
+            .sort({ updatedAt: 'desc' })
             .then((users) =>
                 res.status(200).json({
                     statusCode: 200,
@@ -76,22 +77,32 @@ class UserController {
 
     //DELETE /user/:_id
     delete(req, res, next) {
+        const user = req.user;
         //...Check admin
-        if (req.body._id === req.params._id || req.user.isAdmin) {
-            // findByIdAndDelete............................
-            User.findByIdAndDelete(req.body._id)
-                .then((response) =>
-                    res.status(200).json({
+        // req.body._id === req.params._id || req.user.isAdmin
+        if (true) {
+            console.log(req.params._id);
+            User.findById(req.params._id)
+                .then((response) => {
+                    if (!response) {
+                        return next({
+                            statusCode: 404,
+                            message: 'Not found user to delete',
+                            error: 'Not found user to delete',
+                        });
+                    }
+
+                    return res.status(200).json({
                         statusCode: 200,
                         message: 'Delete successfully',
                         data: { deletedCount: 1 },
-                    }),
-                )
+                    });
+                })
                 .catch(() =>
                     next({
                         statusCode: 404,
-                        message: 'Not found user',
-                        error: 'Not found user',
+                        message: 'Not found user to delete',
+                        error: 'Not found user to delete',
                     }),
                 );
         } else {
@@ -103,45 +114,42 @@ class UserController {
         }
     }
 
-    //PUT /user/:_id
+    //PUT /user
     async update(req, res, next) {
-        if (req.body._id === req.params._id || req.body.isAdmin) {
-            if (req.body.password) {
-                const saltRounds = 10;
-                const hassPassword = await bcrypt.hash(req.body.password, saltRounds);
-                req.body.password = hassPassword;
-            }
-            User.findByIdAndUpdate(req.body._id, req.body)
-                .then((response) =>
-                    res.status(200).json({
-                        statusCode: 200,
-                        message: 'Update successfully',
-                        data: { updatedCount: 1 },
-                    }),
-                )
-                .catch(() =>
-                    next({
-                        statusCode: 404,
-                        message: 'Not found user',
-                        error: 'Not found user',
-                    }),
-                );
-        } else {
-            return next({
-                statusCode: 401,
-                message: 'You can delete only your account!',
-                error: 'You can delete only your account!',
-            });
+        const user = req.user;
+        // user._id === req.params._id || user.isAdmin
+
+        if (req.body.password) {
+            const saltRounds = 10;
+            const hassPassword = await bcrypt.hash(req.body.password, saltRounds);
+            req.body.password = hassPassword;
         }
+        User.findByIdAndUpdate(user._id, req.body)
+            .then(() =>
+                res.status(200).json({
+                    statusCode: 200,
+                    message: 'Update successfully',
+                    data: { updatedCount: 1 },
+                }),
+            )
+            .catch(() =>
+                next({
+                    statusCode: 404,
+                    message: 'Not found user',
+                    error: 'Not found user',
+                }),
+            );
     }
 
     //PUT /user/:_id/follow
     async follow(req, res, next) {
-        if (req.body._id !== req.params._id || req.body.isAdmin) {
+        const userToken = req.user;
+
+        if (userToken._id !== req.params._id) {
             //Get 2 user follow và bị follow và current user là người phát request
             const users = await Promise.all([
                 User.findById(req.params._id),
-                User.findById(req.body._id),
+                User.findById(userToken._id),
             ])
                 .then((responses) => ({ user: responses[0], userCurrent: responses[1] }))
                 .catch({
@@ -152,13 +160,14 @@ class UserController {
             const { user, userCurrent } = users;
             //Xét 2 trường hợp đã follow hoặc chưa follow
             if (!userCurrent.followings.includes(user._id)) {
-                const userUpdate = user.updateOne({
-                    $push: { followers: userCurrent._id },
-                });
-                const userCurrentUpdate = userCurrent.updateOne({
-                    $push: { followings: user._id },
-                });
-                Promise.all([userUpdate, userCurrentUpdate])
+                Promise.all([
+                    user.updateOne({
+                        $push: { followers: userCurrent._id },
+                    }),
+                    userCurrent.updateOne({
+                        $push: { followings: user._id },
+                    }),
+                ])
                     .then(() =>
                         res.status(200).json({
                             statusCode: 200,
@@ -183,19 +192,21 @@ class UserController {
         } else {
             return next({
                 statusCode: 403,
-                message: 'You can not follow yourself',
-                error: 'You can not follow yourself',
+                message: "You can't follow yourself",
+                error: "You can't follow yourself",
             });
         }
     }
 
     //PUT /user/:_id/unfollow
     async unfollow(req, res, next) {
-        if (req.body._id !== req.params._id || req.body.isAdmin) {
+        const userToken = req.user;
+
+        if (userToken._id !== req.params._id) {
             //Get 2 user follow và bị follow và current user là người phát request
             const users = await Promise.all([
                 User.findById(req.params._id),
-                User.findById(req.body._id),
+                User.findById(userToken._id),
             ])
                 .then((responses) => ({ user: responses[0], userCurrent: responses[1] }))
                 .catch({
@@ -230,15 +241,15 @@ class UserController {
             } else {
                 return res.status(403).json({
                     statusCode: 403,
-                    message: 'You do not follow this user',
-                    error: 'You do not follow this user',
+                    message: 'You already unfollow this user',
+                    error: 'You already unfollow this user',
                 });
             }
         } else {
             return next({
                 statusCode: 403,
-                message: 'You can not unfollow yourself',
-                error: 'You can not unfollow yourself',
+                message: "You can't unfollow yourself",
+                error: "You can't unfollow yourself",
             });
         }
     }

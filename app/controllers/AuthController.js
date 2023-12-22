@@ -5,8 +5,15 @@ var jwt = require('jsonwebtoken');
 let refreshTokenArray = [];
 
 const generateAccessToken = (user) => {
+    const { password, ...payload } = user;
     const access_token = jwt.sign(
-        { _id: user._id, isAdmin: user.isAdmin },
+        {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            followings: user.followings,
+        },
         process.env.ACCESS_KEY,
         {
             expiresIn: '7d',
@@ -17,13 +24,9 @@ const generateAccessToken = (user) => {
 };
 
 const generateRefreshToken = (user) => {
-    const refresh_token = jwt.sign(
-        { _id: user._id, isAdmin: user.isAdmin },
-        process.env.REFRESH_KEY,
-        {
-            expiresIn: '365d',
-        },
-    );
+    const refresh_token = jwt.sign({ _id: user._id }, process.env.REFRESH_KEY, {
+        expiresIn: '365d',
+    });
 
     return refresh_token;
 };
@@ -32,13 +35,15 @@ class AuthController {
     //POST /auth/register
     async register(req, res, next) {
         const salt = await bcrypt.genSalt(10);
-        const hassPassword = await bcrypt.hash(req.body.password, salt).catch(() =>
-            next({
+        const hassPassword = await bcrypt.hash(req.body.password, salt).catch(() => null);
+
+        if (!hassPassword) {
+            return next({
                 statusCode: 500,
                 successful: false,
                 message: 'Create hash password failed',
-            }),
-        );
+            });
+        }
 
         req.body.password = hassPassword;
 
@@ -54,7 +59,7 @@ class AuthController {
                     },
                 });
             })
-            .catch((error) =>
+            .catch(() =>
                 next({
                     statusCode: 400,
                     message: `Email ${req.body.email} is exists. Please register another email.`,
@@ -77,13 +82,15 @@ class AuthController {
                     });
                 return response;
             })
-            .catch((error) =>
-                next({
-                    statusCode: 401,
-                    message: 'Login email failed',
-                    error: 'Unauthorized',
-                }),
-            );
+            .catch(() => null);
+
+        if (!user) {
+            return next({
+                statusCode: 401,
+                message: 'Login email failed',
+                error: 'Unauthorized',
+            });
+        }
 
         //Check password
         bcrypt
@@ -116,7 +123,7 @@ class AuthController {
                     data: { access_token, refresh_token, ...payloads },
                 });
             })
-            .catch((error) =>
+            .catch(() =>
                 next({
                     statusCode: 401,
                     message: 'Login password failed',
@@ -136,7 +143,7 @@ class AuthController {
             statusCode: 200,
             message: 'Logout successfully',
             data: {
-                message: 'Logout successfully',
+                deletedCookie: true,
             },
         });
     }
@@ -144,7 +151,7 @@ class AuthController {
     //GET /auth/refresh
     refreshToken(req, res, next) {
         const refresh_token = req.cookies.refresh_token;
-        console.log(refresh_token);
+        // console.log(refresh_token);
         if (refresh_token) {
             jwt.verify(refresh_token, process.env.REFRESH_KEY, (error, user) => {
                 if (error) {
@@ -184,7 +191,7 @@ class AuthController {
                 });
             });
         } else {
-            res.status(401).json({
+            return res.status(401).json({
                 statusCode: 401,
                 message: "You're not authenticated because not exists refresh_token",
                 error: 'Unauthorized',

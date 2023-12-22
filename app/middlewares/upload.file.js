@@ -16,7 +16,7 @@ const getDestinationOfFile = (req) => {
     } else if (req.headers.target_type === 'image_person') {
         return 'public/images/person';
     } else if (req.headers.target_type === 'video') {
-        return 'public/video';
+        return 'public/videos';
     } else {
         return 'public/test';
     }
@@ -29,9 +29,8 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const type = getTypeOfFile(file);
-
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + '.' + type);
+        cb(null, uniqueSuffix + '.' + type);
     },
 });
 

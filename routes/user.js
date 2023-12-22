@@ -5,20 +5,24 @@ const authenticationMiddleware = require('../app/middlewares/authentication');
 
 router.get('/', UserController.getOneUser);
 
-router.get('/getall', authenticationMiddleware.checkToken, UserController.getall);
+router.get('/getall', UserController.getall);
 
-router.put('/:_id', UserController.update);
+router.put('/', authenticationMiddleware.checkToken, UserController.update);
 
 router.delete(
     '/:_id',
-    // authenticationMiddleware.checkToken,
-    // authenticationMiddleware.verifyAdminAuth,
+    authenticationMiddleware.checkToken,
+    authenticationMiddleware.verifyUserAuth,
     UserController.delete,
 );
 
-router.put('/:_id/follow', UserController.follow);
+router.put('/:_id/follow', authenticationMiddleware.checkToken, UserController.follow);
 
-router.put('/:_id/unfollow', UserController.unfollow);
+router.put(
+    '/:_id/unfollow',
+    authenticationMiddleware.checkToken,
+    UserController.unfollow,
+);
 
 router.use((err, req, res, next) => {
     const statusCode = err.statusCode ?? 500;

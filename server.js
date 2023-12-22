@@ -33,7 +33,7 @@ const path = require('path');
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 //path Video
-app.use('/video', express.static(path.join(__dirname, 'public/video')));
+app.use('/videos', express.static(path.join(__dirname, 'public/videos')));
 
 //Middleware server
 serverMiddleware.map((x) => x(app));

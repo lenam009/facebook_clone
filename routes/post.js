@@ -3,24 +3,34 @@ const router = express.Router();
 
 const upload = require('../app/middlewares/upload.file');
 const PostController = require('../app/controllers/PostController');
+const authenticationMiddleware = require('../app/middlewares/authentication');
 
 router.get('/', PostController.index);
 
-router.get('/timeline/:userId', PostController.getPostByFollowing);
+router.get(
+    '/timeline',
+    authenticationMiddleware.checkToken,
+    PostController.getPostByFollowing,
+);
 
 router.get('/profile/:username', PostController.getPostByUsername);
 
 router.get('/:_id', PostController.getOnePost);
 
-router.post('/', PostController.create);
+router.post('/', authenticationMiddleware.checkToken, PostController.create);
 
-router.post('/upload', upload.single('file'), PostController.uploadFile);
+router.post(
+    '/upload',
+    authenticationMiddleware.checkToken,
+    upload.single('file'),
+    PostController.uploadFile,
+);
 
-router.delete('/:_id', PostController.delete);
+router.delete('/:_id', authenticationMiddleware.checkToken, PostController.delete);
 
-router.put('/:_id', PostController.update);
+router.put('/:_id', authenticationMiddleware.checkToken, PostController.update);
 
-router.put('/:_id/like', PostController.like);
+router.put('/:_id/like', authenticationMiddleware.checkToken, PostController.like);
 
 router.use((err, req, res, next) => {
     const statusCode = err.statusCode ?? 500;

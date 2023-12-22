@@ -2,9 +2,32 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 
 class PostController {
-    //GET /post
+    //GET /post (Get all posts)
     index(req, res, next) {
-        res.json('index');
+        Post.find()
+            .sort({ updatedAt: 'desc' })
+            .then((posts) =>
+                res.status(200).json({
+                    statusCode: 200,
+                    message: 'Get all posts successfully',
+                    data: {
+                        meta: {
+                            current: 0,
+                            pageSize: 0,
+                            pages: 0,
+                            total: 0,
+                        },
+                        posts,
+                    },
+                }),
+            )
+            .catch(() =>
+                next({
+                    statusCode: 500,
+                    message: 'Get all posts failed',
+                    error: 'Get all posts failed',
+                }),
+            );
     }
 
     //GET /post/:_id
@@ -22,23 +45,19 @@ class PostController {
             .catch(() =>
                 next({
                     statusCode: 404,
-                    message: 'Not found user',
-                    error: 'Not found user',
+                    message: 'Not found post',
+                    error: 'Not found post',
                 }),
             );
     }
 
-    //GET(Chỉ nhận bài post của các user mà mình đã theo dõi) /post/timeline/:userId
+    //GET(Chỉ nhận bài post của các user mà mình đã theo dõi và của chính mình)
+    //                                                  /post/timeline/:userId
     async getPostByFollowing(req, res, next) {
-        const user = await User.findById(req.params.userId).catch(() => null);
-        if (!user)
-            return next({
-                statusCode: 500,
-                message: 'Get user failed',
-                error: 'Get user failed',
-            });
-
-        const postUser = await Post.find({ userId: user._id }).catch(() => null);
+        const user = req.user;
+        const postUser = await Post.find({ userId: user._id })
+            .sort({ updatedAt: 'desc' })
+            .catch(() => null);
         if (!postUser)
             return next({
                 statusCode: 500,
@@ -46,10 +65,12 @@ class PostController {
                 error: 'Get postUser failed',
             });
 
-        console.log(user);
-
         let postArray = [];
-        return await Promise.all(user.followings.map((x) => Post.find({ userId: x._id })))
+        return await Promise.all(
+            user.followings.map((x) =>
+                Post.find({ userId: x }).sort({ updatedAt: 'desc' }),
+            ),
+        )
             .then((response) => {
                 postArray = postArray.concat(...response, ...postUser);
                 return res.status(200).json({
@@ -79,15 +100,18 @@ class PostController {
     async getPostByUsername(req, res, next) {
         const user = await User.findOne({ username: req.params.username })
             .then((response) => response)
-            .catch(() =>
-                next({
-                    statusCode: 500,
-                    message: 'Get user by username failed',
-                    error: 'Get user by username failed',
-                }),
-            );
+            .catch(() => null);
+
+        if (!user) {
+            return next({
+                statusCode: 500,
+                message: 'Get user by username failed',
+                error: 'Get user by username failed',
+            });
+        }
 
         Post.find({ userId: user._id })
+            .sort({ updatedAt: 'desc' })
             .then((response) =>
                 res.status(200).json({
                     statusCode: 200,
@@ -114,7 +138,8 @@ class PostController {
 
     //POST /post
     create(req, res, next) {
-        Post.create(req.body)
+        const user = req.user;
+        Post.create({ userId: user._id, ...req.body })
             .then((response) =>
                 res.status(201).json({
                     statusCode: 201,
@@ -133,16 +158,21 @@ class PostController {
             );
     }
 
-    //DELETE /post/:id
+    //DELETE /post/:_id
     async delete(req, res, next) {
-        const post = await Post.findById(req.params._id).catch(() =>
-            next({
+        const user = req.user;
+
+        const post = await Post.findById(req.params._id).catch(() => null);
+
+        if (!post) {
+            return next({
                 statusCode: 404,
-                message: 'Not found user',
-                error: 'Not found user',
-            }),
-        );
-        if (post.userId === req.body.userId) {
+                message: 'Not found post to delete',
+                error: 'Not found post to delete',
+            });
+        }
+
+        if (post.userId === user._id) {
             post.deleteOne()
                 .then((response) =>
                     res.status(200).json({
@@ -171,17 +201,18 @@ class PostController {
 
     //PUT /post/:_id
     async update(req, res, next) {
-        const post = await Post.findById(req.params._id).catch(() =>
-            next({
+        const user = req.user;
+        const post = await Post.findById(req.params._id).catch(() => null);
+
+        if (!post) {
+            return next({
                 statusCode: 404,
-                message: 'Not found user',
-                error: 'Not found user',
-            }),
-        );
+                message: 'Not found post to update',
+                error: 'Not found post to update',
+            });
+        }
 
-        console.log('post', post);
-
-        if (post?.userId === req.body.userId) {
+        if (post.userId === user._id) {
             post.updateOne(req.body)
                 .then((response) =>
                     res.status(200).json({
@@ -192,7 +223,13 @@ class PostController {
                         },
                     }),
                 )
-                .catch(() => next('Update post failed'));
+                .catch(() =>
+                    next({
+                        statusCode: 500,
+                        message: 'Update post failed',
+                        error: 'Update post failed',
+                    }),
+                );
         } else {
             return res.status(401).json({
                 statusCode: 401,
@@ -204,19 +241,23 @@ class PostController {
 
     //PUT(Like Or Dislike) /post/:id/like
     async like(req, res, next) {
-        const post = await Post.findById(req.params._id).catch(() =>
-            next({
+        const user = req.user;
+        const post = await Post.findById(req.params._id).catch(() => null);
+
+        if (!post) {
+            return next({
                 statusCode: 404,
-                message: 'Not found user',
-                error: 'Not found user',
-            }),
-        );
-        if (!post.likes.includes(req.body.userId)) {
-            post.updateOne({ $push: { likes: req.body.userId } })
+                message: 'Not found post',
+                error: 'Not found post',
+            });
+        }
+
+        if (!post.likes.includes(user._id)) {
+            post.updateOne({ $push: { likes: user._id } })
                 .then((response) =>
                     res.status(200).json({
                         statusCode: 200,
-                        message: 'Like post successful',
+                        message: 'Like post successfully',
                         data: {
                             ...response,
                         },
@@ -230,11 +271,11 @@ class PostController {
                     }),
                 );
         } else {
-            post.updateOne({ $pull: { likes: req.body.userId } })
+            post.updateOne({ $pull: { likes: user._id } })
                 .then((response) =>
                     res.status(200).json({
                         statusCode: 200,
-                        message: 'Disliked post successful',
+                        message: 'Dislike post successfully',
                         data: {
                             ...response,
                         },
