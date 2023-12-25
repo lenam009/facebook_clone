@@ -3,6 +3,7 @@ import StyledComponentsRegistry from '@/lib/AntdRegistry';
 import NextAuthSessionWrapper from '@/lib/next.auth.wrapper';
 import NProgressWrapper from '@/lib/nprogress.wrapper';
 import './global.scss';
+import ReduxWrapper from '@/utils/redux/redux.wrapper';
 
 export const metadata = {
     title: 'Home',
@@ -13,13 +14,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en">
             <body>
-                <ThemeRegistry>
-                    <StyledComponentsRegistry>
+                <StyledComponentsRegistry>
+                    <ThemeRegistry>
                         <NProgressWrapper>
-                            <NextAuthSessionWrapper>{children}</NextAuthSessionWrapper>
+                            <NextAuthSessionWrapper>
+                                <ReduxWrapper>{children}</ReduxWrapper>
+                            </NextAuthSessionWrapper>
                         </NProgressWrapper>
-                    </StyledComponentsRegistry>
-                </ThemeRegistry>
+                    </ThemeRegistry>
+                </StyledComponentsRegistry>
             </body>
         </html>
     );

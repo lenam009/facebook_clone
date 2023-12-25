@@ -82,11 +82,6 @@ export default function ContentFeed(post: IPost) {
         // }
     };
 
-    console.log(
-        user?.profilePicture ? user.username : '',
-        user?.profilePicture ? local + 'person/' + user.profilePicture : '',
-    );
-
     return (
         <div className={styles['wrapper']}>
             <Button type="text" shape="circle" className={styles['btnMenu']}>
@@ -167,13 +162,13 @@ export default function ContentFeed(post: IPost) {
                         title={icons.map((x, index) => (
                             <Button
                                 key={index}
-                                style={{ padding: '0 6px' }}
+                                style={{ padding: '0' }}
                                 type="text"
                                 size="large"
                                 shape="circle"
                                 onClick={(e) => handleClickLike(e)}
                             >
-                                {x}
+                                <span style={{ fontSize: '2.2rem' }}>{x}</span>
                             </Button>
                         ))}
                     >

@@ -6,6 +6,7 @@ import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { sendRequest } from '@/utils/api';
 import dayjs from 'dayjs';
+import { handleSignInAction } from '@/utils/actions/actions';
 
 // const refreshToken = async (token: JWT) => {
 //     const res = await sendRequest<IBackendRes<ITrackTop[]>>({
@@ -45,7 +46,7 @@ export const authOptions: AuthOptions = {
             // e.g. domain, username, password, 2FA token, etc.
             // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
-                username: { label: 'Email', type: 'email', placeholder: 'Email...' },
+                email: { label: 'Email', type: 'email', placeholder: 'Email...' },
                 password: {
                     label: 'Password',
                     type: 'password',
@@ -53,21 +54,17 @@ export const authOptions: AuthOptions = {
                 },
             },
             async authorize(credentials, req) {
-                const user = await sendRequest<IBackendRes<JWT>>({
-                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login`,
-                    method: 'POST',
-                    body: {
-                        username: credentials?.username,
-                        password: credentials?.password,
-                    },
-                });
+                const userLogin = await handleSignInAction(
+                    credentials?.email!,
+                    credentials?.password!,
+                );
 
-                if (user && user.data) {
+                if (userLogin && userLogin.data) {
                     // Any object returned will be saved in `user` property of the JWT
-                    return user.data as any;
+                    return userLogin.data as any;
                 } else {
                     // If you return null then an error will be displayed advising the user to check their details.
-                    throw new Error(user?.message as string);
+                    throw new Error(userLogin?.message as string);
 
                     // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
                 }
@@ -86,6 +83,8 @@ export const authOptions: AuthOptions = {
     callbacks: {
         async jwt({ token, user, account, profile, trigger }) {
             const dsa = profile;
+
+            // GITHUB, GOOGLE
             if (trigger === 'signIn' && account?.provider !== 'credentials') {
                 const res = await sendRequest<IBackendRes<JWT>>({
                     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/social-media`,
@@ -99,16 +98,10 @@ export const authOptions: AuthOptions = {
                     token.access_token = res.data.access_token;
                     token.refresh_token = res.data.refresh_token;
                     token.user = res.data.user;
-
-                    // token.access_expire = dayjs(new Date())
-                    //     .add(
-                    //         +(process.env.TOKEN_EXPIRE_NUMBER as string),
-                    //         process.env.TOKEN_EXPIRE_UNIT as any,
-                    //     )
-                    //     .unix();
                 }
             }
 
+            //CREDENTIAL
             if (trigger === 'signIn' && account?.provider === 'credentials') {
                 if (token) {
                     token.access_token = user.access_token;
@@ -125,7 +118,7 @@ export const authOptions: AuthOptions = {
                 session.refresh_token = token.refresh_token;
                 session.user = token.user;
 
-                session.access_expire = token.access_expire;
+                // session.access_expire = token.access_expire;
             }
             return session;
         },

@@ -3,19 +3,20 @@ import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import { useState } from 'react';
 import Link from 'next/link';
+import AvatarCustom from '../Avatar/avatar.custom';
 
 // import { useNavigate } from 'react-router-dom';
 
 import { SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Row, Col, Flex, Button } from 'antd';
+import { useSession, signOut } from 'next-auth/react';
 
 import HeaderTabs from './HeaderTabs/tabs.header';
 import Search from './Search/search';
 import routes from '@/config/routes/routes';
 import { FetchDefaltImages } from '@/utils/fetchImage';
-// import { useAppSelector, useAppDispatch } from '@/redux/hook';
+
 // import { getUserCurrentSelector, setUser } from '@/redux/userSlice';
-import { handleFollowUserAction } from '@/utils/actions/actions';
 
 const cx = classNames.bind(styles);
 const local = process.env.REACT_APP_PUBLIC_FOLDER_IMAGE;
@@ -23,15 +24,16 @@ const local = process.env.REACT_APP_PUBLIC_FOLDER_IMAGE;
 export default function Header() {
     const [showInputSearch, setShowInputSearch] = useState<boolean>(false);
 
+    const { data: session } = useSession();
+
     // const user = useAppSelector(getUserCurrentSelector);
     // const dispatch = useAppDispatch();
 
     // const navigate = useNavigate();
 
-    // const handleOnClickLogout = () => {
-    //     dispatch(setUser(null));
-    //     return navigate(routes.login);
-    // };
+    const handleOnClickLogout = () => {
+        signOut();
+    };
 
     return (
         <header className={cx('header-container')}>
@@ -58,7 +60,7 @@ export default function Header() {
                 </Col>
                 <Col span={6} className={cx('header-right')}>
                     <Flex justify="end" align="center" style={{ height: '100%' }}>
-                        {/* {!user ? (
+                        {!session ? (
                             <Button style={{ marginRight: '12px' }}>
                                 <Link href={routes.login.path}>Đăng nhập</Link>
                             </Button>
@@ -69,30 +71,21 @@ export default function Header() {
                             >
                                 Đăng xuất
                             </Button>
-                        )} */}
+                        )}
 
-                        <Button style={{ marginRight: '12px' }}>
+                        {/* <Button style={{ marginRight: '12px' }}>
                             <Link href={routes.login.path}>Đăng nhập</Link>
-                        </Button>
+                        </Button> */}
 
-                        {/* <Link href={routes.profile.prefix + '/' + user?.username}>
-                            <Avatar
-                                icon={<UserOutlined />}
-                                size="large"
-                                className={cx('avatar')}
-                                src={local + 'person/' + user?.profilePicture}
-                                crossOrigin="anonymous"
-                            />
-                        </Link> */}
-
-                        <Avatar
-                            size="large"
-                            className={cx('avatar')}
-                            // src={FetchDefaltImages(`/api/images/1.jpeg?type=post`)}
-                            src={FetchDefaltImages(
-                                `${process.env.NEXT_PUBLIC_BACKEND_URL}/images/person/2.jpeg`,
-                            )}
-                        />
+                        {session && (
+                            <Link
+                                href={
+                                    routes.profile.prefix + '/' + session?.user.username
+                                }
+                            >
+                                <AvatarCustom user={session?.user!} />
+                            </Link>
+                        )}
                     </Flex>
                 </Col>
             </Row>

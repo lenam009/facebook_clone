@@ -2,13 +2,18 @@
 import styles from './auth.signin.module.scss';
 
 import Link from 'next/link';
+import { useState } from 'react';
 
 import { useFormik } from 'formik';
+import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
+
 import * as Yup from 'yup';
 
 import { Row, Col, Flex, Form, Input, Button, Divider, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
+import { signIn } from 'next-auth/react';
 
 import routes from '@/config/routes/routes';
 // import { useAppDispatch, useAppSelector } from '@/redux/hook';
@@ -23,13 +28,36 @@ import routes from '@/config/routes/routes';
 // import authApi from '@/api/authApi';
 
 export default function AuthSignin() {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const router = useRouter();
+
     // const dispatch = useAppDispatch();
 
     // const isFetching = useAppSelector(getIsFetching);
 
     // const navigate = useNavigate();
 
-    const handleOnSubmit = (values: any) => {
+    const handleOnSubmit = async (values: any) => {
+        console.log(values);
+
+        setIsLoading(true);
+        const result = await signIn('credentials', {
+            email: values.email,
+            password: values.password,
+            redirect: false,
+        });
+        setIsLoading(false);
+
+        if (result?.ok) {
+            console.log('ok');
+
+            router.push(routes.home.path);
+        } else {
+            message.error(result?.error);
+        }
+
+        console.log(result);
+
         // dispatch(loginStart());
         // const fetchLogin = async () => {
         //     const data = await authApi.login(values.email, values.password);
@@ -113,7 +141,7 @@ export default function AuthSignin() {
                                     block
                                     htmlType="submit"
                                 >
-                                    {/* {isFetching ? (
+                                    {isLoading ? (
                                         <Spin
                                             style={{ color: 'blue' }}
                                             indicator={
@@ -125,8 +153,7 @@ export default function AuthSignin() {
                                         />
                                     ) : (
                                         ' Đăng nhập'
-                                    )} */}
-                                    Đăng nhập
+                                    )}
                                 </Button>
                             </Form.Item>
                         </form>

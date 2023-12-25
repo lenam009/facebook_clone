@@ -9,7 +9,7 @@ const NProgressWrapper = ({ children }: { children: React.ReactNode }) => {
             {children}
             <ProgressBar
                 height="2px"
-                color="rgba(22,24,35,0.1)"
+                color="blue"
                 options={{ showSpinner: false }}
                 shallowRouting
             />

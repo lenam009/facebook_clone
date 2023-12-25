@@ -24,40 +24,40 @@ interface IProps {
 }
 const items: IProps[] = [
     {
-        icon: <WifiOutlined />,
         title: 'Feed',
+        icon: <WifiOutlined />,
     },
     {
-        icon: <WechatOutlined style={{ color: 'rgba(175,20,209,1)' }} />,
         title: 'Chats',
+        icon: <WechatOutlined style={{ color: 'rgba(175,20,209,1)' }} />,
     },
     {
-        icon: <VideoCameraFilled style={{ color: 'rgb(58,214,21)' }} />,
         title: 'Videos',
+        icon: <VideoCameraFilled style={{ color: 'rgb(58,214,21)' }} />,
     },
     {
-        icon: <UsergroupAddOutlined style={{ color: 'rgb(14,172,198)' }} />,
         title: 'Groups',
+        icon: <UsergroupAddOutlined style={{ color: 'rgb(14,172,198)' }} />,
     },
     {
-        icon: <FileMarkdownFilled style={{ color: 'rgb(198,14,42)' }} />,
         title: 'Bookmarks',
+        icon: <FileMarkdownFilled style={{ color: 'rgb(198,14,42)' }} />,
     },
     {
-        icon: <QuestionCircleFilled style={{ color: 'rgb(26,14,198)' }} />,
         title: 'Questions',
+        icon: <QuestionCircleFilled style={{ color: 'rgb(26,14,198)' }} />,
     },
     {
-        icon: <AccountBookOutlined style={{ color: 'rgb(14,198,174)' }} />,
         title: 'Jobs',
+        icon: <AccountBookOutlined style={{ color: 'rgb(14,198,174)' }} />,
     },
     {
-        icon: <CalendarOutlined style={{ color: 'rgb(203,228,23)' }} />,
         title: 'Events',
+        icon: <CalendarOutlined style={{ color: 'rgb(203,228,23)' }} />,
     },
     {
-        icon: <CodepenCircleOutlined style={{ color: 'rgb(228,139,23)' }} />,
         title: 'Courses',
+        icon: <CodepenCircleOutlined style={{ color: 'rgb(228,139,23)' }} />,
     },
 ];
 

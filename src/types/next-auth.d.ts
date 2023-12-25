@@ -11,8 +11,11 @@ declare module 'next-auth' {
         user: IUser;
     }
 
-    interface Session extends User {
+    interface Session {
         error?: string;
+        access_token: string;
+        refresh_token: string;
+        user: IUser;
 
         access_expire: number;
         expires: string;

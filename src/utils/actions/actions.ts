@@ -34,6 +34,26 @@ export const handleLikeTrackAction = async (id: any, quantity: any) => {
     return likeAction;
 };
 
+export const handleSignInAction = async (email: string, password: string) => {
+    const userLogin = (await sendRequest<IBackendRes<IUser>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
+        method: 'POST',
+        body: {
+            email,
+            password,
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleSignInAction', error);
+            return error;
+        })) as IBackendRes<IUser>;
+
+    return userLogin;
+};
+
 export const handleFollowUserAction = async () => {
     const likeAction = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/65843d9edfd97497a727581d/follow`,

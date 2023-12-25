@@ -9,15 +9,17 @@ import {
 } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { TabsProps, ConfigProvider } from 'antd';
+import { useSession } from 'next-auth/react';
 
 import routes from '@/config/routes/routes';
 import ButtonHeaderTab from '@/components/Button/ButtonHeaderTab/button.header.tab';
 // import { useAppSelector } from '@/redux/hook';
 // import { getUserCurrentSelector } from '@/redux/userSlice';
 
-export default function HeaderTabs(user: IUser) {
+export default function HeaderTabs() {
     const [tab, setTab] = useState(routes.home.path);
     const pathname = usePathname();
+    const { data: session } = useSession();
 
     // const user = useAppSelector(getUserCurrentSelector);
 
@@ -46,7 +48,7 @@ export default function HeaderTabs(user: IUser) {
             label: (
                 <ButtonHeaderTab
                     icon={<UserOutlined />}
-                    to={routes.profile.prefix + '/' + user?.username}
+                    to={routes.profile.prefix + '/' + session?.user.username}
                 />
             ),
         },

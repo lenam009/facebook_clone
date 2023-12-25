@@ -29,10 +29,10 @@ export default function ButtonHeaderTab({ children, to, icon, badge }: IProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
-    console.log('tab', tab);
-    console.log('to', to);
-    console.log('pathname', pathname);
-    console.log(tab === to);
+    // console.log('tab', tab);
+    // console.log('to', to);
+    // console.log('pathname', pathname);
+    // console.log(tab === to);
 
     return (
         <Link
