@@ -20,9 +20,7 @@ export const handleLikeTrackAction = async (id: any, quantity: any) => {
         },
     })
         .then(async (res) => {
-            if (!res.data) return Promise.reject(res);
-
-            return res.data;
+            return res;
         })
         .catch((error) => {
             console.log(error);
@@ -32,26 +30,6 @@ export const handleLikeTrackAction = async (id: any, quantity: any) => {
     revalidateTag('track');
 
     return likeAction;
-};
-
-export const handleSignInAction = async (email: string, password: string) => {
-    const userLogin = (await sendRequest<IBackendRes<IUser>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
-        method: 'POST',
-        body: {
-            email,
-            password,
-        },
-    })
-        .then((res) => {
-            return res;
-        })
-        .catch((error) => {
-            console.log('error handleSignInAction', error);
-            return error;
-        })) as IBackendRes<IUser>;
-
-    return userLogin;
 };
 
 export const handleFollowUserAction = async () => {
@@ -76,4 +54,90 @@ export const handleFollowUserAction = async () => {
         });
 
     // revalidateTag('followuser');
+};
+
+export const handleSignInAction = async (email: string, password: string) => {
+    const userLogin = (await sendRequest<IBackendRes<IUser>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
+        method: 'POST',
+        body: {
+            email,
+            password,
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleSignInAction', error);
+            return error;
+        })) as IBackendRes<IUser>;
+
+    return userLogin;
+};
+
+export const handleGetUserRandomAction = async () => {
+    const session = await getServerSession(authOptions);
+
+    const usersRandom = (await sendRequest<IBackendRes<IUser[]>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getUserRandom`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleGetUserByFollowing', error);
+            return error;
+        })) as IBackendRes<IUser[]>;
+
+    return usersRandom;
+};
+
+export const handleGetUserByFollowing = async () => {
+    const session = await getServerSession(authOptions);
+
+    const usersRandom = (await sendRequest<IBackendRes<IUser[]>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getUserByFollowing`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleGetUserRandomAction', error);
+            return error;
+        })) as IBackendRes<IUser[]>;
+
+    return usersRandom;
+};
+
+export const handleGetOneUseById = async () => {
+    const session = await getServerSession(authOptions);
+
+    const usersRandom = (await sendRequest<IBackendRes<IUser>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+        },
+        nextOption: {
+            next: { tags: ['handleGetOneUseById'] },
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error getOneUseById', error);
+            return error;
+        })) as IBackendRes<IUser>;
+
+    return usersRandom;
 };

@@ -25,3 +25,8 @@ Get User By Following
 #Hiển thị avatar (phần share) và thông tin cả nhân của chính bạn
 
 #Hiển thị bài post của chính bạn
+
+####Sau khi hoàn thành
+-Edit user
+-Parallel route
+-Login facebook

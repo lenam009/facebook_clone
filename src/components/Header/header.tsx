@@ -1,7 +1,7 @@
 'use client';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import AvatarCustom from '../Avatar/avatar.custom';
 
@@ -9,30 +9,29 @@ import AvatarCustom from '../Avatar/avatar.custom';
 
 import { SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Row, Col, Flex, Button } from 'antd';
-import { useSession, signOut } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 
 import HeaderTabs from './HeaderTabs/tabs.header';
 import Search from './Search/search';
 import routes from '@/config/routes/routes';
-import { FetchDefaltImages } from '@/utils/fetchImage';
-
-// import { getUserCurrentSelector, setUser } from '@/redux/userSlice';
+import { getUserSelector, setUser } from '@/utils/redux/userSlice';
+import { useAppSelector, useAppDispatch } from '@/utils/redux/hook';
 
 const cx = classNames.bind(styles);
-const local = process.env.REACT_APP_PUBLIC_FOLDER_IMAGE;
 
 export default function Header() {
     const [showInputSearch, setShowInputSearch] = useState<boolean>(false);
 
-    const { data: session } = useSession();
+    const user = useAppSelector(getUserSelector);
+    const dispatch = useAppDispatch();
 
-    // const user = useAppSelector(getUserCurrentSelector);
-    // const dispatch = useAppDispatch();
+    console.log('header', user);
 
-    // const navigate = useNavigate();
+    const handleOnClickLogout = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
 
-    const handleOnClickLogout = () => {
-        signOut();
+        dispatch(setUser(undefined));
+        signOut({ redirect: false });
     };
 
     return (
@@ -60,7 +59,7 @@ export default function Header() {
                 </Col>
                 <Col span={6} className={cx('header-right')}>
                     <Flex justify="end" align="center" style={{ height: '100%' }}>
-                        {!session ? (
+                        {!user ? (
                             <Button style={{ marginRight: '12px' }}>
                                 <Link href={routes.login.path}>Đăng nhập</Link>
                             </Button>
@@ -77,13 +76,9 @@ export default function Header() {
                             <Link href={routes.login.path}>Đăng nhập</Link>
                         </Button> */}
 
-                        {session && (
-                            <Link
-                                href={
-                                    routes.profile.prefix + '/' + session?.user.username
-                                }
-                            >
-                                <AvatarCustom user={session?.user!} />
+                        {user && (
+                            <Link href={routes.profile.prefix + '/' + user?.username}>
+                                <AvatarCustom user={user} />
                             </Link>
                         )}
                     </Flex>

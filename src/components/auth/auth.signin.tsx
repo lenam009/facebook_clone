@@ -2,44 +2,52 @@
 import styles from './auth.signin.module.scss';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
-import { redirect } from 'next/navigation';
 
 import * as Yup from 'yup';
 
 import { Row, Col, Flex, Form, Input, Button, Divider, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import { handleGetOneUseById } from '@/utils/actions/actions';
+import { useAppDispatch, useAppSelector } from '@/utils/redux/hook';
+import { setUser, getUserSelector } from '@/utils/redux/userSlice';
 
 import routes from '@/config/routes/routes';
-// import { useAppDispatch, useAppSelector } from '@/redux/hook';
-// import {
-//     setUser,
-//     setIsFetching,
-//     getIsFetching,
-//     loginStart,
-//     loginSuccess,
-//     loginFailed,
-// } from '@/redux/userSlice';
-// import authApi from '@/api/authApi';
 
 export default function AuthSignin() {
+    const { data: session } = useSession();
+
+    const dispatch = useAppDispatch();
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
 
-    // const dispatch = useAppDispatch();
+    // console.log('getUserSelector', useAppSelector(getUserSelector));
 
-    // const isFetching = useAppSelector(getIsFetching);
+    useEffect(() => {
+        if (session) {
+            const fetchApi = async () => {
+                const user = await handleGetOneUseById();
 
-    // const navigate = useNavigate();
+                console.log('user', user.data);
+
+                if (user.data) {
+                    dispatch(setUser(user.data));
+                }
+            };
+
+            fetchApi();
+
+            router.push(routes.home.path);
+        }
+    }, [session]);
 
     const handleOnSubmit = async (values: any) => {
-        console.log(values);
-
         setIsLoading(true);
         const result = await signIn('credentials', {
             email: values.email,
@@ -48,30 +56,9 @@ export default function AuthSignin() {
         });
         setIsLoading(false);
 
-        if (result?.ok) {
-            console.log('ok');
-
-            router.push(routes.home.path);
-        } else {
+        if (!result?.ok) {
             message.error(result?.error);
         }
-
-        console.log(result);
-
-        // dispatch(loginStart());
-        // const fetchLogin = async () => {
-        //     const data = await authApi.login(values.email, values.password);
-        //     if (data && data.user) {
-        //         dispatch(loginSuccess(data.user));
-        //         localStorage.setItem('refresh_token', data.user.refresh_token!);
-        //         // Cookie.
-        //         navigate(routes.users);
-        //     } else {
-        //         dispatch(loginFailed());
-        //         message.error('Sai email hoặc mật khẩu !!!');
-        //     }
-        // };
-        // fetchLogin();
     };
 
     const formik = useFormik({

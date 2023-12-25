@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { Flex, Avatar, Badge, ConfigProvider } from 'antd';
 import { AvatarSize } from 'antd/es/avatar/AvatarContext';
+import AvatarCustom from '@/components/Avatar/avatar.custom';
 
 import { UserOutlined } from '@ant-design/icons';
 import routes from '@/config/routes/routes';
@@ -38,18 +39,7 @@ export default function AccountItem({
                         }}
                     >
                         <Badge dot={online} offset={[-8, 7]} color="hsl(102, 53%, 61%)">
-                            <Avatar
-                                size={size}
-                                className={cx('icon')}
-                                icon={<UserOutlined />}
-                                src={
-                                    process.env.NEXT_PUBLIC_BACKEND_URL +
-                                    '/images/person/' +
-                                    user?.profilePicture
-                                }
-                                shape={shape}
-                                // crossOrigin="anonymous"
-                            />
+                            <AvatarCustom user={user} />
                         </Badge>
                     </ConfigProvider>
 

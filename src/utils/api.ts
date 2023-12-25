@@ -93,7 +93,7 @@ export const sendRequestFile = async <T>(props: IRequest) => {
         .catch((error) => error);
 };
 
-export const convertSlugUrl = (str: string) => {
+export const convertSlugUrl = (str: string | undefined) => {
     if (!str) return '';
 
     return slugify(str, {

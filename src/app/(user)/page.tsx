@@ -1,8 +1,11 @@
-import { sendRequest } from '@/utils/api';
 import { Col, Row } from 'antd';
 import LeftBar from '@/components/LeftBar/leftbar.home';
 import Feed from '@/components/Feed/feed';
 import RightBar from '@/components/Home/RightBar/rightbar.home';
+import {
+    handleGetUserRandomAction,
+    handleGetUserByFollowing,
+} from '@/utils/actions/actions';
 
 const user = {
     _id: '657fb2b2902a695ddb00259c',
@@ -22,17 +25,20 @@ const user = {
 };
 
 export default async function HomePage() {
+    const userRandom = await handleGetUserRandomAction();
+
+    const userByFolowing = await handleGetUserByFollowing();
+
     return (
         <Row>
             <Col span={4}>
-                <LeftBar />
+                <LeftBar user={userRandom.data} />
             </Col>
-            <Col span={15} style={{ minHeight: '200vh' }}>
-                {/* {user && <Feed user={user} />} */}
+            <Col span={16} style={{ minHeight: '200vh' }}>
                 <Feed user={user} />
             </Col>
-            <Col span={5}>
-                <RightBar />
+            <Col span={4}>
+                <RightBar user={userByFolowing.data} />
             </Col>
         </Row>
     );

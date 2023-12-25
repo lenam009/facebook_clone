@@ -61,38 +61,7 @@ const items: IProps[] = [
     },
 ];
 
-const user = [
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-];
-
-export default function LeftBar() {
+export default function LeftBar({ user }: { user: IUser[] | undefined }) {
     // const [user, setUser] = useState<IUser[]>([]);
 
     // const user = useAppSelector(getUserCurrentSelector);
@@ -122,13 +91,22 @@ export default function LeftBar() {
                         margin: '16px 0px 8px',
                     }}
                 />
+
+                <h3
+                    style={{
+                        fontWeight: 650,
+                        color: 'rgba(22,24,35,0.65)',
+                        marginBottom: '12px',
+                    }}
+                >
+                    Gợi ý kết bạn
+                </h3>
             </div>
             <div>
-                {user &&
-                    user.map((x, index) => (
-                        // @ts-ignore
-                        <AccountItem key={index} user={x} shape={'square'} />
-                    ))}
+                {user?.map((x, index) => (
+                    // @ts-ignore
+                    <AccountItem key={index} user={x} shape={'square'} />
+                ))}
             </div>
         </div>
     );

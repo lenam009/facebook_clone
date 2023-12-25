@@ -15,7 +15,10 @@ declare module 'next-auth' {
         error?: string;
         access_token: string;
         refresh_token: string;
-        user: IUser;
+        user: {
+            _id: string;
+            email: string;
+        };
 
         access_expire: number;
         expires: string;
@@ -27,7 +30,11 @@ declare module 'next-auth/jwt' {
     interface JWT {
         access_token: string;
         refresh_token: string;
-        user: IUser;
+        user: {
+            _id: string;
+            email: string;
+        };
+
         access_expire: number;
     }
 }

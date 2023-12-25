@@ -8,38 +8,7 @@ import ButtonRightBarAd from '@/components/Button/ButtonRightBarAd';
 import AccountItem from '@/components/AccountItem/account.item';
 // import userApi from '@/api/userApi';
 
-const user = [
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-    {
-        profilePicture: '1.jpeg',
-        username: 'nam',
-    },
-];
-
-export default function RightBar() {
+export default function RightBar({ user }: { user: IUser[] | undefined }) {
     // const [user, setUser] = useState<IUser[] | null>([]);
 
     // const user = useAppSelector(getUserCurrentSelector);
@@ -72,11 +41,12 @@ export default function RightBar() {
                     fontWeight: 650,
                     color: 'rgba(22,24,35,0.65)',
                     marginBottom: '12px',
+                    paddingLeft: '6px',
                 }}
             >
-                Những người bạn đang online
+                Bạn đang theo dõi:
             </h3>
-            <div style={{ marginLeft: '-16px' }}>
+            <div>
                 {user &&
                     user.map((x, index) => (
                         <AccountItem user={x} key={index} size={'large'} online={true} />
