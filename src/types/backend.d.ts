@@ -41,6 +41,18 @@ declare global {
         desc: string;
         city: string;
         from: string;
+        relationship?: number;
+        createdAt: string;
+        updatedAt: string;
+        __v?: any;
+    }
+
+    interface IPost {
+        _id?: string;
+        userId: string;
+        desc: string;
+        img: string;
+        likes: string[];
         createdAt: string;
         updatedAt: string;
     }

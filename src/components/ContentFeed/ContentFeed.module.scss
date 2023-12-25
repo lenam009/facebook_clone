@@ -1,0 +1,84 @@
+.wrapper {
+    --pading-wrapper: 12px;
+    --margin: 12px;
+    width: var(--width-feed-content);
+    padding: 8px var(--pading-wrapper) 8px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    position: relative;
+
+    .btnMenu {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin: 8px 12px 0px;
+    }
+
+    .avatar {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .name {
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
+
+    .clock,
+    .time {
+        font-weight: 400;
+        font-size: 1.18rem;
+        color: rgba(22, 24, 35, 0.7);
+    }
+
+    .desc {
+        font-weight: 400;
+        font-size: 1.5rem;
+        margin: var(--margin) 0px;
+    }
+
+    .image {
+        width: 100%;
+        margin: 0px calc(0px - var(--pading-wrapper)) var(--margin);
+    }
+
+    .icon {
+        font-size: 1.5rem;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .text {
+        font-weight: 400;
+        font-size: 1.5rem;
+
+        &:last-child {
+            margin-left: 8px;
+        }
+    }
+
+    .wraper-footer {
+    }
+
+    .btn {
+        width: calc(100% / 3);
+    }
+
+    .iconHover {
+        font-size: 3rem;
+        // padding: 6px;
+
+        &:hover {
+            cursor: pointer;
+            background-color: rgba(22, 24, 35, 0.05);
+            border-radius: 32px;
+        }
+    }
+}

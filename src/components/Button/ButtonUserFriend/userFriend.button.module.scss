@@ -1,0 +1,16 @@
+.wrapper {
+    --padding-wrapper: 8px;
+    // margin-top: 8px;
+    padding: 8px var(--padding-wrapper) 0px;
+    border-radius: 8px;
+    user-select: none;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(22, 24, 35, 0.1);
+    }
+
+    .image {
+        border-radius: 8px;
+    }
+}

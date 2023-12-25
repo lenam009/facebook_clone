@@ -2,6 +2,7 @@ import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
 import StyledComponentsRegistry from '@/lib/AntdRegistry';
 import NextAuthSessionWrapper from '@/lib/next.auth.wrapper';
 import NProgressWrapper from '@/lib/nprogress.wrapper';
+import './global.scss';
 
 export const metadata = {
     title: 'Home',

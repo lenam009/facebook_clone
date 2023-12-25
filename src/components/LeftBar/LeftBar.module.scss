@@ -1,0 +1,34 @@
+.wrapper {
+    overflow-x: scroll;
+    height: 89vh;
+    position: sticky;
+    // width: 20.5%;
+    top: calc(var(--height-header) + 16px);
+
+    padding: 0px 4px;
+    // background-color: red;
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(22, 24, 35, 0.1);
+    }
+
+    &::-webkit-scrollbar {
+        border-radius: 0;
+        width: 4px;
+    }
+
+    .btn-show-more {
+        margin: 16px 0px 0px 16px;
+        background-color: rgba(22, 24, 35, 0.1);
+        font-weight: 600;
+        width: 170px;
+    }
+}
+
+// .btn-show-more {
+//     margin: 16px 0px 0px 16px;
+//     background-color: rgba(22, 24, 35, 0.1);
+//     font-weight: 600;
+//     width: 170px;
+// }

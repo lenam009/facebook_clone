@@ -1,0 +1,23 @@
+.wrapper {
+    padding: 8px 12px 8px 16px;
+    border-radius: 12px;
+    user-select: none;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(22, 24, 35, 0.1);
+    }
+
+    &:first-child {
+    }
+}
+
+.icon,
+.title {
+    font-size: 1.6rem;
+    color: black;
+}
+
+.title {
+    font-weight: 550;
+}

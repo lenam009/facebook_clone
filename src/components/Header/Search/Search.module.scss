@@ -1,0 +1,29 @@
+.wrapper-search {
+    // height: 500px;
+    width: 320px;
+    padding: 12px 16px;
+    box-shadow: 0px 0px 10px rgba(22, 24, 35, 0.1);
+    background-color: white;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+}
+.btn-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 2rem;
+    &:hover {
+        background-color: rgba(22, 24, 35, 0.1);
+        border-radius: 9999px;
+    }
+}
+
+.input {
+    border: 1px solid #d9d9d9;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}

@@ -100,12 +100,12 @@ export const authOptions: AuthOptions = {
                     token.refresh_token = res.data.refresh_token;
                     token.user = res.data.user;
 
-                    token.access_expire = dayjs(new Date())
-                        .add(
-                            +(process.env.TOKEN_EXPIRE_NUMBER as string),
-                            process.env.TOKEN_EXPIRE_UNIT as any,
-                        )
-                        .unix();
+                    // token.access_expire = dayjs(new Date())
+                    //     .add(
+                    //         +(process.env.TOKEN_EXPIRE_NUMBER as string),
+                    //         process.env.TOKEN_EXPIRE_UNIT as any,
+                    //     )
+                    //     .unix();
                 }
             }
 

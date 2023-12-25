@@ -1,0 +1,70 @@
+.wrapper {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: #f0f2f5;
+
+    .flex {
+        height: 100%;
+    }
+
+    .col-facebook {
+        padding-bottom: 200px;
+    }
+
+    .col-form {
+        padding-bottom: 50px;
+    }
+
+    .facebook {
+        color: blue;
+        font-size: 4rem;
+        letter-spacing: 1px;
+    }
+
+    .desc {
+        font-size: 2rem;
+    }
+
+    .form {
+        background-color: white;
+        padding: 12px 12px 16px 12px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 5px rgba(22, 24, 35, 0.2);
+    }
+
+    .input {
+        padding: 12px 16px;
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
+
+    .btn-login {
+        font-weight: 600;
+    }
+
+    .errorMessage {
+        color: red;
+        padding-left: 5px;
+        font-size: 1.5rem;
+    }
+
+    .forget-password {
+        color: blue;
+        text-align: center;
+        display: block;
+        margin: 12px 0px 0px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .login {
+        padding: 12px 0px;
+        background-color: gray;
+        color: white;
+    }
+}
