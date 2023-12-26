@@ -195,6 +195,48 @@ export const handleCreatePost = async (data: {
     return createPost;
 };
 
+export const handleLikeOrDisLikePost = async (idPost: string) => {
+    const session = await getServerSession(authOptions);
+
+    const createPost = (await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/post/${idPost}/like`,
+        method: 'PUT',
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleCreatePost', error);
+            return error;
+        })) as IBackendRes<IModelPaginate<IPost>>;
+
+    return createPost;
+};
+
+export const handleRegister = async (data: {
+    email: string;
+    username: string;
+    password: string;
+}) => {
+    const registerUser = (await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`,
+        method: 'POST',
+        body: data,
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleRegister', error);
+            return error;
+        })) as IBackendRes<IModelPaginate<IPost>>;
+
+    return registerUser;
+};
+
 export const revalidateGetOneUseById = () => {
     revalidateTag('handleGetOneUseById');
 };

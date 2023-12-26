@@ -6,11 +6,24 @@ import routes from '@/config/routes/routes';
 import dayjs from 'dayjs';
 import AvatarCustom from '../Avatar/avatar.custom';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { handleGetOneUseById } from '@/utils/actions/actions';
+import {
+    handleGetOneUseById,
+    handleLikeOrDisLikePost,
+    revalidateGetPostsFollowing,
+} from '@/utils/actions/actions';
 
 dayjs.extend(relativeTime);
 
-import { Avatar, Flex, Button, Image, Divider, Popover, ConfigProvider } from 'antd';
+import {
+    Avatar,
+    Flex,
+    Button,
+    Image,
+    Divider,
+    Popover,
+    ConfigProvider,
+    message,
+} from 'antd';
 import {
     UserOutlined,
     ClockCircleOutlined,
@@ -24,11 +37,8 @@ import {
     FrownOutlined,
     DashOutlined,
 } from '@ant-design/icons';
-
-// import userApi from '@/api/userApi';
-// import postApi from '@/api/postApi';
-// import { useAppSelector } from '@/redux/hook';
-// import { getUserCurrentSelector } from '@/redux/userSlice';
+import { useAppSelector } from '@/utils/redux/hook';
+import { getUserSelector } from '@/utils/redux/userSlice';
 
 const icons = [
     <LikeFilled style={{ color: 'blue' }} className={styles['iconHover']} />,
@@ -38,36 +48,12 @@ const icons = [
     <FrownOutlined style={{ color: 'gray' }} className={styles['iconHover']} />,
 ];
 
-// const user = {
-//     _id: '657fb2b2902a695ddb00259c',
-//     username: 'admin',
-//     email: 'admin@gmail.com',
-//     profilePicture: '',
-//     coverPicture: '',
-//     followers: [],
-//     followings: ['6584304d7f0d80d9ee444605', '65843d9edfd97497a727581d'],
-//     isAdmin: true,
-//     desc: '',
-//     city: 'New York 123 456',
-//     from: '',
-//     createdAt: '2023-12-18T02:47:14.717Z',
-//     updatedAt: '2023-12-23T08:45:18.073Z',
-//     __v: 0,
-// };
-
 export default function ContentFeed(post: IPost) {
     const [user, setUser] = useState<IUser | undefined>(undefined);
-    // const userCurrent = useAppSelector(getUserCurrentSelector);
 
-    // const [user, setUser] = useState<IUser | null>(null);
-    const [likes, setLikes] = useState<number>(post.likes.length);
-    const [isLiked, setIsLiked] = useState<boolean>(false);
-
-    // console.log(post);
+    const userCurrent = useAppSelector(getUserSelector);
 
     useEffect(() => {
-        // console.log('post ContentFeed', post);
-
         const fetchUser = async () => {
             const userApi = await handleGetOneUseById(post.userId);
             if (userApi.data) {
@@ -77,13 +63,14 @@ export default function ContentFeed(post: IPost) {
         fetchUser();
     }, []);
 
-    const handleClickLike = (e: React.MouseEvent) => {
-        // if (post._id && userCurrent && userCurrent?._id) {
-        //     postApi.likeOrDislikePost(post._id, userCurrent?._id).then((res) => {
-        //         setLikes(isLiked ? likes - 1 : likes + 1);
-        //         setIsLiked(!isLiked);
-        //     });
-        // }
+    const handleClickLike = async (e: React.MouseEvent) => {
+        const result = await handleLikeOrDisLikePost(post._id!);
+        if (result.data) {
+            // message.success(result.message);
+            revalidateGetPostsFollowing();
+        } else {
+            message.error(result.message);
+        }
     };
 
     return (
@@ -140,7 +127,7 @@ export default function ContentFeed(post: IPost) {
                 <div>
                     <LikeFilled style={{ color: 'blue' }} className={styles['icon']} />
                     <HeartFilled style={{ color: 'red' }} className={styles['icon']} />
-                    <span className={styles['text']}>{likes}</span>
+                    <span className={styles['text']}>{post.likes.length}</span>
                 </div>
                 <div>
                     <span className={styles['text']}>{'0'} bình luận</span>
@@ -181,7 +168,13 @@ export default function ContentFeed(post: IPost) {
                             icon={<LikeOutlined />}
                             className={styles['btn']}
                             onClick={(e) => handleClickLike(e)}
-                            style={{ color: isLiked ? 'blue' : 'black' }}
+                            style={{
+                                color: post.likes.includes(
+                                    userCurrent ? userCurrent?._id : '',
+                                )
+                                    ? 'blue'
+                                    : 'black',
+                            }}
                         >
                             Like
                         </Button>

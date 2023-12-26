@@ -49,10 +49,10 @@ export default async function HomePage() {
             <Col span={4}>
                 <LeftBar user={userRandom.data} />
             </Col>
-            <Col span={16}>
+            <Col span={15}>
                 <Feed user={undefined} home={true} posts={postsFollowing.data?.result} />
             </Col>
-            <Col span={4}>
+            <Col span={5}>
                 <RightBar user={userByFolowing.data} />
             </Col>
         </Row>

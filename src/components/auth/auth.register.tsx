@@ -3,9 +3,11 @@ import styles from './auth.register.module.scss';
 import Link from 'next/link';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useState } from 'react';
 
 import { Row, Col, Flex, Form, Input, Button, Spin, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import { handleRegister } from '@/utils/actions/actions';
 
 import routes from '@/config/routes/routes';
 // import { useAppDispatch, useAppSelector } from '@/redux/hook';
@@ -20,41 +22,26 @@ import routes from '@/config/routes/routes';
 // import authApi from '@/api/authApi';
 
 export default function AuthRegister() {
-    // const dispatch = useAppDispatch();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    // const isFetching = useAppSelector(getIsFetching);
-
-    const error = () => {
-        message.error({
-            type: 'error',
-            content: 'This is an error message',
+    const handleOnSubmit = async (
+        values: { email: string; username: string; password: string },
+        { resetForm }: any,
+    ) => {
+        setIsLoading(true);
+        const result = await handleRegister({
+            email: values.email,
+            username: values.username,
+            password: values.password,
         });
-    };
+        setIsLoading(false);
 
-    const success = () => {
-        message.open({
-            type: 'success',
-            content: 'This is a success message',
-        });
-    };
-    const handleOnSubmit = (values: any, { resetForm }: any) => {
-        // dispatch(registerStart());
-        // const fetchLogin = async () => {
-        //     const data = await authApi.register(
-        //         values.email,
-        //         values.password,
-        //         values.username,
-        //     );
-        //     if (data && data.user) {
-        //         dispatch(registerSuccess());
-        //         resetForm();
-        //         success();
-        //     } else {
-        //         dispatch(registerFailed());
-        //         error();
-        //     }
-        // };
-        // fetchLogin();
+        if (result.data) {
+            resetForm();
+            message.success(result.message);
+        } else {
+            message.error(result.message);
+        }
     };
 
     const formik = useFormik({
@@ -152,7 +139,7 @@ export default function AuthRegister() {
                                     block
                                     htmlType="submit"
                                 >
-                                    {/* {isFetching ? (
+                                    {isLoading ? (
                                         <Spin
                                             style={{ color: 'blue' }}
                                             indicator={
@@ -164,8 +151,7 @@ export default function AuthRegister() {
                                         />
                                     ) : (
                                         ' Đăng ký'
-                                    )} */}
-                                    Đăng ký
+                                    )}
                                 </Button>
                             </Form.Item>
                         </form>

@@ -16,8 +16,8 @@ import { withAuth } from 'next-auth/middleware';
 export default withAuth({
     // Matches the pages config in `[...nextauth]`
     pages: {
-        signIn: '/auth/signin',
+        signIn: '/login',
     },
 });
 
-export const config = { matcher: [] };
+export const config = { matcher: ['/profile', '/profile/:slug*', '/'] };

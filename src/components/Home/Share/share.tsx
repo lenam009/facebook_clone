@@ -100,48 +100,38 @@ export default function Share({ user }: IProp) {
         },
 
         onChange(info) {
-            console.log(info.fileList);
-
-            // if (info.fileList[0]?.response) {
-            //     setFile(info.fileList[0].response.data.filename);
-            //     setFieldList(info.fileList);
-            // }
-            // if (info.file.status === 'done') {
-            //     setFieldList(info.fileList);
-            //     message.success(info.fileList[0].response.message);
-            // } else if (info.file.status === 'error') {
-            //     message.error(info.fileList[0].response.message);
-            // }
+            if (info.fileList[0]?.response) {
+                setFile(info.fileList[0].response.data.filename);
+                setFieldList(info.fileList);
+            }
+            if (info.file.status === 'done') {
+                setFieldList(info.fileList);
+                message.success(info.fileList[0].response.message);
+            } else if (info.file.status === 'error') {
+                message.error(info.fileList[0].response.message);
+            }
         },
     };
 
-    // console.log('fileList', fieldList);
-
-    const handleOnClickSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleOnClickSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const typeOfFile = getTypeOfFile(file);
 
-        setFieldList([]);
+        const createPost = await handleCreatePost({
+            desc,
+            target_type: typeOfFile.target_type,
+            [typeOfFile.type]: file,
+        });
 
-        const fetchPost = async () => {
-            const createPost = await handleCreatePost({
-                desc,
-                target_type: typeOfFile.target_type,
-                // img: typeOfFile.type.includes('image'),
-                [typeOfFile.type]: file,
-            });
-
-            if (createPost.data) {
-                revalidateGetPostsFollowing();
-                setFile('');
-                setDesc('');
-                message.success(createPost.message);
-            } else {
-                message.error(createPost.message);
-            }
-        };
-
-        fetchPost();
+        if (createPost.data) {
+            revalidateGetPostsFollowing();
+            setFieldList([]);
+            setFile('');
+            setDesc('');
+            message.success(createPost.message);
+        } else {
+            message.error(createPost.message);
+        }
     };
 
     return (

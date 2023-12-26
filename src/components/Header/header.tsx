@@ -35,7 +35,7 @@ export default function Header() {
         e.preventDefault();
 
         dispatch(setUser(undefined));
-        signOut({ redirect: false });
+        signOut({ redirect: true });
     };
 
     return (
