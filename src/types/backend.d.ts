@@ -51,9 +51,10 @@ declare global {
         _id?: string;
         userId: string;
         desc: string;
-        img: string;
+        img?: string;
         likes: string[];
         createdAt: string;
         updatedAt: string;
+        video?: string;
     }
 }

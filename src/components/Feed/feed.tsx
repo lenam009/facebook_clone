@@ -6,12 +6,12 @@ import { Flex } from 'antd';
 
 import Share from '@/components/Home/Share/share';
 import ContentFeed from '@/components/ContentFeed/content.feed';
-// import { useAppSelector } from '@/redux/hook';
-// import { getUserCurrentSelector } from '@/redux/userSlice';
-// import postApi from '@/api/postApi';
+import { useAppSelector } from '@/utils/redux/hook';
+import { getUserSelector } from '@/utils/redux/userSlice';
 
 interface IProp {
-    user: IUser | null;
+    user: IUser | undefined;
+    posts: IPost[] | undefined;
     home?: boolean;
 }
 
@@ -38,10 +38,16 @@ const posts = [
     },
 ];
 
-export default function Feed({ user, home = true }: IProp) {
+export default function Feed({ user, posts, home = true }: IProp) {
     // const [posts, setPosts] = useState<IPost[]>([]);
+    let userCurrent = undefined;
 
-    // const userCurrent = useAppSelector(getUserCurrentSelector);
+    // console.log('postsFollowing', posts);
+
+    if (home) {
+        userCurrent = useAppSelector(getUserSelector);
+    } else {
+    }
 
     // !user
     // ? '6562c4fb86bb7cc1bef81959'
@@ -65,8 +71,8 @@ export default function Feed({ user, home = true }: IProp) {
 
     return (
         <Flex vertical align="center" className={styles['wrapper']}>
-            <Share user={user} />
-            {posts.map((x) => (
+            <Share user={userCurrent} />
+            {posts?.map((x) => (
                 <ContentFeed
                     key={x._id}
                     _id={x._id}
@@ -76,6 +82,7 @@ export default function Feed({ user, home = true }: IProp) {
                     img={x.img}
                     createdAt={x.createdAt}
                     updatedAt={x.updatedAt}
+                    video={x.video}
                     // profileUsername={user?.username}
                 />
             ))}

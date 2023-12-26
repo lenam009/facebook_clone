@@ -4,6 +4,7 @@ import NextAuthSessionWrapper from '@/lib/next.auth.wrapper';
 import NProgressWrapper from '@/lib/nprogress.wrapper';
 import './global.scss';
 import ReduxWrapper from '@/utils/redux/redux.wrapper';
+import ReduxFetchApi from '@/components/WrapperReducerRedux/redux.fetchApi';
 
 export const metadata = {
     title: 'Home',
@@ -18,7 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <ThemeRegistry>
                         <NProgressWrapper>
                             <NextAuthSessionWrapper>
-                                <ReduxWrapper>{children}</ReduxWrapper>
+                                <ReduxWrapper>
+                                    <ReduxFetchApi>{children}</ReduxFetchApi>
+                                </ReduxWrapper>
                             </NextAuthSessionWrapper>
                         </NProgressWrapper>
                     </ThemeRegistry>

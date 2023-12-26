@@ -4,6 +4,7 @@ import styles from './Header.module.scss';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import AvatarCustom from '../Avatar/avatar.custom';
+import { useRouter } from 'next/navigation';
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -16,16 +17,19 @@ import Search from './Search/search';
 import routes from '@/config/routes/routes';
 import { getUserSelector, setUser } from '@/utils/redux/userSlice';
 import { useAppSelector, useAppDispatch } from '@/utils/redux/hook';
+import { revalidateGetOneUseById } from '@/utils/actions/actions';
+import { handleGetOneUseById } from '@/utils/actions/actions';
 
 const cx = classNames.bind(styles);
 
 export default function Header() {
     const [showInputSearch, setShowInputSearch] = useState<boolean>(false);
+    const router = useRouter();
 
     const user = useAppSelector(getUserSelector);
     const dispatch = useAppDispatch();
 
-    console.log('header', user);
+    console.log('header_getUserSelector', user);
 
     const handleOnClickLogout = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
@@ -60,7 +64,10 @@ export default function Header() {
                 <Col span={6} className={cx('header-right')}>
                     <Flex justify="end" align="center" style={{ height: '100%' }}>
                         {!user ? (
-                            <Button style={{ marginRight: '12px' }}>
+                            <Button
+                                style={{ marginRight: '12px' }}
+                                onClick={(e) => e.preventDefault()}
+                            >
                                 <Link href={routes.login.path}>Đăng nhập</Link>
                             </Button>
                         ) : (
@@ -71,6 +78,15 @@ export default function Header() {
                                 Đăng xuất
                             </Button>
                         )}
+
+                        <button
+                            onClick={async () => {
+                                revalidateGetOneUseById();
+                                // router.refresh();
+                            }}
+                        >
+                            test
+                        </button>
 
                         {/* <Button style={{ marginRight: '12px' }}>
                             <Link href={routes.login.path}>Đăng nhập</Link>

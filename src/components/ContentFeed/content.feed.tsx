@@ -4,7 +4,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import routes from '@/config/routes/routes';
 import dayjs from 'dayjs';
-var relativeTime = require('dayjs/plugin/relativeTime');
+import AvatarCustom from '../Avatar/avatar.custom';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { handleGetOneUseById } from '@/utils/actions/actions';
+
 dayjs.extend(relativeTime);
 
 import { Avatar, Flex, Button, Image, Divider, Popover, ConfigProvider } from 'antd';
@@ -27,8 +30,6 @@ import {
 // import { useAppSelector } from '@/redux/hook';
 // import { getUserCurrentSelector } from '@/redux/userSlice';
 
-const local = process.env.REACT_APP_PUBLIC_FOLDER_IMAGE;
-
 const icons = [
     <LikeFilled style={{ color: 'blue' }} className={styles['iconHover']} />,
     <HeartFilled style={{ color: 'red' }} className={styles['iconHover']} />,
@@ -37,40 +38,43 @@ const icons = [
     <FrownOutlined style={{ color: 'gray' }} className={styles['iconHover']} />,
 ];
 
-const user = {
-    _id: '657fb2b2902a695ddb00259c',
-    username: 'admin',
-    email: 'admin@gmail.com',
-    profilePicture: '',
-    coverPicture: '',
-    followers: [],
-    followings: ['6584304d7f0d80d9ee444605', '65843d9edfd97497a727581d'],
-    isAdmin: true,
-    desc: '',
-    city: 'New York 123 456',
-    from: '',
-    createdAt: '2023-12-18T02:47:14.717Z',
-    updatedAt: '2023-12-23T08:45:18.073Z',
-    __v: 0,
-};
+// const user = {
+//     _id: '657fb2b2902a695ddb00259c',
+//     username: 'admin',
+//     email: 'admin@gmail.com',
+//     profilePicture: '',
+//     coverPicture: '',
+//     followers: [],
+//     followings: ['6584304d7f0d80d9ee444605', '65843d9edfd97497a727581d'],
+//     isAdmin: true,
+//     desc: '',
+//     city: 'New York 123 456',
+//     from: '',
+//     createdAt: '2023-12-18T02:47:14.717Z',
+//     updatedAt: '2023-12-23T08:45:18.073Z',
+//     __v: 0,
+// };
 
 export default function ContentFeed(post: IPost) {
+    const [user, setUser] = useState<IUser | undefined>(undefined);
     // const userCurrent = useAppSelector(getUserCurrentSelector);
 
     // const [user, setUser] = useState<IUser | null>(null);
     const [likes, setLikes] = useState<number>(post.likes.length);
     const [isLiked, setIsLiked] = useState<boolean>(false);
 
+    // console.log(post);
+
     useEffect(() => {
-        // const fetchUser = async () => {
-        //     const user: any = await userApi.getOneUser(post.userId);
-        //     setUser(user);
-        //     if (userCurrent && userCurrent._id && post.likes.includes(userCurrent._id)) {
-        //         setIsLiked(true);
-        //     }
-        // };
-        // fetchUser();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // console.log('post ContentFeed', post);
+
+        const fetchUser = async () => {
+            const userApi = await handleGetOneUseById(post.userId);
+            if (userApi.data) {
+                setUser(userApi.data);
+            }
+        };
+        fetchUser();
     }, []);
 
     const handleClickLike = (e: React.MouseEvent) => {
@@ -89,16 +93,7 @@ export default function ContentFeed(post: IPost) {
             </Button>
             <Flex>
                 <Link href={routes.profile.prefix + '/' + user?.username}>
-                    <Avatar
-                        icon={<UserOutlined />}
-                        className={styles['avatar']}
-                        size={'large'}
-                        src={
-                            process.env.NEXT_PUBLIC_BACKEND_URL +
-                            '/images/person/' +
-                            '2.jpeg'
-                        }
-                    />
+                    <AvatarCustom user={user} />
                 </Link>
 
                 <div>
@@ -111,10 +106,7 @@ export default function ContentFeed(post: IPost) {
                         </Link>
                         <div>
                             <span className={styles['time']}>
-                                {
-                                    // @ts-ignore
-                                    dayjs(post.createdAt).fromNow()
-                                }
+                                {dayjs(post.createdAt).fromNow()}
                                 &nbsp;
                             </span>
                             <ClockCircleOutlined className={styles['clock']} />
@@ -127,12 +119,23 @@ export default function ContentFeed(post: IPost) {
 
             {post.img && (
                 <Image
-                    height={500}
+                    height={400}
                     width={'calc(100% + 24px)'}
                     rootClassName={styles['image']}
-                    src={process.env.NEXT_PUBLIC_BACKEND_URL + '/images/post/' + '1.jpeg'}
+                    src={process.env.NEXT_PUBLIC_BACKEND_URL + '/images/post/' + post.img}
                 />
             )}
+
+            {post.video && (
+                <video width={'100%'} controls style={{ borderRadius: '4px' }}>
+                    <source
+                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/videos/${post.video}`}
+                        type="video/mp4"
+                    />
+                    Your browser does not support HTML video.
+                </video>
+            )}
+
             <Flex justify="space-between" className={styles['']}>
                 <div>
                     <LikeFilled style={{ color: 'blue' }} className={styles['icon']} />

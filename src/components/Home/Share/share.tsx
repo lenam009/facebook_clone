@@ -1,9 +1,9 @@
 import styles from './Share.module.scss';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useRef } from 'react';
 // import { useAppSelector } from '@/redux/hook';
 // import { getUserCurrentSelector } from '@/redux/userSlice';
 
-import { Avatar, Flex, Input, Button, message } from 'antd';
+import { Avatar, Flex, Input, Button, message, Upload } from 'antd';
 import type { UploadProps } from 'antd';
 import {
     UserOutlined,
@@ -11,7 +11,11 @@ import {
     TagOutlined,
     EnvironmentOutlined,
     SmileOutlined,
+    UploadOutlined,
 } from '@ant-design/icons';
+import { useSession } from 'next-auth/react';
+import { handleCreatePost, revalidateGetPostsFollowing } from '@/utils/actions/actions';
+import { UploadFile } from 'antd';
 // import postApi from '@/api/postApi';
 // import axios from 'axios';
 
@@ -34,69 +38,114 @@ const items: {
     },
 ];
 
+const getTypeOfFile = (fileName: string): { type: string; target_type: string } => {
+    if (fileName.startsWith('video'))
+        return {
+            type: 'video',
+            target_type: 'video',
+        };
+    if (fileName.startsWith('image'))
+        return {
+            type: 'img',
+            target_type: 'image_post',
+        };
+    return { type: '', target_type: '' };
+};
+
 interface IProp {
-    user: IUser | null;
+    user: IUser | undefined;
 }
 
 export default function Share({ user }: IProp) {
     // const userCurrent = useAppSelector(getUserCurrentSelector);
-    const [messageApi, contextHolder] = message.useMessage();
     const [desc, setDesc] = useState<string>('');
-    const [file, setFile] = useState<any>(null);
+    const [file, setFile] = useState<string>('');
+    const [fieldList, setFieldList] = useState<UploadFile[]>([]);
 
-    const handleOnChangeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
+    const { data: sessionAuth } = useSession();
+
+    // console.log('file', file);
+
+    const props: UploadProps = {
+        name: 'file',
+        action: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/post/upload`,
+        headers: {
+            Authorization: `Bearer ${sessionAuth?.access_token}`,
+        },
+        maxCount: 1,
+
+        // fileList: fieldList,
+
+        defaultFileList: fieldList,
+
+        beforeUpload: (file) => {
+            const isPNG = [
+                'image/png',
+                'image/jpg',
+                'image/jpeg',
+                'video/x-flv',
+                'video/mp4',
+                'application/x-mpegURL',
+                'video/x-matroska',
+                'video/MP2T',
+                'video/3gpp',
+                'video/quicktime',
+                'video/x-msvideo',
+                'video/x-ms-wmv',
+            ].includes(file.type);
+            if (!isPNG) {
+                message.error(`${file.name} isn't image or video`);
+            }
+            return isPNG || Upload.LIST_IGNORE;
+        },
+
+        onChange(info) {
+            console.log(info.fileList);
+
+            // if (info.fileList[0]?.response) {
+            //     setFile(info.fileList[0].response.data.filename);
+            //     setFieldList(info.fileList);
+            // }
+            // if (info.file.status === 'done') {
+            //     setFieldList(info.fileList);
+            //     message.success(info.fileList[0].response.message);
+            // } else if (info.file.status === 'error') {
+            //     message.error(info.fileList[0].response.message);
+            // }
+        },
     };
 
-    const success = () => {
-        messageApi.open({
-            type: 'success',
-            content: 'Đăng bài viết thành công',
-            duration: 1,
-        });
-    };
-
-    const error = () => {
-        messageApi.open({
-            type: 'error',
-            content: 'Đăng bài viết thất bại!',
-        });
-    };
+    // console.log('fileList', fieldList);
 
     const handleOnClickSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // const fetchPost = async () => {
-        //     if (user && user._id) {
-        //         const filename: string = Date.now().toString() + file.name;
-        //         if (file) {
-        //             const data = new FormData();
+        const typeOfFile = getTypeOfFile(file);
 
-        //             data.append('file', file);
-        //             // data.append('name', filename);
+        setFieldList([]);
 
-        //             await axios
-        //                 .post('http://localhost:8088/api/upload', data)
-        //                 .catch((e) => {});
-        //         }
+        const fetchPost = async () => {
+            const createPost = await handleCreatePost({
+                desc,
+                target_type: typeOfFile.target_type,
+                // img: typeOfFile.type.includes('image'),
+                [typeOfFile.type]: file,
+            });
 
-        //         postApi
-        //             .create(user?._id, desc, file.name)
-        //             .then(() => {
-        //                 setDesc('');
-        //                 success();
-        //             })
-        //             .catch(() => error());
-        //     } else {
-        //         error();
-        //     }
-        // };
+            if (createPost.data) {
+                revalidateGetPostsFollowing();
+                setFile('');
+                setDesc('');
+                message.success(createPost.message);
+            } else {
+                message.error(createPost.message);
+            }
+        };
 
-        // fetchPost();
+        fetchPost();
     };
 
     return (
         <div className={styles['wrapper']}>
-            {contextHolder}
             <form onSubmit={handleOnClickSubmit}>
                 <div className={styles['wrapper-input']}>
                     <Flex>
@@ -106,7 +155,7 @@ export default function Share({ user }: IProp) {
                             src={
                                 process.env.NEXT_PUBLIC_BACKEND_URL +
                                 '/images/person/' +
-                                '1.jpeg'
+                                user?.profilePicture
                             }
                         />
                         <Input
@@ -134,34 +183,28 @@ export default function Share({ user }: IProp) {
                         align="center"
                         style={{ padding: '0 12px' }}
                     >
-                        <Button
-                            style={{ padding: '0px 0px' }}
-                            size="large"
-                            className={styles['button']}
-                            type="text"
-                            onClick={() => {
-                                console.log('upload');
-                            }}
-                            htmlType="button"
-                        >
-                            <label
-                                htmlFor="file"
-                                style={{ cursor: 'pointer', padding: '0px 8px' }}
+                        <Upload {...props} style={{ backgroundColor: 'red' }}>
+                            <Button
+                                style={{ padding: '0px 0px' }}
+                                size="large"
+                                className={styles['button']}
+                                type="text"
+                                onClick={() => {
+                                    console.log('upload');
+                                }}
+                                htmlType="button"
                             >
-                                <input
-                                    style={{ display: 'none', width: '100%' }}
-                                    type="file"
-                                    id="file"
-                                    name="file"
-                                    accept=".png,.jpeg,.jpg"
-                                    onChange={handleOnChangeUpload}
-                                />
-                                <SnippetsOutlined
-                                    style={{ color: 'red', marginRight: '8px' }}
-                                />
-                                Photo or Video
-                            </label>
-                        </Button>
+                                <label
+                                    htmlFor="file"
+                                    style={{ cursor: 'pointer', padding: '0px 8px' }}
+                                >
+                                    <SnippetsOutlined
+                                        style={{ color: 'red', marginRight: '8px' }}
+                                    />
+                                    Photo or Video
+                                </label>
+                            </Button>
+                        </Upload>
 
                         {items.map((x, index) => (
                             <Button

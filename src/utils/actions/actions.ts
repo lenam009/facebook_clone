@@ -100,11 +100,12 @@ export const handleGetUserRandomAction = async () => {
 export const handleGetUserByFollowing = async () => {
     const session = await getServerSession(authOptions);
 
-    const usersRandom = (await sendRequest<IBackendRes<IUser[]>>({
+    const usersFollowing = (await sendRequest<IBackendRes<IUser[]>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getUserByFollowing`,
         method: 'GET',
         headers: {
             Authorization: `Bearer ${session?.access_token}`,
+            next: { tags: ['handleGetUserByFollowing'] },
         },
     })
         .then((res) => {
@@ -115,17 +116,15 @@ export const handleGetUserByFollowing = async () => {
             return error;
         })) as IBackendRes<IUser[]>;
 
-    return usersRandom;
+    return usersFollowing;
 };
 
-export const handleGetOneUseById = async () => {
-    const session = await getServerSession(authOptions);
-
-    const usersRandom = (await sendRequest<IBackendRes<IUser>>({
+export const handleGetOneUseById = async (id: string) => {
+    const user = (await sendRequest<IBackendRes<IUser>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user`,
         method: 'GET',
-        headers: {
-            Authorization: `Bearer ${session?.access_token}`,
+        queryParams: {
+            _id: id,
         },
         nextOption: {
             next: { tags: ['handleGetOneUseById'] },
@@ -139,5 +138,66 @@ export const handleGetOneUseById = async () => {
             return error;
         })) as IBackendRes<IUser>;
 
-    return usersRandom;
+    return user;
+};
+
+export const handleGetPostsFollowing = async () => {
+    const session = await getServerSession(authOptions);
+
+    console.log('session2', session);
+
+    const postsFollowing = (await sendRequest<IBackendRes<IModelPaginate<IPost>>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/post/timeline`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+        },
+        nextOption: {
+            next: { tags: ['handleGetPostsFollowing'] },
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleGetPostsFollowing', error);
+            return error;
+        })) as IBackendRes<IModelPaginate<IPost>>;
+
+    return postsFollowing;
+};
+
+export const handleCreatePost = async (data: {
+    desc: string;
+    target_type: string;
+    img?: string;
+    video?: string;
+}) => {
+    const session = await getServerSession(authOptions);
+
+    const createPost = (await sendRequest<IBackendRes<IModelPaginate<IPost>>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/post`,
+        method: 'POST',
+        body: data,
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+            target_type: data.target_type,
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleCreatePost', error);
+            return error;
+        })) as IBackendRes<IModelPaginate<IPost>>;
+
+    return createPost;
+};
+
+export const revalidateGetOneUseById = () => {
+    revalidateTag('handleGetOneUseById');
+};
+export const revalidateGetPostsFollowing = () => {
+    revalidateTag('handleGetPostsFollowing');
 };

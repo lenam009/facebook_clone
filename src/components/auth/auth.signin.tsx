@@ -13,9 +13,10 @@ import { Row, Col, Flex, Form, Input, Button, Divider, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 import { signIn, useSession } from 'next-auth/react';
-import { handleGetOneUseById } from '@/utils/actions/actions';
+import { handleGetOneUseById, revalidateGetOneUseById } from '@/utils/actions/actions';
 import { useAppDispatch, useAppSelector } from '@/utils/redux/hook';
 import { setUser, getUserSelector } from '@/utils/redux/userSlice';
+import { sendRequest } from '@/utils/api';
 
 import routes from '@/config/routes/routes';
 
@@ -27,26 +28,6 @@ export default function AuthSignin() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
 
-    // console.log('getUserSelector', useAppSelector(getUserSelector));
-
-    useEffect(() => {
-        if (session) {
-            const fetchApi = async () => {
-                const user = await handleGetOneUseById();
-
-                console.log('user', user.data);
-
-                if (user.data) {
-                    dispatch(setUser(user.data));
-                }
-            };
-
-            fetchApi();
-
-            router.push(routes.home.path);
-        }
-    }, [session]);
-
     const handleOnSubmit = async (values: any) => {
         setIsLoading(true);
         const result = await signIn('credentials', {
@@ -56,7 +37,10 @@ export default function AuthSignin() {
         });
         setIsLoading(false);
 
-        if (!result?.ok) {
+        if (result?.ok) {
+            revalidateGetOneUseById();
+            router.push(routes.home.path);
+        } else {
             message.error(result?.error);
         }
     };
