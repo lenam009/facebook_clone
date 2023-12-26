@@ -26,4 +26,10 @@ const deleteFile = (pathFile, next) => {
     });
 };
 
-module.exports = deleteFile;
+const deleteFileApi = (req, res, next) => {
+    const fileName = req.body.filename;
+
+    deleteFile();
+};
+
+module.exports = { deleteFileApi, deleteFile };

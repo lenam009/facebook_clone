@@ -1,8 +1,6 @@
 var jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const path = require('path');
-const deleteFile = require('../middlewares/delete.file');
 
 function between(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);

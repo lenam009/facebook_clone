@@ -7,7 +7,22 @@ const path = require('path');
 //     next,
 // );
 
-const copyFile = (sourcePath, destinationPath, next) => {
+const getDestinationOfFile = (req) => {
+    if (req.headers.target_type === 'image_post') {
+        return 'public/images/post';
+    } else if (req.headers.target_type === 'image_person') {
+        return 'public/images/person';
+    } else if (req.headers.target_type === 'video') {
+        return 'public/videos';
+    } else {
+        return 'public/test';
+    }
+};
+
+const moveFile = async (fileName, req, next) => {
+    const sourcePath = '/public/test/' + fileName;
+    const destinationPath = getDestinationOfFile(req) + '/' + fileName;
+
     // path=`/public/images/post/images.jpg`
     const sourcePathFull = path.join(__dirname, '../..', sourcePath);
     const destinationPathFull = path.join(__dirname, '../..', destinationPath);
@@ -15,11 +30,10 @@ const copyFile = (sourcePath, destinationPath, next) => {
     // console.log('sourcePathFull', sourcePathFull);
     // console.log('destinationPathFull', destinationPathFull);
 
-    fs.access(sourcePathFull, fs.constants.F_OK, async (err) => {
+    return await fs.access(sourcePathFull, fs.constants.F_OK, async (err) => {
         if (!err) {
             await fs.rename(sourcePathFull, destinationPathFull, (err) => {
                 if (err) {
-                    console.log('error...', err);
                     return next({
                         statusCode: 500,
                         message: 'Move file failed',
@@ -32,4 +46,4 @@ const copyFile = (sourcePath, destinationPath, next) => {
     });
 };
 
-module.exports = copyFile;
+module.exports = moveFile;

@@ -10,6 +10,16 @@ const getTypeOfFile = (file) => {
     }
 };
 
+const getTitleOfFile = (file) => {
+    if (file.mimetype.includes('image')) {
+        return 'image';
+    } else if (file.mimetype.includes('video')) {
+        return 'video';
+    } else {
+        return '';
+    }
+};
+
 const getDestinationOfFile = (req) => {
     if (req.headers.target_type === 'image_post') {
         return 'public/images/post';
@@ -28,9 +38,11 @@ const storage = multer.diskStorage({
         cb(null, dest);
     },
     filename: (req, file, cb) => {
+        const title = getTitleOfFile(file) + '-';
+
         const type = getTypeOfFile(file);
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, uniqueSuffix + '.' + type);
+        cb(null, title + uniqueSuffix + '.' + type);
     },
 });
 

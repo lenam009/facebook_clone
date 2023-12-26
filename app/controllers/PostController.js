@@ -1,6 +1,6 @@
 const Post = require('../models/Post');
 const User = require('../models/User');
-const copyFile = require('../middlewares/copy.file');
+const moveFile = require('../middlewares/move.file');
 const deleteFile = require('../middlewares/delete.file');
 
 async function getOneUserById(_id) {
@@ -155,8 +155,13 @@ class PostController {
     }
 
     //POST /post
-    create(req, res, next) {
+    async create(req, res, next) {
         const user = req.user;
+
+        const fileName = req.body.img ?? req.body.video;
+
+        await moveFile(fileName, req, next);
+
         Post.create({ userId: user._id, ...req.body })
             .then((response) =>
                 res.status(201).json({
@@ -317,6 +322,18 @@ class PostController {
             message: 'Upload file successfully',
             data: {
                 filename: req.file.filename,
+            },
+        });
+    }
+
+    deleteFile(req, res, next) {
+        // console.log('req.file', req.file);
+        // console.log('req.body', req.body);
+        return res.status(201).json({
+            statusCode: 201,
+            message: 'Delete file successfully',
+            data: {
+                message: 'Delete file successfully',
             },
         });
     }

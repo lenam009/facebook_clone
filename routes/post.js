@@ -26,6 +26,13 @@ router.post(
     PostController.uploadFile,
 );
 
+// router.delete(
+//     '/deleteFile',
+//     authenticationMiddleware.checkToken,
+//     deleteFile()
+//     PostController.deleteFile,
+// );
+
 router.delete('/:_id', authenticationMiddleware.checkToken, PostController.delete);
 
 router.put('/:_id', authenticationMiddleware.checkToken, PostController.update);
