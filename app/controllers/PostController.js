@@ -1,5 +1,12 @@
 const Post = require('../models/Post');
 const User = require('../models/User');
+const copyFile = require('../middlewares/copy.file');
+const deleteFile = require('../middlewares/delete.file');
+
+async function getOneUserById(_id) {
+    const userCurrent = await User.findById(_id).catch(() => null);
+    return userCurrent;
+}
 
 class PostController {
     //GET /post (Get all posts)
@@ -55,6 +62,17 @@ class PostController {
     //                                                  /post/timeline/:userId
     async getPostByFollowing(req, res, next) {
         const user = req.user;
+
+        const userCurrent = await getOneUserById(user._id);
+
+        if (!userCurrent) {
+            return next({
+                statusCode: 500,
+                message: 'Get user by id failed',
+                error: 'Get user by id failed',
+            });
+        }
+
         const postUser = await Post.find({ userId: user._id })
             .sort({ updatedAt: 'desc' })
             .catch(() => null);
@@ -67,7 +85,7 @@ class PostController {
 
         let postArray = [];
         return await Promise.all(
-            user.followings.map((x) =>
+            userCurrent.followings.map((x) =>
                 Post.find({ userId: x }).sort({ updatedAt: 'desc' }),
             ),
         )
@@ -83,7 +101,7 @@ class PostController {
                             pages: 0,
                             total: 0,
                         },
-                        posts: postArray,
+                        result: postArray,
                     },
                 });
             })

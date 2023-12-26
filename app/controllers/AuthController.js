@@ -9,10 +9,7 @@ const generateAccessToken = (user) => {
     const access_token = jwt.sign(
         {
             _id: user._id,
-            username: user.username,
             email: user.email,
-            isAdmin: user.isAdmin,
-            followings: user.followings,
         },
         process.env.ACCESS_KEY,
         {
@@ -120,7 +117,7 @@ class AuthController {
                 return res.status(201).json({
                     statusCode: 201,
                     message: 'Login successfully',
-                    data: { access_token, refresh_token, ...payloads },
+                    data: { access_token, refresh_token, user: payloads },
                 });
             })
             .catch(() =>

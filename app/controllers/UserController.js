@@ -1,12 +1,24 @@
 var jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const path = require('path');
+const deleteFile = require('../middlewares/delete.file');
+
+function between(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+async function getOneUserById(_id) {
+    const userCurrent = await User.findById(_id).catch(() => null);
+    return userCurrent;
+}
 
 class UserController {
     //GET /user/getall
     getall(req, res, next) {
         User.find()
             .sort({ updatedAt: 'desc' })
+            .select({ password: 0 })
             .then((users) =>
                 res.status(200).json({
                     statusCode: 200,
@@ -33,46 +45,84 @@ class UserController {
 
     //GET /user/?_id=''&username=''
     async getOneUser(req, res, next) {
-        const _id = req.query._id;
-        const username = req.query.username;
+        // const user = req.user;
+        const id = req.query._id;
+        console.log('id', id);
 
-        return _id
-            ? await User.findById(_id)
-                  .then((user) => {
-                      const { password, ...payloads } = user._doc;
-                      return res.status(200).json({
-                          statusCode: 200,
-                          message: 'Get user successfully',
-                          data: {
-                              ...payloads,
-                          },
-                      });
-                  })
-                  .catch(() =>
-                      next({
-                          statusCode: 404,
-                          message: 'Not found user',
-                          error: 'Not found user',
-                      }),
-                  )
-            : await User.findOne({ username: username })
-                  .then((user) => {
-                      const { password, ...payloads } = user._doc;
-                      return res.status(200).json({
-                          statusCode: 200,
-                          message: 'Get user successfully',
-                          data: {
-                              ...payloads,
-                          },
-                      });
-                  })
-                  .catch(() =>
-                      next({
-                          statusCode: 500,
-                          message: 'Get one user failed',
-                          error: 'Get one user failed',
-                      }),
-                  );
+        User.findById(id)
+            .then((user) => {
+                const { password, ...payloads } = user._doc;
+                return res.status(200).json({
+                    statusCode: 200,
+                    message: 'Get user successfully',
+                    data: {
+                        ...payloads,
+                    },
+                });
+            })
+            .catch(() =>
+                next({
+                    statusCode: 404,
+                    message: 'Not found user',
+                    error: 'Not found user',
+                }),
+            );
+    }
+
+    async getUserByFollowing(req, res, next) {
+        const user = req.user;
+
+        const userCurrent = await getOneUserById(user._id, next);
+
+        if (!userCurrent) {
+            return next({
+                statusCode: 500,
+                message: 'Get user by id failed',
+                error: 'Get user by id failed',
+            });
+        }
+
+        User.find({ _id: { $in: userCurrent.followings } })
+            .limit(10)
+            .then((response) =>
+                res.status(200).json({
+                    statusCode: 200,
+                    message: 'Get user successfully',
+                    data: response,
+                }),
+            )
+            .catch(() =>
+                next({
+                    statusCode: 500,
+                    message: 'Get user by following failed',
+                    error: 'Get user by following failed',
+                }),
+            );
+    }
+
+    async getUserRandom(req, res, next) {
+        const countAllUsers = await User.countDocuments();
+
+        const randomIndex = between(0, countAllUsers <= 7 ? 0 : countAllUsers - 7);
+
+        User.find()
+            .skip(randomIndex)
+            .sort({ createdAt: 'desc' })
+            .limit(7)
+            .then((response) =>
+                res.status(200).json({
+                    statusCode: 200,
+                    message: 'Get user random successfully',
+                    data: response,
+                }),
+            )
+            .catch(() =>
+                next({
+                    statusCode: 500,
+                    message: 'Get user random failed',
+                    error: 'Get user random failed',
+                }),
+            );
     }
 
     //DELETE /user/:_id
@@ -146,7 +196,6 @@ class UserController {
         const userToken = req.user;
 
         if (userToken._id !== req.params._id) {
-            //Get 2 user follow và bị follow và current user là người phát request
             const users = await Promise.all([
                 User.findById(req.params._id),
                 User.findById(userToken._id),
@@ -157,6 +206,7 @@ class UserController {
                     message: 'Not found user',
                     error: 'Not found user',
                 });
+            // userCurrent là người phát request
             const { user, userCurrent } = users;
             //Xét 2 trường hợp đã follow hoặc chưa follow
             if (!userCurrent.followings.includes(user._id)) {

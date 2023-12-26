@@ -7,6 +7,18 @@ router.get('/', UserController.getOneUser);
 
 router.get('/getall', UserController.getall);
 
+router.get(
+    '/getUserByFollowing',
+    authenticationMiddleware.checkToken,
+    UserController.getUserByFollowing,
+);
+
+router.get(
+    '/getUserRandom',
+    authenticationMiddleware.checkToken,
+    UserController.getUserRandom,
+);
+
 router.put('/', authenticationMiddleware.checkToken, UserController.update);
 
 router.delete(

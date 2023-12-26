@@ -21,19 +21,25 @@ const corsPolicy = (app) => {
     const corsOptions = {
         credentials: true,
         origin: 'http://localhost:3000',
+        optionSuccessStatus: 200,
     };
 
     app.use(cors(corsOptions));
 
-    // app.use(function (req, res, next) {
-    //     res.header('Content-Type', 'application/json;charset=UTF-8');
-    //     res.header('Access-Control-Allow-Credentials', true);
-    //     res.header(
-    //         'Access-Control-Allow-Headers',
-    //         'Origin, X-Requested-With, Content-Type, Accept',
-    //     );
-    //     next();
-    // });
+    app.use(function (req, res, next) {
+        // res.header('Content-Type', 'application/json;charset=UTF-8');
+        // res.header('Access-Control-Allow-Credentials', true);
+        // res.header(
+        //     'Access-Control-Allow-Headers',
+        //     'Origin, X-Requested-With, Content-Type, Accept',
+        // );
+
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+        next();
+    });
 };
 
 //Parser json

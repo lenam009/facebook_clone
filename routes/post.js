@@ -22,7 +22,7 @@ router.post('/', authenticationMiddleware.checkToken, PostController.create);
 router.post(
     '/upload',
     authenticationMiddleware.checkToken,
-    upload.single('file'),
+    upload.uploadFile.single('file'),
     PostController.uploadFile,
 );
 
