@@ -2,11 +2,9 @@
 
 ### Link Backend : https://github.com/lenam009/facebook_clone/tree/facebook_express
 
-### Công nghệ sử dụng: typescript, nextAuth, redux
+### Công nghệ sử dụng: typescript, nextAuth, redux, next 14 appRouter
 
 ### UI: Antd, Mui
-
-### Next Js version: 14.0.2
 
 ### Áp dụng JWT
 
