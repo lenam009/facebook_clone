@@ -42,7 +42,7 @@ export default function AuthSignin() {
         setIsLoading(false);
 
         if (result?.ok) {
-            revalidateGetOneUseById();
+            await revalidateGetOneUseById();
             router.push(routes.home.path);
         } else {
             message.error(result?.error);

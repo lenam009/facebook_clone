@@ -7,8 +7,8 @@ import ReduxWrapper from '@/utils/redux/redux.wrapper';
 import ReduxFetchApi from '@/components/WrapperReducerRedux/redux.fetchApi';
 
 export const metadata = {
-    title: 'Home',
-    description: 'Home',
+    title: 'Facebook Clone',
+    description: 'Facebook Clone',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
