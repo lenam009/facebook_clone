@@ -12,49 +12,38 @@ import RightBarProfile from '@/components/Profile/RightBarProfile/rightBarProfil
 // import { useAppDispatch, useAppSelector } from '@/redux/hook';
 // import { setUser, getUserCurrentSelector } from '@/redux/userSlice';
 
-export default function ProfileUser() {
-    const [user, setUser] = useState<IUser | null>(null);
-
-    const user1 = {
-        _id: '657fb2b2902a695ddb00259c',
-        username: 'admin',
-        email: 'admin@gmail.com',
-        profilePicture: '',
-        coverPicture: '',
-        followers: [],
-        followings: ['6584304d7f0d80d9ee444605', '65843d9edfd97497a727581d'],
-        isAdmin: true,
-        desc: '',
-        city: 'New York 123 456',
-        from: '',
-        createdAt: '2023-12-18T02:47:14.717Z',
-        updatedAt: '2023-12-23T08:45:18.073Z',
-        __v: 0,
-    };
-
-    // const params = useParams();
-
-    // const dispatch = useAppDispatch();
-    // const user = useAppSelector(getUserCurrentSelector);
-
-    useEffect(() => {
-        // userApi.getOneUser('', params.username).then((res: any) => setUser(res));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
+interface IProp {
+    userRandom: IUser[] | undefined;
+    userCurrentProfile: IUser | undefined;
+    postsByUserId: IPost[] | undefined;
+    usersFollowing: IUser[] | undefined;
+}
+export default function ProfileUser({
+    userRandom,
+    userCurrentProfile,
+    postsByUserId,
+    usersFollowing,
+}: IProp) {
     return (
         <Row className={styles['wrapper']}>
             <Col span={4}>
-                <LeftBar />
+                <LeftBar user={userRandom} />
             </Col>
             <Col span={20}>
-                <Walkpaper user={user} />
+                <Walkpaper user={userCurrentProfile} />
                 <Row>
                     <Col span={17}>
-                        {user1?.username && <Feed user={user} home={false} />}
+                        <Feed
+                            user={userCurrentProfile}
+                            home={false}
+                            posts={postsByUserId}
+                        />
                     </Col>
                     <Col span={7}>
-                        <RightBarProfile user={user} />
+                        <RightBarProfile
+                            user={userCurrentProfile}
+                            usersFollowing={usersFollowing}
+                        />
                     </Col>
                 </Row>
             </Col>

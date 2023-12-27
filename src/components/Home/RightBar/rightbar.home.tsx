@@ -49,7 +49,12 @@ export default function RightBar({ user }: { user: IUser[] | undefined }) {
             <div>
                 {user &&
                     user.map((x, index) => (
-                        <AccountItem user={x} key={index} size={'large'} online={true} />
+                        <AccountItem
+                            user={x}
+                            key={x._id + ''}
+                            size={'large'}
+                            online={true}
+                        />
                     ))}
             </div>
         </div>

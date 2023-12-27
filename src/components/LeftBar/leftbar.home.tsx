@@ -62,15 +62,6 @@ const items: IProps[] = [
 ];
 
 export default function LeftBar({ user }: { user: IUser[] | undefined }) {
-    // const [user, setUser] = useState<IUser[]>([]);
-
-    // const user = useAppSelector(getUserCurrentSelector);
-
-    // useEffect(() => {
-    //     userApi.getAllUser().then((res: any) => setUser(res));
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-
     return (
         <div className={styles['wrapper']}>
             {items.map((x, index) => (

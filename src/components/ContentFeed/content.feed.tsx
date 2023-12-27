@@ -7,10 +7,11 @@ import dayjs from 'dayjs';
 import AvatarCustom from '../Avatar/avatar.custom';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {
-    handleGetOneUseById,
+    handleGetOneUserById,
     handleLikeOrDisLikePost,
     revalidateGetPostsFollowing,
 } from '@/utils/actions/actions';
+import { useRouter } from 'next/navigation';
 
 dayjs.extend(relativeTime);
 
@@ -39,6 +40,7 @@ import {
 } from '@ant-design/icons';
 import { useAppSelector } from '@/utils/redux/hook';
 import { getUserSelector } from '@/utils/redux/userSlice';
+import { convertSlugUrl } from '@/utils/api';
 
 const icons = [
     <LikeFilled style={{ color: 'blue' }} className={styles['iconHover']} />,
@@ -50,12 +52,13 @@ const icons = [
 
 export default function ContentFeed(post: IPost) {
     const [user, setUser] = useState<IUser | undefined>(undefined);
+    const router = useRouter();
 
     const userCurrent = useAppSelector(getUserSelector);
 
     useEffect(() => {
         const fetchUser = async () => {
-            const userApi = await handleGetOneUseById(post.userId);
+            const userApi = await handleGetOneUserById(post.userId);
             if (userApi.data) {
                 setUser(userApi.data);
             }
@@ -68,6 +71,7 @@ export default function ContentFeed(post: IPost) {
         if (result.data) {
             // message.success(result.message);
             revalidateGetPostsFollowing();
+            // router.refresh();
         } else {
             message.error(result.message);
         }
@@ -79,14 +83,28 @@ export default function ContentFeed(post: IPost) {
                 <DashOutlined />
             </Button>
             <Flex>
-                <Link href={routes.profile.prefix + '/' + user?.username}>
+                <Link
+                    href={
+                        routes.profile.prefix +
+                        '/' +
+                        convertSlugUrl(user?.username) +
+                        '-' +
+                        user?._id
+                    }
+                >
                     <AvatarCustom user={user} />
                 </Link>
 
                 <div>
                     <Flex style={{ padding: '0px 12px' }} vertical>
                         <Link
-                            href={routes.profile.prefix + '/' + user?.username}
+                            href={
+                                routes.profile.prefix +
+                                '/' +
+                                convertSlugUrl(user?.username) +
+                                '-' +
+                                user?._id
+                            }
                             style={{ color: 'black' }}
                         >
                             <h4 className={styles['name']}>{user?.username}</h4>
@@ -109,6 +127,7 @@ export default function ContentFeed(post: IPost) {
                     height={400}
                     width={'calc(100% + 24px)'}
                     rootClassName={styles['image']}
+                    fallback="/unknown.png"
                     src={process.env.NEXT_PUBLIC_BACKEND_URL + '/images/post/' + post.img}
                 />
             )}

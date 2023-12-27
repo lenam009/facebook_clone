@@ -1,9 +1,16 @@
 import Box from '@mui/material/Box';
 import Header from '@/components/Header/header';
 
-export default function UserLayout({ children }: { children: React.ReactNode }) {
+export default function UserLayout({
+    children,
+    header,
+}: {
+    children: React.ReactNode;
+    header: React.ReactNode;
+}) {
     return (
         <Box>
+            {/* {header} */}
             <Header />
             <Box
                 sx={{

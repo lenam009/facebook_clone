@@ -18,7 +18,8 @@ import routes from '@/config/routes/routes';
 import { getUserSelector, setUser } from '@/utils/redux/userSlice';
 import { useAppSelector, useAppDispatch } from '@/utils/redux/hook';
 import { revalidateGetOneUseById } from '@/utils/actions/actions';
-import { handleGetOneUseById } from '@/utils/actions/actions';
+import { handleGetOneUserById } from '@/utils/actions/actions';
+import { convertSlugUrl } from '@/utils/api';
 
 const cx = classNames.bind(styles);
 
@@ -34,7 +35,7 @@ export default function Header() {
     const handleOnClickLogout = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
 
-        dispatch(setUser(undefined));
+        // dispatch(setUser(undefined));
         signOut({ redirect: true });
     };
 
@@ -79,28 +80,31 @@ export default function Header() {
                             </Button>
                         )}
 
-                        <button
+                        {/* <button
                             onClick={async () => {
                                 revalidateGetOneUseById();
                                 // router.refresh();
                             }}
                         >
                             test
-                        </button>
-
-                        {/* <Button style={{ marginRight: '12px' }}>
-                            <Link href={routes.login.path}>Đăng nhập</Link>
-                        </Button> */}
+                        </button> */}
 
                         {user && (
-                            <Link href={routes.profile.prefix + '/' + user?.username}>
+                            <Link
+                                href={
+                                    routes.profile.prefix +
+                                    '/' +
+                                    convertSlugUrl(user?.username) +
+                                    '-' +
+                                    user?._id
+                                }
+                            >
                                 <AvatarCustom user={user} />
                             </Link>
                         )}
                     </Flex>
                 </Col>
             </Row>
-
             <Search
                 showInputSearch={showInputSearch}
                 setShowInputSearch={setShowInputSearch}

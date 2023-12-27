@@ -16,6 +16,8 @@ import {
 import { useSession } from 'next-auth/react';
 import { handleCreatePost, revalidateGetPostsFollowing } from '@/utils/actions/actions';
 import { UploadFile } from 'antd';
+import Skeleton from '@mui/material/Skeleton';
+import Box from '@mui/material/Box';
 // import postApi from '@/api/postApi';
 // import axios from 'axios';
 
@@ -68,7 +70,7 @@ export default function Share({ user }: IProp) {
 
     const props: UploadProps = {
         name: 'file',
-        action: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/post/upload`,
+        action: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/upload`,
         headers: {
             Authorization: `Bearer ${sessionAuth?.access_token}`,
         },

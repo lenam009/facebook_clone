@@ -32,28 +32,34 @@ export const handleLikeTrackAction = async (id: any, quantity: any) => {
     return likeAction;
 };
 
-export const handleFollowUserAction = async () => {
-    const likeAction = await sendRequest<IBackendRes<any>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/65843d9edfd97497a727581d/follow`,
+export const handleFollowOrUnfollowUserAction = async (
+    userIdFollowed: string,
+    follow: boolean,
+) => {
+    const session = await getServerSession(authOptions);
+    const isFollow: string = follow ? 'follow' : 'unfollow';
+
+    const followAction = (await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/${userIdFollowed}/${isFollow}`,
         method: 'PUT',
         headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTdmYjJiMjkwMmE2OTVkZGIwMDI1OWMiLCJ1c2VybmFtZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJpc0FkbWluIjp0cnVlLCJmb2xsb3dpbmdzIjpbIjY1ODQzMDRkN2YwZDgwZDllZTQ0NDYwNSJdLCJpYXQiOjE3MDMyMTk2MjksImV4cCI6MTcwMzgyNDQyOX0.bLS8qjtA80M3FV1fdP_4sIXDutPGA-o8t3m48wzWxEY`,
+            Authorization: `Bearer ${session?.access_token}`,
             // cache: 'no-store',
         },
 
         nextOption: {
-            next: { tags: ['followuser'] },
+            next: { tags: ['handleFollowOrUnfollowUserAction'] },
         },
     })
-        .then(async (res) => {
-            return res.data;
+        .then((res) => {
+            return res;
         })
         .catch((error) => {
-            console.log('error', error);
-            return null;
-        });
+            console.log('error handleFollowOrUnfollowUserAction', error);
+            return error;
+        })) as IBackendRes<any>;
 
-    // revalidateTag('followuser');
+    return followAction;
 };
 
 export const handleSignInAction = async (email: string, password: string) => {
@@ -97,14 +103,13 @@ export const handleGetUserRandomAction = async () => {
     return usersRandom;
 };
 
-export const handleGetUserByFollowing = async () => {
-    const session = await getServerSession(authOptions);
+export const handleGetUserByFollowing = async (userId: string) => {
+    // const session = await getServerSession(authOptions);
 
     const usersFollowing = (await sendRequest<IBackendRes<IUser[]>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getUserByFollowing`,
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getUserByFollowing/${userId}`,
         method: 'GET',
         headers: {
-            Authorization: `Bearer ${session?.access_token}`,
             next: { tags: ['handleGetUserByFollowing'] },
         },
     })
@@ -119,7 +124,7 @@ export const handleGetUserByFollowing = async () => {
     return usersFollowing;
 };
 
-export const handleGetOneUseById = async (id: string) => {
+export const handleGetOneUserById = async (id: string) => {
     const user = (await sendRequest<IBackendRes<IUser>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user`,
         method: 'GET',
@@ -127,7 +132,7 @@ export const handleGetOneUseById = async (id: string) => {
             _id: id,
         },
         nextOption: {
-            next: { tags: ['handleGetOneUseById'] },
+            next: { tags: ['handleGetOneUserById'] },
         },
     })
         .then((res) => {
@@ -143,8 +148,6 @@ export const handleGetOneUseById = async (id: string) => {
 
 export const handleGetPostsFollowing = async () => {
     const session = await getServerSession(authOptions);
-
-    console.log('session2', session);
 
     const postsFollowing = (await sendRequest<IBackendRes<IModelPaginate<IPost>>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/post/timeline`,
@@ -211,7 +214,7 @@ export const handleLikeOrDisLikePost = async (idPost: string) => {
         .catch((error) => {
             console.log('error handleCreatePost', error);
             return error;
-        })) as IBackendRes<IModelPaginate<IPost>>;
+        })) as IBackendRes<any>;
 
     return createPost;
 };
@@ -232,14 +235,67 @@ export const handleRegister = async (data: {
         .catch((error) => {
             console.log('error handleRegister', error);
             return error;
-        })) as IBackendRes<IModelPaginate<IPost>>;
+        })) as IBackendRes<any>;
 
     return registerUser;
 };
 
+export const handleGetPostsByUserId = async (userId: string) => {
+    const posts = (await sendRequest<IBackendRes<IModelPaginate<IPost>>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/post/profile/${userId}`,
+        method: 'GET',
+        nextOption: {
+            next: { tags: ['handleGetPostsByUserId'] },
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleGetPostsByUserId', error);
+            return error;
+        })) as IBackendRes<IModelPaginate<IPost>>;
+
+    return posts;
+};
+
+export const handleUpdateUser = async (data: {
+    username: string;
+    email: string;
+    desc: string;
+    city: string;
+    from: string;
+    profilePicture: string;
+    coverPicture: string;
+}) => {
+    const session = await getServerSession(authOptions);
+
+    const user = (await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user`,
+        method: 'PUT',
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+            target_type: 'image_person',
+        },
+        body: data,
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleUpdateUser', error);
+            return error;
+        })) as IBackendRes<any>;
+
+    return user;
+};
+
 export const revalidateGetOneUseById = () => {
-    revalidateTag('handleGetOneUseById');
+    revalidateTag('handleGetOneUserById');
 };
 export const revalidateGetPostsFollowing = () => {
     revalidateTag('handleGetPostsFollowing');
+};
+export const revalidateGetPostsByUserId = () => {
+    revalidateTag('handleGetPostsByUserId');
 };

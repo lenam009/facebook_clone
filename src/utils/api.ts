@@ -39,7 +39,7 @@ export const sendRequest = async <T>(props: IRequest) => {
                 } as T);
             });
         }
-    });
+    }) as T;
     // .catch((res) => {
     //     return res;
     // }) as T;

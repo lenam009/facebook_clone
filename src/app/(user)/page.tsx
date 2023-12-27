@@ -5,10 +5,10 @@ import RightBar from '@/components/Home/RightBar/rightbar.home';
 import {
     handleGetUserRandomAction,
     handleGetUserByFollowing,
-    handleGetOneUseById,
+    handleGetOneUserById,
     handleGetPostsFollowing,
 } from '@/utils/actions/actions';
-// import WrapperRedux from '@/components/WrapperReducerRedux/redux.dispatch';
+// import ReduxChangeState from '@/components/WrapperReducerRedux/redux.dispatch';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
@@ -36,15 +36,15 @@ export default async function HomePage() {
 
     const userRandom = await handleGetUserRandomAction();
 
-    const userByFolowing = await handleGetUserByFollowing();
+    const userByFolowing = await handleGetUserByFollowing(session?.user._id!);
 
     const postsFollowing = await handleGetPostsFollowing();
 
-    // // đời WrapperRedux ra ngoài layout và cả fetch user1
-    // const user1 = await handleGetOneUseById(session?.user._id);
+    // // đời ReduxChangeState ra ngoài layout và cả fetch user1
+    // const user1 = await handleGetOneUserById(session?.user._id);
 
     return (
-        // <WrapperRedux user={user1}>
+        // <ReduxChangeState user={user1}>
         <Row>
             <Col span={4}>
                 <LeftBar user={userRandom.data} />
@@ -56,6 +56,6 @@ export default async function HomePage() {
                 <RightBar user={userByFolowing.data} />
             </Col>
         </Row>
-        // </WrapperRedux>
+        // </ReduxChangeState>
     );
 }

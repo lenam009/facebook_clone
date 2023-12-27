@@ -13,7 +13,7 @@ import { Row, Col, Flex, Form, Input, Button, Divider, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 import { signIn, useSession } from 'next-auth/react';
-import { handleGetOneUseById, revalidateGetOneUseById } from '@/utils/actions/actions';
+import { handleGetOneUserById, revalidateGetOneUseById } from '@/utils/actions/actions';
 import { useAppDispatch, useAppSelector } from '@/utils/redux/hook';
 import { setUser, getUserSelector } from '@/utils/redux/userSlice';
 import { sendRequest } from '@/utils/api';
@@ -27,6 +27,10 @@ export default function AuthSignin() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
+
+    useEffect(() => {
+        dispatch(setUser(undefined));
+    }, []);
 
     const handleOnSubmit = async (values: any) => {
         setIsLoading(true);

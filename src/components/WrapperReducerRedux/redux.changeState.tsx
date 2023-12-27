@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { handleGetOneUseById } from '@/utils/actions/actions';
+import { handleGetOneUserById } from '@/utils/actions/actions';
 import { useAppDispatch, useAppSelector } from '@/utils/redux/hook';
 import { setUser } from '@/utils/redux/userSlice';
 import { useEffect } from 'react';
@@ -9,7 +9,7 @@ import { sendRequest } from '@/utils/api';
 import { useRouter } from 'next/navigation';
 import routes from '@/config/routes/routes';
 
-export default function WrapperRedux({
+export default function ReduxChangeState({
     children,
     user,
 }: {
