@@ -35,6 +35,9 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 //path Video
 app.use('/videos', express.static(path.join(__dirname, 'public/videos')));
 
+//path/test
+app.use('/test', express.static(path.join(__dirname, 'public/test')));
+
 //Middleware server
 serverMiddleware.map((x) => x(app));
 

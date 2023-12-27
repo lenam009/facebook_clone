@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const moveFile = require('../middlewares/move.file');
 
 function between(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -67,10 +68,11 @@ class UserController {
             );
     }
 
+    //GET /user/getUserByFollowing/:_id
     async getUserByFollowing(req, res, next) {
-        const user = req.user;
+        const userId = req.params._id;
 
-        const userCurrent = await getOneUserById(user._id, next);
+        const userCurrent = await getOneUserById(userId, next);
 
         if (!userCurrent) {
             return next({
@@ -165,14 +167,29 @@ class UserController {
     //PUT /user
     async update(req, res, next) {
         const user = req.user;
-        // user._id === req.params._id || user.isAdmin
+
+        // const profilePicture = req.body.profilePicture;
+        // const coverPicture = req.body.coverPicture;
+
+        let { profilePicture, coverPicture, ...data } = req.body;
+
+        if (profilePicture) {
+            data = { ...data, profilePicture };
+            await moveFile(profilePicture, req, next);
+        }
+
+        if (coverPicture) {
+            data = { ...data, coverPicture };
+            await moveFile(coverPicture, req, next);
+        }
 
         if (req.body.password) {
             const saltRounds = 10;
             const hassPassword = await bcrypt.hash(req.body.password, saltRounds);
             req.body.password = hassPassword;
         }
-        User.findByIdAndUpdate(user._id, req.body)
+
+        User.findByIdAndUpdate(user._id, data)
             .then(() =>
                 res.status(200).json({
                     statusCode: 200,

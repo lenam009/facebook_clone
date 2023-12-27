@@ -7,11 +7,7 @@ router.get('/', UserController.getOneUser);
 
 router.get('/getall', UserController.getall);
 
-router.get(
-    '/getUserByFollowing',
-    authenticationMiddleware.checkToken,
-    UserController.getUserByFollowing,
-);
+router.get('/getUserByFollowing/:_id', UserController.getUserByFollowing);
 
 router.get(
     '/getUserRandom',

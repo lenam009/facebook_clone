@@ -13,7 +13,7 @@ router.get(
     PostController.getPostByFollowing,
 );
 
-router.get('/profile/:username', PostController.getPostByUsername);
+router.get('/profile/:_id', PostController.getPostByUserId);
 
 router.get('/:_id', PostController.getOnePost);
 

@@ -34,8 +34,8 @@ const getDestinationOfFile = (req) => {
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dest = getDestinationOfFile(req);
-        cb(null, dest);
+        // const dest = getDestinationOfFile(req);
+        cb(null, 'public/test');
     },
     filename: (req, file, cb) => {
         const title = getTitleOfFile(file) + '-';

@@ -115,16 +115,14 @@ class PostController {
     }
 
     //GET(Chỉ nhận bài post của user có name tương ứng) /post/profile/:username
-    async getPostByUsername(req, res, next) {
-        const user = await User.findOne({ username: req.params.username })
-            .then((response) => response)
-            .catch(() => null);
+    async getPostByUserId(req, res, next) {
+        const user = await User.findById(req.params._id).catch(() => null);
 
         if (!user) {
             return next({
-                statusCode: 500,
-                message: 'Get user by username failed',
-                error: 'Get user by username failed',
+                statusCode: 404,
+                message: 'Not found user',
+                error: 'Not found user',
             });
         }
 
@@ -133,7 +131,7 @@ class PostController {
             .then((response) =>
                 res.status(200).json({
                     statusCode: 200,
-                    message: 'Get post by username successfully',
+                    message: 'Get post by user id successfully',
                     data: {
                         meta: {
                             current: 0,
@@ -141,15 +139,15 @@ class PostController {
                             pages: 0,
                             total: 0,
                         },
-                        posts: response,
+                        result: response,
                     },
                 }),
             )
             .catch(() =>
                 next({
                     statusCode: 500,
-                    message: 'Get posts by username failed',
-                    error: 'Get posts by username failed',
+                    message: 'Get posts user id failed',
+                    error: 'Get posts user id failed',
                 }),
             );
     }
@@ -326,17 +324,17 @@ class PostController {
         });
     }
 
-    deleteFile(req, res, next) {
-        // console.log('req.file', req.file);
-        // console.log('req.body', req.body);
-        return res.status(201).json({
-            statusCode: 201,
-            message: 'Delete file successfully',
-            data: {
-                message: 'Delete file successfully',
-            },
-        });
-    }
+    // deleteFile(req, res, next) {
+    //     // console.log('req.file', req.file);
+    //     // console.log('req.body', req.body);
+    //     return res.status(201).json({
+    //         statusCode: 201,
+    //         message: 'Delete file successfully',
+    //         data: {
+    //             message: 'Delete file successfully',
+    //         },
+    //     });
+    // }
 }
 
 module.exports = new PostController();
