@@ -90,17 +90,6 @@ export default function Modal() {
             }
             return isPNG || Upload.LIST_IGNORE;
         },
-
-        onChange(info) {
-            if (info.fileList[0]?.response) {
-                // setFile(info.fileList[0].response.data.filename);
-            }
-            if (info.file.status === 'done') {
-                message.success(info.fileList[0].response.message);
-            } else if (info.file.status === 'error') {
-                message.error(info.fileList[0].response.message);
-            }
-        },
     };
 
     const propsProfilePicture: UploadProps = {
@@ -110,9 +99,9 @@ export default function Modal() {
                 setProfilePicture(info.fileList[0].response.data.filename);
             }
             if (info.file.status === 'done') {
-                message.success(info.fileList[0].response.message);
+                // message.success(info.fileList[0].response.message);
             } else if (info.file.status === 'error') {
-                message.error(info.fileList[0].response.message);
+                // message.error(info.fileList[0].response.message);
             }
         },
     };
@@ -124,9 +113,9 @@ export default function Modal() {
                 setCoverPicture(info.fileList[0].response.data.filename);
             }
             if (info.file.status === 'done') {
-                message.success(info.fileList[0].response.message);
+                // message.success(info.fileList[0].response.message);
             } else if (info.file.status === 'error') {
-                message.error(info.fileList[0].response.message);
+                // message.error(info.fileList[0].response.message);
             }
         },
     };

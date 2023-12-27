@@ -108,9 +108,9 @@ export default function Share({ user }: IProp) {
             }
             if (info.file.status === 'done') {
                 setFieldList(info.fileList);
-                message.success(info.fileList[0].response.message);
+                // message.success(info.fileList[0].response.message);
             } else if (info.file.status === 'error') {
-                message.error(info.fileList[0].response.message);
+                // message.error(info.fileList[0].response.message);
             }
         },
     };
