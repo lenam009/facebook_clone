@@ -6,6 +6,8 @@
 
 ### Áp dụng kĩ thuật App Routing, Data Fetching,... của Next Js
 
+### BackEnd: nodejs express, JWT
+
 ############# Trang Home ###############
 
 #Hiển thị ngẫu nhiên user (left bar)
