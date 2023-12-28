@@ -12,9 +12,9 @@
 
 ############# Trang Home ###############
 
-#Like bài viết
+#Post bài viết (Gồm content, video hoặc image bài viết)
 
-#Post bài viết
+#Like bài viết
 
 #Hiển thị ngẫu nhiên user (left bar)
 
