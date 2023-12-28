@@ -1,21 +1,9 @@
 'use client';
 import { useCallback, useRef, useEffect, MouseEventHandler, useState } from 'react';
 import Box from '@mui/material/Box';
-// import Button from "@mui/material/Button";
-import Typography from '@mui/material/Typography';
-import { default as ModalMui } from '@mui/material/Modal';
 import { useHasMounted } from '@/utils/customHook';
 
-import {
-    Button,
-    Modal as ModalAntd,
-    Form,
-    Input,
-    Image,
-    Upload,
-    UploadFile,
-    message,
-} from 'antd';
+import { Button, Modal as ModalAntd, Form, Input, Image, Upload, message } from 'antd';
 import type { UploadProps } from 'antd';
 import { useAppSelector } from '@/utils/redux/hook';
 import { getUserSelector } from '@/utils/redux/userSlice';

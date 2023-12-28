@@ -1,6 +1,6 @@
 'use client';
 import styles from './LeftBar.module.scss';
-import { useEffect, useState, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import { Button, Divider } from 'antd';
 import {

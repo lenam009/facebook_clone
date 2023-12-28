@@ -29,22 +29,8 @@ export default function ButtonHeaderTab({ children, to, icon, badge }: IProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
-    // console.log('tab', tab);
-    // console.log('to', to);
-    // console.log('pathname', pathname);
-    // console.log(tab === to);
-
     return (
-        <Link
-            className={cx(
-                'link',
-                icon && 'icon',
-                // 'active',
-                // tab === to || tab.includes(routes.profile.prefix) ? 'active' : '',
-            )}
-            // style={{ color: 'yellow' }}
-            href={to}
-        >
+        <Link className={cx('link', icon && 'icon')} href={to}>
             <>
                 <Badge count={badge}>
                     <span

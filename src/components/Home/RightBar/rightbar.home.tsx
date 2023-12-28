@@ -6,18 +6,8 @@ import { Divider } from 'antd';
 
 import ButtonRightBarAd from '@/components/Button/ButtonRightBarAd';
 import AccountItem from '@/components/AccountItem/account.item';
-// import userApi from '@/api/userApi';
 
 export default function RightBar({ user }: { user: IUser[] | undefined }) {
-    // const [user, setUser] = useState<IUser[] | null>([]);
-
-    // const user = useAppSelector(getUserCurrentSelector);
-
-    // useEffect(() => {
-    //     userApi.getAllUser().then((res: any) => setUser(res));
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-
     return (
         <div className={styles['wrapper']}>
             <h3 style={{ fontWeight: 650, color: 'rgba(22,24,35,0.65)' }}>

@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-import {
-    UserOutlined,
-    MessageOutlined,
-    BellOutlined,
-    HomeOutlined,
-} from '@ant-design/icons';
+import { UserOutlined, HomeOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { TabsProps, ConfigProvider } from 'antd';
 import { convertSlugUrl } from '@/utils/api';
@@ -15,20 +10,12 @@ import routes from '@/config/routes/routes';
 import ButtonHeaderTab from '@/components/Button/ButtonHeaderTab/button.header.tab';
 import { getUserSelector } from '@/utils/redux/userSlice';
 import { useAppSelector } from '@/utils/redux/hook';
-// import { useAppSelector } from '@/redux/hook';
-// import { getUserCurrentSelector } from '@/redux/userSlice';
 
 export default function HeaderTabs() {
     const [tab, setTab] = useState(routes.home.path);
     const pathname = usePathname();
 
     const user = useAppSelector(getUserSelector);
-
-    // const user = useAppSelector(getUserCurrentSelector);
-
-    // console.log('pathname', pathname);
-    // console.log('tab', tab);
-    // console.log('routes.profile.prefix', routes.profile.prefix);
 
     useEffect(() => {
         if (pathname.includes(routes.profile.prefix)) {

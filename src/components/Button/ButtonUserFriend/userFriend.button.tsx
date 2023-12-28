@@ -22,8 +22,6 @@ export default function ButtonUserFriend({
                 height={'120px'}
                 preview={false}
                 fallback="/user.png"
-                // alt="error"
-                // fallback="/assets/person/2.jpeg"
                 src={
                     process.env.NEXT_PUBLIC_BACKEND_URL +
                     '/images/person/' +

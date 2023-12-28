@@ -13,10 +13,9 @@ import { Row, Col, Flex, Form, Input, Button, Divider, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 import { signIn, useSession } from 'next-auth/react';
-import { handleGetOneUserById, revalidateGetOneUseById } from '@/utils/actions/actions';
-import { useAppDispatch, useAppSelector } from '@/utils/redux/hook';
-import { setUser, getUserSelector } from '@/utils/redux/userSlice';
-import { sendRequest } from '@/utils/api';
+import { revalidateGetOneUseById } from '@/utils/actions/actions';
+import { useAppDispatch } from '@/utils/redux/hook';
+import { setUser } from '@/utils/redux/userSlice';
 
 import routes from '@/config/routes/routes';
 
@@ -111,7 +110,7 @@ export default function AuthSignin() {
                                 <Button
                                     size="large"
                                     className={styles['btn-login']}
-                                    // disabled={isFetching}
+                                    disabled={isLoading}
                                     type="primary"
                                     block
                                     htmlType="submit"

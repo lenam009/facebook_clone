@@ -10,16 +10,6 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { handleRegister } from '@/utils/actions/actions';
 
 import routes from '@/config/routes/routes';
-// import { useAppDispatch, useAppSelector } from '@/redux/hook';
-// import {
-//     setUser,
-//     setIsFetching,
-//     getIsFetching,
-//     registerStart,
-//     registerSuccess,
-//     registerFailed,
-// } from '@/redux/userSlice';
-// import authApi from '@/api/authApi';
 
 export default function AuthRegister() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -135,6 +125,7 @@ export default function AuthRegister() {
                                 <Button
                                     size="large"
                                     className={styles['btn-login']}
+                                    disabled={isLoading}
                                     type="primary"
                                     block
                                     htmlType="submit"

@@ -1,9 +1,7 @@
 import styles from './rightBarProfile.user.module.scss';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import ButtonUserFriend from '@/components/Button/ButtonUserFriend/userFriend.button';
-// import { getUserCurrentSelector } from '@/redux/userSlice';
-// import { useAppSelector } from '@/redux/hook';
 import { Flex, Button, message } from 'antd';
 import { useAppSelector } from '@/utils/redux/hook';
 import { getUserSelector } from '@/utils/redux/userSlice';
@@ -15,8 +13,6 @@ import Link from 'next/link';
 import routes from '@/config/routes/routes';
 import { convertSlugUrl } from '@/utils/api';
 
-// import userApi from '@/api/userApi';
-
 interface IProp {
     user: IUser | undefined;
     usersFollowing: IUser[] | undefined;
@@ -24,7 +20,6 @@ interface IProp {
 export default function RightBarProfile({ user, usersFollowing }: IProp) {
     const userCurrent = useAppSelector(getUserSelector);
 
-    // const userCurrent = useAppSelector(getUserCurrentSelector);
     const [isFollow, setIsFollow] = useState<boolean>(
         userCurrent!.followings.includes(user?._id!),
     );

@@ -6,29 +6,23 @@ import Link from 'next/link';
 import AvatarCustom from '../Avatar/avatar.custom';
 import { useRouter } from 'next/navigation';
 
-// import { useNavigate } from 'react-router-dom';
-
-import { SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import { Avatar, Row, Col, Flex, Button } from 'antd';
 import { signOut } from 'next-auth/react';
 
 import HeaderTabs from './HeaderTabs/tabs.header';
 import Search from './Search/search';
 import routes from '@/config/routes/routes';
-import { getUserSelector, setUser } from '@/utils/redux/userSlice';
+import { getUserSelector } from '@/utils/redux/userSlice';
 import { useAppSelector, useAppDispatch } from '@/utils/redux/hook';
-import { revalidateGetOneUseById } from '@/utils/actions/actions';
-import { handleGetOneUserById } from '@/utils/actions/actions';
 import { convertSlugUrl } from '@/utils/api';
 
 const cx = classNames.bind(styles);
 
 export default function Header() {
     const [showInputSearch, setShowInputSearch] = useState<boolean>(false);
-    const router = useRouter();
 
     const user = useAppSelector(getUserSelector);
-    const dispatch = useAppDispatch();
 
     console.log('header_getUserSelector', user);
 

@@ -11,15 +11,10 @@ import {
     TagOutlined,
     EnvironmentOutlined,
     SmileOutlined,
-    UploadOutlined,
 } from '@ant-design/icons';
 import { useSession } from 'next-auth/react';
 import { handleCreatePost, revalidateGetPostsFollowing } from '@/utils/actions/actions';
 import { UploadFile } from 'antd';
-import Skeleton from '@mui/material/Skeleton';
-import Box from '@mui/material/Box';
-// import postApi from '@/api/postApi';
-// import axios from 'axios';
 
 const items: {
     key?: string;
@@ -59,14 +54,11 @@ interface IProp {
 }
 
 export default function Share({ user }: IProp) {
-    // const userCurrent = useAppSelector(getUserCurrentSelector);
     const [desc, setDesc] = useState<string>('');
     const [file, setFile] = useState<string>('');
     const [fieldList, setFieldList] = useState<UploadFile[]>([]);
 
     const { data: sessionAuth } = useSession();
-
-    // console.log('file', file);
 
     const props: UploadProps = {
         name: 'file',
@@ -75,8 +67,6 @@ export default function Share({ user }: IProp) {
             Authorization: `Bearer ${sessionAuth?.access_token}`,
         },
         maxCount: 1,
-
-        // fileList: fieldList,
 
         defaultFileList: fieldList,
 
@@ -108,9 +98,8 @@ export default function Share({ user }: IProp) {
             }
             if (info.file.status === 'done') {
                 setFieldList(info.fileList);
-                // message.success(info.fileList[0].response.message);
             } else if (info.file.status === 'error') {
-                // message.error(info.fileList[0].response.message);
+                message.error(info.fileList[0].response.message);
             }
         },
     };

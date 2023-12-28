@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './AccountItem.module.scss';
 import Link from 'next/link';
 
-import { Flex, Avatar, Badge, ConfigProvider } from 'antd';
+import { Flex, Badge, ConfigProvider } from 'antd';
 import { AvatarSize } from 'antd/es/avatar/AvatarContext';
 import AvatarCustom from '@/components/Avatar/avatar.custom';
 

@@ -5,34 +5,13 @@ import RightBar from '@/components/Home/RightBar/rightbar.home';
 import {
     handleGetUserRandomAction,
     handleGetUserByFollowing,
-    handleGetOneUserById,
     handleGetPostsFollowing,
 } from '@/utils/actions/actions';
-// import ReduxChangeState from '@/components/WrapperReducerRedux/redux.dispatch';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
-const user = {
-    _id: '657fb2b2902a695ddb00259c',
-    username: 'admin',
-    email: 'admin@gmail.com',
-    profilePicture: '',
-    coverPicture: '',
-    followers: [],
-    followings: ['6584304d7f0d80d9ee444605', '65843d9edfd97497a727581d'],
-    isAdmin: true,
-    desc: '',
-    city: 'New York 123 456',
-    from: '',
-    createdAt: '2023-12-18T02:47:14.717Z',
-    updatedAt: '2023-12-23T08:45:18.073Z',
-    __v: 0,
-};
-
 export default async function HomePage() {
     const session = await getServerSession(authOptions);
-
-    // console.log('session', session);
 
     const userRandom = await handleGetUserRandomAction();
 
@@ -40,11 +19,7 @@ export default async function HomePage() {
 
     const postsFollowing = await handleGetPostsFollowing();
 
-    // // đời ReduxChangeState ra ngoài layout và cả fetch user1
-    // const user1 = await handleGetOneUserById(session?.user._id);
-
     return (
-        // <ReduxChangeState user={user1}>
         <Row>
             <Col span={4}>
                 <LeftBar user={userRandom.data} />
@@ -56,6 +31,5 @@ export default async function HomePage() {
                 <RightBar user={userByFolowing.data} />
             </Col>
         </Row>
-        // </ReduxChangeState>
     );
 }

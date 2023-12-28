@@ -1,5 +1,4 @@
 import styles from './ContentFeed.module.scss';
-// import { Users } from '@/data/dataFacebook';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import routes from '@/config/routes/routes';
@@ -15,18 +14,8 @@ import { useRouter } from 'next/navigation';
 
 dayjs.extend(relativeTime);
 
+import { Flex, Button, Image, Divider, Popover, ConfigProvider, message } from 'antd';
 import {
-    Avatar,
-    Flex,
-    Button,
-    Image,
-    Divider,
-    Popover,
-    ConfigProvider,
-    message,
-} from 'antd';
-import {
-    UserOutlined,
     ClockCircleOutlined,
     LikeFilled,
     HeartFilled,
@@ -69,9 +58,7 @@ export default function ContentFeed(post: IPost) {
     const handleClickLike = async (e: React.MouseEvent) => {
         const result = await handleLikeOrDisLikePost(post._id!);
         if (result.data) {
-            // message.success(result.message);
             revalidateGetPostsFollowing();
-            // router.refresh();
         } else {
             message.error(result.message);
         }
