@@ -12,6 +12,10 @@
 
 ############# Trang Home ###############
 
+#Like bài viết
+
+#Post bài viết
+
 #Hiển thị ngẫu nhiên user (left bar)
 
 #Hiển thị những người bạn đang theo dõi (right bar)
@@ -20,13 +24,9 @@
 
 #Hiển thị bài post và thông tin của những người bạn đang theo dõi
 
-#Like bài viết
-
-#Post bài viết
-
 ############# Trang Profile ###############
 
-#Edit profile (áp dụng Intercept route và Parallel route)
+#Trang edit profile (áp dụng Intercept route và Parallel route)
 
 #Follow/Unfollow user
 
@@ -35,3 +35,6 @@
 #Hiển thị avatar (phần share) và thông tin cả nhân của chính bạn
 
 #Hiển thị bài post của chính bạn
+
+############# Trang Login ###############
+############# Trang Register ###############
