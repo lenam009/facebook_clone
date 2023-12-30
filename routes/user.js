@@ -3,7 +3,15 @@ const router = express.Router();
 const UserController = require('../app/controllers/UserController');
 const authenticationMiddleware = require('../app/middlewares/authentication');
 
-router.get('/', UserController.getOneUser);
+router.get(
+    '/',
+    (req, res, next) => {
+        setTimeout(() => {
+            next();
+        }, 2000);
+    },
+    UserController.getOneUser,
+);
 
 router.get('/getall', UserController.getall);
 
