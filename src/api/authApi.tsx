@@ -7,6 +7,7 @@ interface IAuth {
     token?: string;
     isAdmin?: boolean;
     user?: IUser;
+    data?: any;
 }
 
 const authApi = {

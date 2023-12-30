@@ -12,57 +12,57 @@ const axiosCreate: AxiosInstance = axios.create({
     },
 });
 
-const AxiosRequestHandler = ({ children }: { children: any }) => {
-    const currentUser = useAppSelector(getUserCurrentSelector);
+// const AxiosRequestHandler = ({ children }: { children: any }) => {
+//     const currentUser = useAppSelector(getUserCurrentSelector);
 
-    const currentUserRef = useRef(currentUser);
+//     const currentUserRef = useRef(currentUser);
 
-    useEffect(() => {
-        const responseInterceptor = axiosCreate.interceptors.request.use(
-            async function (config) {
-                if (currentUserRef && currentUserRef.current) {
-                    const currentDate = new Date();
-                    const decodeAccessToken = jwtDecode(currentUserRef.current.access_token!);
+//     useEffect(() => {
+//         const responseInterceptor = axiosCreate.interceptors.request.use(
+//             async function (config) {
+//                 if (currentUserRef && currentUserRef.current) {
+//                     const currentDate = new Date();
+//                     const decodeAccessToken = jwtDecode(currentUserRef.current.access_token!);
 
-                    console.log('currentUser', currentUser);
+//                     console.log('currentUser', currentUser);
 
-                    if (decodeAccessToken.exp! < currentDate.getTime() / 1000) {
-                        const data = await axiosCreate
-                            .get('auth/refresh', {
-                                withCredentials: true,
-                            })
-                            .then((res) => {
-                                console.log('res', res);
-                                // config.header['token'] = 'Bearer ${res.access_token}';
-                                // return res;
-                            })
-                            .catch((error) => {
-                                console.log('error', error);
-                                // return error;
-                            });
+//                     if (decodeAccessToken.exp! < currentDate.getTime() / 1000) {
+//                         const data = await axiosCreate
+//                             .get('auth/refresh', {
+//                                 withCredentials: true,
+//                             })
+//                             .then((res) => {
+//                                 console.log('res', res);
+//                                 // config.header['token'] = 'Bearer ${res.access_token}';
+//                                 // return res;
+//                             })
+//                             .catch((error) => {
+//                                 console.log('error', error);
+//                                 // return error;
+//                             });
 
-                        // console.log('data', data);
-                    }
-                }
+//                         // console.log('data', data);
+//                     }
+//                 }
 
-                return config;
-            },
-            function (error) {
-                return Promise.reject(error);
-            },
-        );
+//                 return config;
+//             },
+//             function (error) {
+//                 return Promise.reject(error);
+//             },
+//         );
 
-        return () => {
-            axiosCreate.interceptors.request.eject(responseInterceptor);
-        };
-    }, [currentUserRef.current]);
+//         return () => {
+//             axiosCreate.interceptors.request.eject(responseInterceptor);
+//         };
+//     }, [currentUserRef.current]);
 
-    useEffect(() => {
-        currentUserRef.current = currentUser;
-    }, [currentUser]);
+//     useEffect(() => {
+//         currentUserRef.current = currentUser;
+//     }, [currentUser]);
 
-    return children;
-};
+//     return children;
+// };
 
 axiosCreate.interceptors.response.use(
     function (response) {
@@ -74,4 +74,4 @@ axiosCreate.interceptors.response.use(
 );
 
 export default axiosCreate;
-export { AxiosRequestHandler };
+// export { AxiosRequestHandler };

@@ -1,0 +1,18 @@
+.wrapper {
+    overflow-x: scroll;
+    position: sticky;
+    // width: 24.5%;
+    height: 100vh;
+    padding: 0px 4px;
+    top: calc(var(--height-header) + 16px);
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(22, 24, 35, 0.1);
+    }
+
+    &::-webkit-scrollbar {
+        border-radius: 0;
+        width: 4px;
+    }
+}

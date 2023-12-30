@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -19,11 +19,20 @@ import {
     loginFailed,
 } from '@/redux/userSlice';
 import authApi from '@/api/authApi';
+import { useGetUsersQuery, useGetUserByIdQuery } from '@/redux/user.rtkQuery';
 
 const cx = classNames.bind(styles);
 
 export default function Login() {
     const [messageApi, contextHolder] = message.useMessage();
+
+    const match = useMatch('login/:idUser');
+
+    console.log('match', match);
+
+    // let { idUser } = useParams();
+
+    // console.log('idUser', idUser);
 
     const dispatch = useAppDispatch();
 
@@ -31,25 +40,47 @@ export default function Login() {
 
     const navigate = useNavigate();
 
+    //isLoading cho fetch đầu tiên
+    //isFetching cho mỗi lần gọi api
+    const { data, error, isLoading, isFetching: isFetchingAll } = useGetUsersQuery();
+
+    const {
+        data: dataId,
+        error: errorId,
+        isLoading: isLoadingId,
+        isFetching: isFetchingId,
+    } = useGetUserByIdQuery('657fb2b2902a695ddb00259c');
+
     const handleOnSubmit = (values: any) => {
         dispatch(loginStart());
 
         const fetchLogin = async () => {
             const data = await authApi.login(values.email, values.password);
 
-            if (data && data.user) {
-                dispatch(loginSuccess(data.user));
-                localStorage.setItem('refresh_token', data.user.refresh_token!);
-                // Cookie.
-                navigate(routes.users);
-            } else {
-                dispatch(loginFailed());
-                message.error('Sai email hoặc mật khẩu !!!');
-            }
+            console.log('data', data);
+
+            // if (data.data) {
+            //     // dispatch(loginSuccess(data.user));
+            //     // localStorage.setItem('refresh_token', data.user.refresh_token!);
+            //     // Cookie.
+            //     navigate(routes.home);
+            // } else {
+            //     dispatch(loginFailed());
+            //     message.error('Sai email hoặc mật khẩu !!!');
+            // }
         };
 
         fetchLogin();
     };
+
+    // const handleRTK = async () => {
+    //     console.log(data);
+    //     if (errorId) {
+    //         console.log('errorId', errorId);
+    //     } else {
+    //         console.log('dataId', dataId);
+    //     }
+    // };
 
     const formik = useFormik({
         initialValues: {
@@ -114,7 +145,7 @@ export default function Login() {
                                 <Button
                                     size="large"
                                     className={cx('btn-login')}
-                                    disabled={isFetching}
+                                    // disabled={isFetching}
                                     type="primary"
                                     block
                                     htmlType="submit"
@@ -132,6 +163,10 @@ export default function Login() {
                                     ) : (
                                         ' Đăng nhập'
                                     )}
+                                </Button>
+
+                                <Button onClick={() => {}}>
+                                    RTK Query &nbsp; {isFetchingId ? 'Loading' : ''}
                                 </Button>
                             </Form.Item>
                         </form>

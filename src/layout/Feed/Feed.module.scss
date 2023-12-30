@@ -1,0 +1,9 @@
+.wrapper {
+    width: 100%;
+    // padding: 8px 64px;
+}
+
+.content {
+    width: var(--width-feed-content);
+    background-color: red;
+}

@@ -8,12 +8,20 @@ import Feed from '@/components/layout/Feed';
 import RightBar from '@/components/layout/RightBar';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { setUser, getUserCurrentSelector } from '@/redux/userSlice';
+import { Await, useLoaderData } from 'react-router-dom';
+import { Suspense } from 'react';
 
 const cx = classNames.bind(styles);
 
 export default function Home() {
     const user = useAppSelector(getUserCurrentSelector);
 
+    //@ts-ignore
+    const { res } = useLoaderData();
+
+    if (res) console.log('user1', res);
+
+    console.log(123);
     return (
         <Row className={cx('wrapper')}>
             <Col span={4}>
@@ -24,5 +32,13 @@ export default function Home() {
                 <RightBar />
             </Col>
         </Row>
+
+        // <Suspense fallback={<h1>Loading</h1>}>
+        //     {/* Await manages the deferred data (promise) */}
+        //     <Await resolve={res}>
+        //         {/* this calls back when the data is resolved */}
+        //         {(resolvedHistory) => <h1>{JSON.stringify(resolvedHistory)}</h1>}
+        //     </Await>
+        // </Suspense>
     );
 }

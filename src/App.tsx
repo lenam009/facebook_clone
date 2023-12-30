@@ -14,48 +14,49 @@ function App() {
     let user = useAppSelector(getUserCurrentSelector);
 
     return (
-        <Router basename={process.env.PUBLIC_URL}>
-            <div className="App">
-                <Routes>
-                    <Route
-                        path={routes.home}
-                        element={
-                            <DefaultLayout>
-                                <Home />
-                            </DefaultLayout>
-                        }
-                    />
-                    {/* !user ? (
-                    <Navigate to={routes.login} />) : (
-                    <DefaultLayout>
-                        <Home />
-                    </DefaultLayout>
-                    ) */}
-                    <Route
-                        path={routes.profile.path}
-                        element={
-                            <DefaultLayout>
-                                <Profile />
-                            </DefaultLayout>
-                        }
-                    />
-                    <Route
-                        path={routes.users}
-                        element={
-                            <DefaultLayout>
-                                <UsersPage />
-                            </DefaultLayout>
-                        }
-                    />
-                    <Route
-                        path={routes.login}
-                        // user ? <Navigate to={routes.home} /> : <Login />
-                        element={<Login />}
-                    />
-                    <Route path={routes.register} element={<Register />} />
-                </Routes>
-            </div>
-        </Router>
+        // <Router basename={process.env.PUBLIC_URL}>
+        //     <div className="App">
+        //         <Routes>
+        //             <Route
+        //                 path={routes.home}
+        //                 element={
+        //                     <DefaultLayout>
+        //                         <Home />
+        //                     </DefaultLayout>
+        //                 }
+        //             />
+        //             {/* !user ? (
+        //             <Navigate to={routes.login} />) : (
+        //             <DefaultLayout>
+        //                 <Home />
+        //             </DefaultLayout>
+        //             ) */}
+        //             <Route
+        //                 path={routes.profile.path}
+        //                 element={
+        //                     <DefaultLayout>
+        //                         <Profile />
+        //                     </DefaultLayout>
+        //                 }
+        //             />
+        //             <Route
+        //                 path={routes.users}
+        //                 element={
+        //                     <DefaultLayout>
+        //                         <UsersPage />
+        //                     </DefaultLayout>
+        //                 }
+        //             />
+        //             <Route
+        //                 path={routes.login}
+        //                 // user ? <Navigate to={routes.home} /> : <Login />
+        //                 element={<Login />}
+        //             />
+        //             <Route path={routes.register} element={<Register />} />
+        //         </Routes>
+        //     </div>
+        // </Router>
+        <>App tsx</>
     );
 }
 

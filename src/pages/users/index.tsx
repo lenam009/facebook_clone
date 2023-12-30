@@ -28,11 +28,8 @@ export default function UsersPage() {
 
         axiosCreate
             .get('user/getall', {
-                params: {
-                    ID: 12345,
-                },
                 headers: {
-                    token: `Bearer ${currentUser?.access_token}`,
+                    Authorization: 'Bearer ' + currentUser?.access_token,
                 },
             })
             .then((response: any) => {
@@ -48,7 +45,7 @@ export default function UsersPage() {
             axiosCreate
                 .delete(`user/${id}`, {
                     headers: {
-                        token: `Bearer ${currentUser?.access_token}`,
+                        Authorization: 'Bearer ' + currentUser?.access_token,
                     },
                     data: {
                         _id: currentUser?._id,

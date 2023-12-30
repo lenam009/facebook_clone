@@ -28,28 +28,16 @@ export default function HeaderTabs() {
             key: routes.home,
             label: <ButtonHeaderTab icon={<HomeOutlined />} to={routes.home} />,
         },
-        // {
-        //     key: 'timeline',
-        //     label: <ButtonHeaderTab to={routes.home}>Timeline</ButtonHeaderTab>,
-        // },
+
         {
             key: routes.profile.prefix,
             label: (
                 <ButtonHeaderTab
-                    to={routes.profile.prefix + '/' + user?.username}
+                    to={routes.profile.prefix + '/' + 'slug123'}
                     icon={<UserOutlined />}
-                    // badge={2}
                 />
             ),
         },
-        // {
-        //     key: '4',
-        //     label: <ButtonHeaderTab to={routes.home} icon={<MessageOutlined />} badge={3} />,
-        // },
-        // {
-        //     key: '5',
-        //     label: <ButtonHeaderTab to={routes.home} icon={<BellOutlined />} badge={1} />,
-        // },
     ];
 
     return (
