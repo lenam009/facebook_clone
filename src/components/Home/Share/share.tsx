@@ -15,6 +15,7 @@ import {
 import { useSession } from 'next-auth/react';
 import { handleCreatePost, revalidateGetPostsFollowing } from '@/utils/actions/actions';
 import { UploadFile } from 'antd';
+import AvatarCustom from '@/components/Avatar/avatar.custom';
 
 const items: {
     key?: string;
@@ -130,15 +131,7 @@ export default function Share({ user }: IProp) {
             <form onSubmit={handleOnClickSubmit}>
                 <div className={styles['wrapper-input']}>
                     <Flex>
-                        <Avatar
-                            icon={<UserOutlined />}
-                            size={'large'}
-                            src={
-                                process.env.NEXT_PUBLIC_BACKEND_URL +
-                                '/images/person/' +
-                                user?.profilePicture
-                            }
-                        />
+                        <AvatarCustom user={user} />
                         <Input
                             style={{ fontSize: '1.8rem' }}
                             placeholder={
