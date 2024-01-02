@@ -1,26 +1,21 @@
 const jwt = require('jsonwebtoken');
 
-const createJWT = async (payload, expiresIn, option = {}) => {
+const createJWT = async (payload, secretKey, expiresIn, option = {}) => {
     return new Promise((resolve, reject) =>
-        jwt.sign(
-            payload,
-            process.env.ACCESS_KEY,
-            { expiresIn, ...option },
-            function (err, token) {
-                if (err) {
-                    console.log('error', err);
-                    return reject(err);
-                }
+        jwt.sign(payload, secretKey, { expiresIn, ...option }, function (err, token) {
+            if (err) {
+                console.log('error', err);
+                return reject(err);
+            }
 
-                return resolve(token);
-            },
-        ),
+            return resolve(token);
+        }),
     );
 };
 
-const verifyToken = async (token) => {
+const verifyToken = async (token, secretKey) => {
     return new Promise((resolve, reject) =>
-        jwt.verify(token, process.env.ACCESS_KEY, function (err, decoded) {
+        jwt.verify(token, secretKey, function (err, decoded) {
             if (err) {
                 console.log('error', err);
                 return reject(err);

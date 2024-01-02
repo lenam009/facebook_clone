@@ -15,7 +15,9 @@ const checkToken = async (req, res, next) => {
     const token = extractBearerToken(req);
 
     if (token) {
-        const decoded = await JWTAction.verifyToken(token).catch(() => null);
+        const decoded = await JWTAction.verifyToken(token, process.env.ACCESS_KEY).catch(
+            () => null,
+        );
 
         if (decoded) {
             req.user = decoded;

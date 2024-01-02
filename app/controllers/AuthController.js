@@ -9,17 +9,26 @@ const generateAccessToken = async (user) => {
     const payload = {
         _id: user._id,
         email: user.email,
+        isAdmin: user.isAdmin,
     };
 
-    const access_token = await JWTAction.createJWT(payload, '7d').catch((err) => null);
+    const access_token = await JWTAction.createJWT(
+        payload,
+        process.env.ACCESS_KEY,
+        '7d',
+    ).catch((err) => null);
 
     return access_token;
 };
 
 const generateRefreshToken = async (user) => {
-    const payload = { _id: user._id };
+    const payload = { _id: user._id, email: user.email };
 
-    const refresh_token = await JWTAction.createJWT(payload, '365d').catch((err) => null);
+    const refresh_token = await JWTAction.createJWT(
+        payload,
+        process.env.REFRESH_KEY,
+        '8d',
+    ).catch((err) => null);
 
     return refresh_token;
 };
