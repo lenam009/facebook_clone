@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken');
+var JWTAction = require('./JWT.action');
 
-function extractToken(req) {
+function extractBearerToken(req) {
     if (
         req.headers.authorization &&
         req.headers.authorization.split(' ')[0] === 'Bearer'
@@ -10,25 +11,24 @@ function extractToken(req) {
     return null;
 }
 
-const checkToken = (req, res, next) => {
-    const token = extractToken(req);
+const checkToken = async (req, res, next) => {
+    const token = extractBearerToken(req);
 
     if (token) {
-        //Bearer xmjfds49
-        jwt.verify(token, process.env.ACCESS_KEY, (error, user) => {
-            if (error) {
-                return res.status(403).json({
-                    statusCode: 403,
-                    message: 'Token ko hợp lệ hoặc đã hết hạn!',
-                    error: 'Unauthorized',
-                });
-            }
+        const decoded = await JWTAction.verifyToken(token).catch(() => null);
 
-            req.user = user;
+        if (decoded) {
+            req.user = decoded;
             next();
-        });
+        } else {
+            return res.status(403).json({
+                statusCode: 403,
+                message: 'Token ko hợp lệ hoặc đã hết hạn!',
+                error: 'Unauthorized',
+            });
+        }
     } else {
-        res.status(403).json({
+        return res.status(403).json({
             statusCode: 403,
             message: 'Bạn chưa đăng nhập vì access_token ko tồn tại!',
             error: 'Unauthorized',
@@ -37,7 +37,7 @@ const checkToken = (req, res, next) => {
 };
 
 const verifyUserAuth = (req, res, next) => {
-    if (req.user && (req.user.isAdmin || req.user._id === req.params._id)) {
+    if (req.user && req.user.isAdmin) {
         next();
     } else {
         res.status(401).json({

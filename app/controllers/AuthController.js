@@ -1,29 +1,25 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
+var JWTAction = require('../middlewares/JWT.action');
 
 let refreshTokenArray = [];
 
-const generateAccessToken = (user) => {
-    const { password, ...payload } = user;
-    const access_token = jwt.sign(
-        {
-            _id: user._id,
-            email: user.email,
-        },
-        process.env.ACCESS_KEY,
-        {
-            expiresIn: '7d',
-        },
-    );
+const generateAccessToken = async (user) => {
+    const payload = {
+        _id: user._id,
+        email: user.email,
+    };
+
+    const access_token = await JWTAction.createJWT(payload, '7d').catch((err) => null);
 
     return access_token;
 };
 
-const generateRefreshToken = (user) => {
-    const refresh_token = jwt.sign({ _id: user._id }, process.env.REFRESH_KEY, {
-        expiresIn: '365d',
-    });
+const generateRefreshToken = async (user) => {
+    const payload = { _id: user._id };
+
+    const refresh_token = await JWTAction.createJWT(payload, '365d').catch((err) => null);
 
     return refresh_token;
 };
@@ -92,7 +88,7 @@ class AuthController {
         //Check password
         bcrypt
             .compare(req.body.password, user.password)
-            .then((result) => {
+            .then(async (result) => {
                 if (!result)
                     return res.status(401).json({
                         statusCode: 401,
@@ -100,9 +96,17 @@ class AuthController {
                         error: 'Unauthorized',
                     });
 
-                const access_token = generateAccessToken(user);
+                const access_token = await generateAccessToken(user);
+                const refresh_token = await generateRefreshToken(user);
 
-                const refresh_token = generateRefreshToken(user);
+                if (!access_token | !refresh_token) {
+                    return next({
+                        statusCode: 500,
+                        message: 'Create token failed',
+                        error: 'Unauthorized',
+                    });
+                }
+
                 refreshTokenArray.push(refresh_token);
 
                 //Lưu refresh_token vào cookie...
@@ -170,6 +174,7 @@ class AuthController {
 
                 const new_access_token = generateAccessToken(user);
                 const new_refresh_token = generateRefreshToken(user);
+
                 refreshTokenArray.push(new_refresh_token);
 
                 res.cookie('refresh_token', new_refresh_token, {

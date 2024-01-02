@@ -13,7 +13,7 @@ router.get(
     UserController.getOneUser,
 );
 
-router.get('/getall', UserController.getall);
+router.get('/getall', authenticationMiddleware.checkToken, UserController.getall);
 
 router.get('/getUserByFollowing/:_id', UserController.getUserByFollowing);
 
