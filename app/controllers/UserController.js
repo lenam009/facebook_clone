@@ -46,7 +46,9 @@ class UserController {
     async getOneUser(req, res, next) {
         // const user = req.user;
         const id = req.query._id;
-        console.log('id', id);
+
+        console.log('path', req.path);
+        console.log('method', req.method);
 
         User.findById(id)
             .then((user) => {

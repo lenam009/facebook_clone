@@ -23,15 +23,15 @@ const checkToken = async (req, res, next) => {
             req.user = decoded;
             next();
         } else {
-            return res.status(403).json({
-                statusCode: 403,
-                message: 'Token ko hợp lệ hoặc đã hết hạn!',
+            return res.status(401).json({
+                statusCode: 401,
+                message: 'Token ko hợp lệ  hoặc đã hết hạn!',
                 error: 'Unauthorized',
             });
         }
     } else {
-        return res.status(403).json({
-            statusCode: 403,
+        return res.status(401).json({
+            statusCode: 401,
             message: 'Bạn chưa đăng nhập vì access_token ko tồn tại!',
             error: 'Unauthorized',
         });
@@ -50,9 +50,23 @@ const verifyUserAuth = (req, res, next) => {
     }
 };
 
+// const checkUserJWT = (req, res, next) => {
+//     const cookies = req.cookies;
+//     if (cookies && cookies.refresh_token) {
+//         console.log('cookies', cookies);
+//     } else {
+//         return res.status(401).json({
+//             statusCode: 401,
+//             message: 'Bạn chưa đăng nhập vì cookies ko tồn tại!',
+//             error: 'Unauthorized',
+//         });
+//     }
+// };
+
 const authentication = {
     checkToken,
     verifyUserAuth,
+    // checkUserJWT,
 };
 
 module.exports = authentication;

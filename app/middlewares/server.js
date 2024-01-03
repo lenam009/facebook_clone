@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+// const path = require('path');
+
 //Cookie parser
 const cookie = (app) => {
     app.use(cookieParser());

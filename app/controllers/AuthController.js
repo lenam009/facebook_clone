@@ -74,6 +74,8 @@ class AuthController {
     async login(req, res, next) {
         //Muốn ko dùng return thì ko được dùng trong then
         //Get user
+        console.log('Cookies: ', req.cookies);
+
         const user = await User.findOne({ email: req.body.email })
             .then((response) => {
                 if (!response)
@@ -124,6 +126,7 @@ class AuthController {
                     secure: true,
                     sameSite: 'none',
                     path: '/',
+                    maxAge: 60 * 60 * 1000,
                 });
 
                 const { password, ...payloads } = user._doc;

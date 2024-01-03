@@ -4,7 +4,7 @@ const path = require('path');
 // deleteFile('/public/videos/1703559188065-104505885.mp4');
 
 const deleteFile = (pathFile, next) => {
-    // path=`/public/images/post/images.jpg`
+    // pathFile=`/public/images/post/images.jpg`
     const pathFull = path.join(__dirname, '../..', pathFile);
 
     // console.log('path...........', pathFull);

@@ -5,6 +5,23 @@ const upload = require('../app/middlewares/upload.file');
 const PostController = require('../app/controllers/PostController');
 const authenticationMiddleware = require('../app/middlewares/authentication');
 
+// const checkUserJWT = (req, res, next) => {
+//     const nonSecurePaths = [
+//         { path: '/', method: 'GET' },
+//         { path: '/getall', method: 'GET' },
+//         { path: '/getall', method: 'GET' },
+//     ];
+
+//     if (nonSecurePaths.some((x) => x.path === req.path && x.method === req.method)) {
+//         return next();
+//     }
+
+//     //authenticate user
+//     authenticationMiddleware.checkToken(req, res, next);
+// };
+
+// router.use(checkUserJWT);
+
 router.get('/', PostController.index);
 
 router.get(
