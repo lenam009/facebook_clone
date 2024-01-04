@@ -44,7 +44,7 @@ const verifyUserAuth = (req, res, next) => {
     } else {
         res.status(401).json({
             statusCode: 401,
-            message: "You're not allowed to resolve this work!",
+            message: "You're not permission to resolve this work!",
             error: 'Your role not enough to resolve this work!',
         });
     }
