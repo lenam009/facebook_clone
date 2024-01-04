@@ -52,18 +52,19 @@ export default function Login() {
     } = useGetUserByIdQuery('657fb2b2902a695ddb00259c');
 
     const handleOnSubmit = (values: any) => {
-        dispatch(loginStart());
-
         const fetchLogin = async () => {
-            const data = await authApi.login(values.email, values.password);
+            const data = await authApi
+                .login(values.email, values.password)
+                .catch((res) => console.log('res', res));
 
-            console.log('data', data);
+            if (data?.data) message.success(data.message);
 
             // if (data.data) {
             //     // dispatch(loginSuccess(data.user));
             //     // localStorage.setItem('refresh_token', data.user.refresh_token!);
             //     // Cookie.
-            //     navigate(routes.home);
+            //     // navigate(routes.home);
+            //     message.success(JSON.stringify(data.data));
             // } else {
             //     dispatch(loginFailed());
             //     message.error('Sai email hoặc mật khẩu !!!');

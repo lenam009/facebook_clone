@@ -14,19 +14,18 @@ const authApi = {
     login(email: string, password: string) {
         const url = 'auth/login';
 
-        return axiosCreate
-            .post(
-                url,
-                {
+        return (
+            axiosCreate
+                .post(url, {
                     email,
                     password,
-                },
-                {
-                    withCredentials: true,
-                },
-            )
-            .then((response) => response)
-            .catch(() => console.log('Error login')) as Promise<IAuth>;
+                })
+                // .then((response) => response)
+                .catch(() => {
+                    console.log('Error login');
+                    return null;
+                }) as Promise<IBackendRes<any> | null>
+        );
     },
 
     register(email: string, password: string, username: string) {

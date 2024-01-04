@@ -4,6 +4,8 @@ import { useAppSelector } from '@/redux/hook';
 import { getUserCurrentSelector } from '@/redux/userSlice';
 import { jwtDecode } from 'jwt-decode';
 import { useEffect, useRef } from 'react';
+import { message } from 'antd';
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const axiosCreate: AxiosInstance = axios.create({
     baseURL: 'http://localhost:8088/api/',
@@ -11,6 +13,12 @@ const axiosCreate: AxiosInstance = axios.create({
         'Content-Type': 'application/json',
     },
 });
+
+axiosCreate.defaults.withCredentials = true;
+
+axiosCreate.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(
+    'access_token',
+)}`;
 
 // const AxiosRequestHandler = ({ children }: { children: any }) => {
 //     const currentUser = useAppSelector(getUserCurrentSelector);
@@ -65,11 +73,13 @@ const axiosCreate: AxiosInstance = axios.create({
 // };
 
 axiosCreate.interceptors.response.use(
-    function (response) {
+    //@ts-ignore
+    function (response: AxiosResponse) {
         return response.data;
     },
-    function (error) {
-        return Promise.reject(error.response.data);
+    function (error: AxiosError<IBackendRes<any>>) {
+        message.error(error.response?.data.message);
+        return Promise.reject(error.response?.data);
     },
 );
 
