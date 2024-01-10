@@ -89,11 +89,13 @@ export const authOptions: AuthOptions = {
                 const res = await sendRequest<IBackendRes<JWT>>({
                     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/social-media`,
                     method: 'POST',
+
                     body: {
                         type: account?.provider.toLocaleUpperCase(),
                         username: user.email,
                     },
                 });
+
                 if (res.data) {
                     token.access_token = res.data.access_token;
                     token.refresh_token = res.data.refresh_token;

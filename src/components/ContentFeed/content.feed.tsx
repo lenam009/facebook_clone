@@ -46,6 +46,7 @@ export default function ContentFeed(post: IPost) {
     const userCurrent = useAppSelector(getUserSelector);
 
     useEffect(() => {
+        //Ko nên fetch ở đây
         const fetchUser = async () => {
             const userApi = await handleGetOneUserById(post.userId);
             if (userApi.data) {
@@ -58,7 +59,8 @@ export default function ContentFeed(post: IPost) {
     const handleClickLike = async (e: React.MouseEvent) => {
         const result = await handleLikeOrDisLikePost(post._id!);
         if (result.data) {
-            revalidateGetPostsFollowing();
+            // revalidateGetPostsFollowing();
+            // message.success(result.message);
         } else {
             message.error(result.message);
         }

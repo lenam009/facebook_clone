@@ -182,6 +182,7 @@ export const handleLikeOrDisLikePost = async (idPost: string) => {
         },
     })
         .then((res) => {
+            revalidateGetPostsFollowing();
             return res;
         })
         .catch((error) => {
