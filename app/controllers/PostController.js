@@ -75,18 +75,15 @@ class PostController {
 
         const postUser = await Post.find({ userId: user._id })
             .sort({ updatedAt: 'desc' })
-            .catch(() => null);
-        if (!postUser)
-            return next({
-                statusCode: 500,
-                message: 'Get postUser failed',
-                error: 'Get postUser failed',
-            });
+            .catch(() => []);
 
         let postArray = [];
+
         return await Promise.all(
             userCurrent.followings.map((x) =>
-                Post.find({ userId: x }).sort({ updatedAt: 'desc' }),
+                Post.find({ userId: x })
+                    .sort({ updatedAt: 'desc' })
+                    .catch(() => []),
             ),
         )
             .then((response) => {
