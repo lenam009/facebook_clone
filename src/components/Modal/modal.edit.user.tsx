@@ -112,14 +112,14 @@ export default function Modal() {
         router.back();
     }, [router]);
 
-    const onClick: MouseEventHandler = useCallback(
-        (e) => {
-            if (e.target === overlay.current || e.target === wrapper.current) {
-                if (onDismiss) onDismiss();
-            }
-        },
-        [onDismiss, overlay, wrapper],
-    );
+    // const onClick: MouseEventHandler = useCallback(
+    //     (e) => {
+    //         if (e.target === overlay.current || e.target === wrapper.current) {
+    //             if (onDismiss) onDismiss();
+    //         }
+    //     },
+    //     [onDismiss, overlay, wrapper],
+    // );
 
     const onKeyDown = useCallback(
         (e: KeyboardEvent) => {
@@ -169,7 +169,7 @@ export default function Modal() {
     return (
         <>
             <div
-                ref={overlay}
+                // ref={overlay}
                 style={{
                     position: 'fixed',
                     top: 0,
@@ -179,7 +179,7 @@ export default function Modal() {
                     opacity: '0.6',
                     backgroundColor: 'black',
                 }}
-                onClick={onClick}
+                // onClick={onClick}
             ></div>
 
             <ModalAntd

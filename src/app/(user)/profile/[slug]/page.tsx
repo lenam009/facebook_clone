@@ -18,8 +18,6 @@ export default async function ProfilePage({ params }: { params: { slug: string }
     const wordId = words.split('-');
     const userId = wordId[wordId.length - 1];
 
-    console.log(123);
-
     const userRandom = await handleGetUserRandomAction();
 
     const userCurrentProfile = await handleGetOneUserById(userId);
