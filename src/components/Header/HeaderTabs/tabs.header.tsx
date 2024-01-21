@@ -15,7 +15,7 @@ export default function HeaderTabs() {
     const [tab, setTab] = useState(routes.home.path);
     const pathname = usePathname();
 
-    const user = useAppSelector(getUserSelector);
+    const currentUser = useAppSelector(getUserSelector);
 
     useEffect(() => {
         if (pathname.includes(routes.profile.prefix)) {
@@ -41,9 +41,9 @@ export default function HeaderTabs() {
                     to={
                         routes.profile.prefix +
                         '/' +
-                        convertSlugUrl(user?.username) +
+                        convertSlugUrl(currentUser?.username) +
                         '-' +
-                        user?._id
+                        currentUser?._id
                     }
                 />
             ),

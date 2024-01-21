@@ -3,15 +3,15 @@ import Header from '@/components/Header/header';
 
 export default function UserLayout({
     children,
-    editUser2,
+    editUser,
 }: {
     children: React.ReactNode;
-    editUser2: React.ReactNode;
+    editUser: React.ReactNode;
 }) {
     return (
         <>
             {children}
-            {editUser2}
+            {editUser}
         </>
     );
 }

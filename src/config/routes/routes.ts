@@ -5,7 +5,7 @@ const routes = {
         params: ':/username',
         path: '/profile/:username',
     },
-    editUser: { path: '/profile/edit2' },
+    editUser: { path: '/profile/edit' },
 
     login: { path: '/login' },
     register: { path: '/register' },

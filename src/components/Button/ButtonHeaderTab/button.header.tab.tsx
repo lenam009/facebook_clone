@@ -3,7 +3,8 @@ import classNames from 'classnames/bind';
 import styles from './ButtonHeaderTab.module.scss';
 import { ReactNode } from 'react';
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSelectedLayoutSegment } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { Badge } from 'antd';
 
@@ -20,9 +21,15 @@ interface IProps {
 export default function ButtonHeaderTab({ children, to, icon, badge }: IProps) {
     const [tab, setTab] = useState(routes.home.path);
     const pathname = usePathname();
+    const router = useRouter();
+    const segment = useSelectedLayoutSegment();
 
     useEffect(() => {
         if (pathname.includes(routes.profile.prefix)) to = pathname;
+
+        console.log('pathname', pathname);
+
+        console.log('segment', segment);
 
         setTab(pathname);
 
