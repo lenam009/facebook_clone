@@ -12,21 +12,12 @@ import { getUserSelector } from '@/utils/redux/userSlice';
 import { useAppSelector } from '@/utils/redux/hook';
 
 export default function HeaderTabs() {
-    const [tab, setTab] = useState(routes.home.path);
     const pathname = usePathname();
 
     const currentUser = useAppSelector(getUserSelector);
 
-    useEffect(() => {
-        if (pathname.includes(routes.profile.prefix)) {
-            console.log('ok');
-
-            setTab(routes.profile.prefix);
-            return;
-        }
-        setTab(pathname);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pathname]);
+    const tab =
+        (pathname.includes(routes.profile.prefix) && routes.profile.prefix) || pathname;
 
     const items: TabsProps['items'] = [
         {

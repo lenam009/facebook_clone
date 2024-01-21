@@ -24,7 +24,7 @@ export default function ButtonHeaderTab({ children, to, icon, badge }: IProps) {
 
     // console.log('pathname', pathname);
 
-    const tab2 =
+    const tab =
         pathname === to ||
         (pathname.includes(routes.profile.prefix) && to.includes(routes.profile.prefix));
 
@@ -32,7 +32,7 @@ export default function ButtonHeaderTab({ children, to, icon, badge }: IProps) {
         <Link className={cx('link', icon && 'icon')} href={to}>
             <>
                 <Badge count={badge}>
-                    <span style={{ fontSize: '2rem' }} className={cx(tab2 && 'active')}>
+                    <span style={{ fontSize: '2rem' }} className={cx(tab && 'active')}>
                         {children ?? icon}
                     </span>
                 </Badge>
