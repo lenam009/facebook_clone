@@ -5,11 +5,15 @@ import { UserOutlined, EditOutlined } from '@ant-design/icons';
 import Box from '@mui/material/Box';
 import Link from 'next/link';
 import routes from '@/config/routes/routes';
+import { getUserSelector } from '@/utils/redux/userSlice';
+import { useAppSelector } from '@/utils/redux/hook';
 
 interface IProps {
     user: IUser | undefined;
 }
 export default function Walkpaper({ user }: IProps) {
+    const currentUser = useAppSelector(getUserSelector);
+
     return (
         <div className={styles['wrapper']}>
             <Image
@@ -36,13 +40,15 @@ export default function Walkpaper({ user }: IProps) {
                 />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <h1 className={styles['name']}>{user?.username}</h1>
-                    <Link href={routes.editUser.path}>
-                        <Button
-                            type="text"
-                            icon={<EditOutlined />}
-                            shape="circle"
-                        ></Button>
-                    </Link>
+                    {currentUser?._id === user?._id && (
+                        <Link href={routes.editUser.path}>
+                            <Button
+                                type="text"
+                                icon={<EditOutlined />}
+                                shape="circle"
+                            ></Button>
+                        </Link>
+                    )}
                 </Box>
                 <p className={styles['desc']}>{user?.desc}</p>
             </Flex>

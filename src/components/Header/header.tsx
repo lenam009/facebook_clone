@@ -14,7 +14,7 @@ import HeaderTabs from './HeaderTabs/tabs.header';
 import Search from './Search/search';
 import routes from '@/config/routes/routes';
 import { getUserSelector } from '@/utils/redux/userSlice';
-import { useAppSelector, useAppDispatch } from '@/utils/redux/hook';
+import { useAppSelector } from '@/utils/redux/hook';
 import { convertSlugUrl } from '@/utils/api';
 
 const cx = classNames.bind(styles);

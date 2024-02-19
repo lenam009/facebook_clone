@@ -38,7 +38,7 @@ type FieldType = {
 export default function Modal() {
     const overlay = useRef(null);
     const wrapper = useRef(null);
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<FieldType>();
     const hasMounted = useHasMounted();
     const { data: sessionAuth } = useSession();
     const router = useRouter();

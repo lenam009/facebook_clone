@@ -10,8 +10,9 @@ export default function UserLayout({
 }) {
     return (
         <Box>
-            {/* {header} */}
-            <Header />
+            {/* Parallel route có thể bị mất header bên profile page */}
+            {header}
+            {/* <Header /> */}
             <Box
                 sx={{
                     padding: 'calc(var(--height-header) + 16px) 8px 0px',

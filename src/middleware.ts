@@ -20,4 +20,4 @@ export default withAuth({
     },
 });
 
-export const config = { matcher: ['/profile', '/profile/:slug*', '/'] };
+export const config = { matcher: ['/profile', '/profile/:slug', '/'] };
