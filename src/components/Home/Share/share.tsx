@@ -72,7 +72,7 @@ export default function Share({ user }: IProp) {
         defaultFileList: fieldList,
 
         beforeUpload: (file) => {
-            const isPNG = [
+            const isImageOrVideo = [
                 'image/png',
                 'image/jpg',
                 'image/jpeg',
@@ -86,10 +86,10 @@ export default function Share({ user }: IProp) {
                 'video/x-msvideo',
                 'video/x-ms-wmv',
             ].includes(file.type);
-            if (!isPNG) {
+            if (!isImageOrVideo) {
                 message.error(`${file.name} isn't image or video`);
             }
-            return isPNG || Upload.LIST_IGNORE;
+            return isImageOrVideo || Upload.LIST_IGNORE;
         },
 
         onChange(info) {
