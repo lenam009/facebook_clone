@@ -19,12 +19,12 @@ router.get('/:_id', PostController.getOnePost);
 
 router.post('/', authenticationMiddleware.checkToken, PostController.create);
 
-router.post(
-    '/upload',
-    authenticationMiddleware.checkToken,
-    upload.uploadFile.single('file'),
-    PostController.uploadFile,
-);
+// router.post(
+//     '/upload',
+//     authenticationMiddleware.checkToken,
+//     upload.uploadFile.single('file'),
+//     PostController.uploadFile,
+// );
 
 // router.delete(
 //     '/deleteFile',
