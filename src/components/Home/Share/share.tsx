@@ -96,6 +96,7 @@ export default function Share({ user }: IProp) {
             if (info.fileList[0]?.response) {
                 setFile(info.fileList[0].response.data.filename);
                 setFieldList(info.fileList);
+                console.log('info.fileList[0]: ', info.fileList[0]);
             }
             if (info.file.status === 'done') {
                 setFieldList(info.fileList);
