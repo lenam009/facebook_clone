@@ -38,6 +38,37 @@ const checkToken = async (req, res, next) => {
     }
 };
 
+const checkUserDetail = async (req, res, next) => {
+    const token = extractBearerToken(req);
+
+    if (token) {
+        const decoded = await JWTAction.verifyToken(token, process.env.ACCESS_KEY).catch(
+            () => null,
+        );
+
+        if (decoded) {
+            const { _id, email } = decoded;
+            return res.status(200).json({
+                statusCode: 200,
+                message: 'User valid',
+                data: { _id, email },
+            });
+        } else {
+            return res.status(401).json({
+                statusCode: 401,
+                message: 'Token ko hợp lệ hoặc đã hết hạn!',
+                error: 'Unauthorized',
+            });
+        }
+    } else {
+        return res.status(401).json({
+            statusCode: 401,
+            message: 'Bạn chưa đăng nhập vì access_token ko tồn tại!',
+            error: 'Unauthorized',
+        });
+    }
+};
+
 const verifyUserAuth = (req, res, next) => {
     if (req.user && req.user.isAdmin) {
         next();
@@ -66,6 +97,7 @@ const verifyUserAuth = (req, res, next) => {
 const authentication = {
     checkToken,
     verifyUserAuth,
+    checkUserDetail,
     // checkUserJWT,
 };
 

@@ -27,6 +27,8 @@ router.get('/', UserController.getOneUser);
 
 router.get('/getall', UserController.getall);
 
+router.get('/userDetail', authenticationMiddleware.checkUserDetail);
+
 router.get('/getUserByFollowing/:_id', UserController.getUserByFollowing);
 
 router.get(
