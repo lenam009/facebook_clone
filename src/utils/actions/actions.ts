@@ -267,7 +267,7 @@ export const handleUpdateUser = async (data: {
 export const handleCreateMessage = async (data: { receiverId: string; text: String }) => {
     const session = await getServerSession(authOptions);
 
-    const posts = (await sendRequest<IBackendRes<IModelPaginate<IPost>>>({
+    const user = (await sendRequest<IBackendRes<IModelPaginate<IPost>>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/messenger`,
         method: 'POST',
         headers: {
@@ -286,7 +286,7 @@ export const handleCreateMessage = async (data: { receiverId: string; text: Stri
             return error;
         })) as IBackendRes<IMessenger>;
 
-    return posts;
+    return user;
 };
 
 export const handleGetMessage = async (receiverId: string) => {
@@ -310,6 +310,30 @@ export const handleGetMessage = async (receiverId: string) => {
             console.log('error handleGetMessage', error);
             return error;
         })) as IBackendRes<IMessenger[]>;
+
+    return posts;
+};
+
+export const handleGetUserDetail = async () => {
+    const session = await getServerSession(authOptions);
+
+    const posts = (await sendRequest<IBackendRes<IModelPaginate<IPost>>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/userDetail`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+        },
+        nextOption: {
+            next: { tags: ['handleGetUserDetail'] },
+        },
+    })
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            console.log('error handleGetUserDetail', error);
+            return error;
+        })) as IBackendRes<IUser>;
 
     return posts;
 };
