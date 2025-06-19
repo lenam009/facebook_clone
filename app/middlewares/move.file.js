@@ -41,10 +41,10 @@ const moveFile = async (req, next) => {
     const sourcePathFull = path.join(__dirname, '../..', sourcePath);
     const destinationPathFull = path.join(__dirname, '../..', destinationPath);
 
-    console.log('header', sourcePath);
-    console.log('__dirname', __dirname);
-    console.log('sourcePathFull', sourcePathFull);
-    console.log('destinationPathFull', destinationPathFull);
+    // console.log('header', sourcePath);
+    // console.log('__dirname', __dirname);
+    // console.log('sourcePathFull', sourcePathFull);
+    // console.log('destinationPathFull', destinationPathFull);
 
     return await fs.access(sourcePathFull, fs.constants.F_OK, async (err) => {
         if (!err) {
