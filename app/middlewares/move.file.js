@@ -7,6 +7,18 @@ const path = require('path');
 //     next,
 // );
 
+const getSourceOfFile = (req) => {
+    if (req.headers.source_path === 'image_post') {
+        return 'public/images/post';
+    } else if (req.headers.source_path === 'image_person') {
+        return 'public/images/person';
+    } else if (req.headers.source_path === 'video') {
+        return 'public/videos';
+    } else {
+        return 'public/test';
+    }
+};
+
 const getDestinationOfFile = (req) => {
     if (req.headers.target_type === 'image_post') {
         return 'public/images/post';
@@ -19,16 +31,20 @@ const getDestinationOfFile = (req) => {
     }
 };
 
-const moveFile = async (fileName, req, next) => {
-    const sourcePath = '/public/test/' + fileName;
+const moveFile = async (req, next) => {
+    const fileName = req.body.fileName;
+
+    const sourcePath = getSourceOfFile(req) + '/' + fileName;
     const destinationPath = getDestinationOfFile(req) + '/' + fileName;
 
     // path=`/public/images/post/images.jpg`
     const sourcePathFull = path.join(__dirname, '../..', sourcePath);
     const destinationPathFull = path.join(__dirname, '../..', destinationPath);
 
-    // console.log('sourcePathFull', sourcePathFull);
-    // console.log('destinationPathFull', destinationPathFull);
+    console.log('header', sourcePath);
+    console.log('__dirname', __dirname);
+    console.log('sourcePathFull', sourcePathFull);
+    console.log('destinationPathFull', destinationPathFull);
 
     return await fs.access(sourcePathFull, fs.constants.F_OK, async (err) => {
         if (!err) {
