@@ -86,7 +86,7 @@ const morganMethod = (app, express) => {
 };
 
 const pathImage = (app, express) => {
-    console.log('middleware', path.join(__dirname, '../..', 'public/images'));
+    // console.log('middleware', path.join(__dirname, '../..', 'public/images'));
     //path Images
     app.use('/images', express.static(path.join(__dirname, '../..', 'public/images')));
 
