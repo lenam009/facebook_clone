@@ -1,18 +1,18 @@
-const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const path = require('path');
 
 // const path = require('path');
 
 //Cookie parser
-const cookie = (app) => {
+const cookie = (app, express) => {
     app.use(cookieParser());
 };
 
 //Enable CORS Policy
-const corsPolicy = (app) => {
+const corsPolicy = (app, express) => {
     // app.use(cors());
     // const whitelist = ['http://localhost:3000', 'http://example2.com'];
 
@@ -43,12 +43,12 @@ const corsPolicy = (app) => {
 };
 
 //Parser json
-const jsonParser = (app) => {
+const jsonParser = (app, express) => {
     app.use(express.json());
 };
 
 //(form html post len server )
-const postHtml = (app) => {
+const postHtml = (app, express) => {
     app.use(
         express.urlencoded({
             extended: true,
@@ -57,7 +57,7 @@ const postHtml = (app) => {
 };
 
 //helmet(security)
-const helmetMethod = (app) => {
+const helmetMethod = (app, express) => {
     app.use(
         helmet({
             contentSecurityPolicy: {
@@ -81,11 +81,24 @@ const helmetMethod = (app) => {
 };
 
 //morgan(file log request->server)
-const morganMethod = (app) => {
+const morganMethod = (app, express) => {
     app.use(morgan('common'));
 };
 
+const pathImage = (app, express) => {
+    console.log('middleware', path.join(__dirname, '../..', 'public/images'));
+    //path Images
+    app.use('/images', express.static(path.join(__dirname, '../..', 'public/images')));
+
+    //path Video
+    app.use('/videos', express.static(path.join(__dirname, '../..', 'public/videos')));
+
+    //path/test
+    app.use('/test', express.static(path.join(__dirname, '../..', 'public/test')));
+};
+
 const serverMiddleware = [
+    pathImage,
     corsPolicy,
     cookie,
     jsonParser,

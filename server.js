@@ -7,17 +7,19 @@ const connect_db = require('./app/connect_db');
 const serverMiddleware = require('./app/middlewares/server');
 const path = require('path');
 
-//path Images
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+// //path Images
+// app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
-//path Video
-app.use('/videos', express.static(path.join(__dirname, 'public/videos')));
+// //path Video
+// app.use('/videos', express.static(path.join(__dirname, 'public/videos')));
 
-//path/test
-app.use('/test', express.static(path.join(__dirname, 'public/test')));
+// //path/test
+// app.use('/test', express.static(path.join(__dirname, 'public/test')));
+
+console.log('pathServer', __dirname);
 
 //Middleware server
-serverMiddleware.map((x) => x(app));
+serverMiddleware.map((x) => x(app, express));
 
 //Config .env
 dotenv.config();
