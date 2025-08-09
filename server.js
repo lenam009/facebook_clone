@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const dotenv = require('dotenv');
 
 const routes = require('./routes');
 const connect_db = require('./app/connect_db');
@@ -16,13 +15,8 @@ const path = require('path');
 // //path/test
 // app.use('/test', express.static(path.join(__dirname, 'public/test')));
 
-console.log('pathServer', __dirname);
-
 //Middleware server
 serverMiddleware.map((x) => x(app, express));
-
-//Config .env
-dotenv.config();
 
 //Connect database
 connect_db.connect();

@@ -3,8 +3,14 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const dotenv = require('dotenv');
 
 // const path = require('path');
+
+//Config .env
+const env = () => {
+    dotenv.config();
+};
 
 //Cookie parser
 const cookie = (app, express) => {
@@ -105,6 +111,7 @@ const serverMiddleware = [
     postHtml,
     helmetMethod,
     morganMethod,
+    env,
 ];
 
 module.exports = serverMiddleware;
