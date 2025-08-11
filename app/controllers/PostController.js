@@ -77,38 +77,32 @@ class PostController {
             .sort({ updatedAt: 'desc' })
             .catch(() => []);
 
-        let postArray = [];
+        const postUserFollowing = await Post.find({
+            userId: { $in: userCurrent.followings },
+        })
+            .sort({ updatedAt: 'desc' })
+            .catch(() => []);
 
-        return await Promise.all(
-            userCurrent.followings.map((x) =>
-                Post.find({ userId: x })
-                    .sort({ updatedAt: 'desc' })
-                    .catch(() => []),
-            ),
-        )
-            .then((response) => {
-                postArray = postArray.concat(...response, ...postUser);
-                return res.status(200).json({
-                    statusCode: 200,
-                    message: 'Get post by following successfully',
-                    data: {
-                        meta: {
-                            current: 0,
-                            pageSize: 0,
-                            pages: 0,
-                            total: 0,
-                        },
-                        result: postArray,
-                    },
-                });
-            })
-            .catch(() =>
-                next({
-                    statusCode: 500,
-                    message: 'Get timeline failed',
-                    error: 'Get timeline failed',
-                }),
-            );
+        // let postArray = [];
+
+        const postArray = [].concat(...postUserFollowing, ...postUser);
+
+        console.log('postUser', postUser.length);
+        console.log('postUserFollowing', postUserFollowing.length);
+
+        return res.status(200).json({
+            statusCode: 200,
+            message: 'Get post by following successfully',
+            data: {
+                meta: {
+                    current: 0,
+                    pageSize: 0,
+                    pages: 0,
+                    total: 0,
+                },
+                result: postArray,
+            },
+        });
     }
 
     //GET(Chỉ nhận bài post của user có name tương ứng) /post/profile/:username

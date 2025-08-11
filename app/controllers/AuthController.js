@@ -74,7 +74,7 @@ class AuthController {
     async login(req, res, next) {
         //Muốn ko dùng return thì ko được dùng trong then
         //Get user
-        console.log('Cookies: ', req.cookies);
+        // console.log('Cookies: ', req.cookies);
 
         const user = await User.findOne({ email: req.body.email })
             .then((response) => {
