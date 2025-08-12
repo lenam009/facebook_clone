@@ -158,6 +158,7 @@ export const handleCreatePost = async (data: {
         headers: {
             Authorization: `Bearer ${session?.access_token}`,
             target_type: data.target_type,
+            source_path: null,
         },
     })
         .then((res) => {
