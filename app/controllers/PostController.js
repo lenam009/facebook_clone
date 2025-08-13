@@ -73,7 +73,7 @@ class PostController {
             });
         }
 
-        const postUser = await Post.find({ userId: user._id })
+        const postUserCurrent = await Post.find({ userId: user._id })
             .sort({ updatedAt: 'desc' })
             .catch(() => []);
 
@@ -85,10 +85,10 @@ class PostController {
 
         // let postArray = [];
 
-        const postArray = [].concat(...postUserFollowing, ...postUser);
+        const postArray = [].concat(...postUserFollowing, ...postUserCurrent);
 
-        console.log('postUser', postUser.length);
-        console.log('postUserFollowing', postUserFollowing.length);
+        // console.log('postUserCurrent', postUserCurrent.length);
+        // console.log('postUserFollowing', postUserFollowing.length);
 
         return res.status(200).json({
             statusCode: 200,
@@ -302,30 +302,6 @@ class PostController {
                 );
         }
     }
-
-    uploadFile(req, res, next) {
-        // console.log('req.file', req.file);
-        // console.log('req.body', req.body);
-        return res.status(201).json({
-            statusCode: 201,
-            message: 'Upload file successfully',
-            data: {
-                filename: req.file.filename,
-            },
-        });
-    }
-
-    // deleteFile(req, res, next) {
-    //     // console.log('req.file', req.file);
-    //     // console.log('req.body', req.body);
-    //     return res.status(201).json({
-    //         statusCode: 201,
-    //         message: 'Delete file successfully',
-    //         data: {
-    //             message: 'Delete file successfully',
-    //         },
-    //     });
-    // }
 }
 
 module.exports = new PostController();
